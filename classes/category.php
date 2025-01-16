@@ -12,6 +12,15 @@ class Category
     $this->description = $description;
   }
 
+  public static function getAllCategories(PDO $db)
+  {
+    $query = "SELECT * FROM categories";
+    $stmt = $db->prepare($query);
+    $stmt->execute();
+
+    return $stmt->fetchAll(PDO::FETCH_ASSOC);
+  }
+
   public function getId()
   {
     return $this->id;

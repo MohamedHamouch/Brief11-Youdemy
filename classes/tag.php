@@ -10,6 +10,15 @@ class Tag
         $this->name = $name;
     }
 
+    public static function getAllTags(PDO $db)
+    {
+        $query = "SELECT * FROM tags";
+        $stmt = $db->prepare($query);
+        $stmt->execute();
+
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
     public function getId()
     {
         return $this->id;
