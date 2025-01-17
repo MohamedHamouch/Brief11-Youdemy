@@ -55,7 +55,7 @@ if (isset($_SESSION['user'])) {
               <?php
               if (!$connected) {
                 echo '<li>
-                <a href="auth/login.php"
+                <a href="pages/auth/login.php"
                   class="flex items-center space-x-2 bg-orange-50 text-orange-700 px-4 py-2 rounded-full hover:bg-orange-100 transition-colors duration-300">
                   <i class="fas fa-sign-in-alt text-lg"></i>
                   <span>Sign In</span>
@@ -86,7 +86,7 @@ if (isset($_SESSION['user'])) {
                       class="block px-4 py-2 text-sm text-gray-700 hover:bg-orange-50 hover:text-orange-700">My Courses</a>';
                     }
                     ?>
-                    <a href="auth/process/logout.php"
+                    <a href="pages/auth/process/logout.php"
                       class="block px-4 py-2 text-sm text-gray-700 hover:bg-orange-50 hover:text-red-700">Logout</a>
                   </div>
                 </li>
