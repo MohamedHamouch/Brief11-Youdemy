@@ -9,6 +9,12 @@ class Tag
         $this->id = $id;
         $this->name = $name;
     }
+    
+    public static function tagCount(PDO $db){
+        $query = "SELECT COUNT(*) FROM tags";
+        $stmt = $db->query($query);
+        return $stmt->fetchColumn();
+    }
 
     public static function getAllTags(PDO $db)
     {
