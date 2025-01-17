@@ -193,7 +193,7 @@ if (isset($_SESSION['user'])) {
     </div>
   </footer>
 
-  <script src="profile.js"></script>
+  <script src="../../js/profile.js"></script>
   <script src="../../js/menu.js"></script>
 </body>
 
