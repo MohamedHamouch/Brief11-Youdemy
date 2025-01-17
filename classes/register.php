@@ -25,13 +25,17 @@ trait Register
 
       $hashedPass = password_hash($this->password, PASSWORD_DEFAULT);
 
-      $query = "INSERT INTO users (email, first_name, last_name, password) 
-                VALUES (:email, :first_name, :last_name, :password)";
+      $query = "INSERT INTO users (email, first_name, last_name, password, role, is_active, is_suspended) 
+                VALUES (:email, :first_name, :last_name, :password, :role, :is_active, :is_suspended)";
+
       $stmt = $db->prepare($query);
       $stmt->bindParam(':email', $this->email);
       $stmt->bindParam(':first_name', $this->first_name);
       $stmt->bindParam(':last_name', $this->last_name);
       $stmt->bindParam(':password', $hashedPass);
+      $stmt->bindParam(':role', $role);
+      $stmt->bindParam(':is_active', $is_active);
+      $stmt->bindParam(':is_suspended', $is_suspended);
 
       if ($stmt->execute()) {
         return true;
