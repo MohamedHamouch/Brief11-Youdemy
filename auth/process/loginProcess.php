@@ -10,7 +10,7 @@ require_once '../../classes/admin.php';
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   if (isset($_POST['email']) && isset($_POST['password'])) {
 
-    $email = test_input($_POST['email']);
+    $email = trim($_POST['email']);
     $password = $_POST['password'];
 
     $role = User::getUserRole($PDOConn, $email);
@@ -37,7 +37,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 
     if ($status === true) {
-      $_SESSION['user'] = $user;
+      $_SESSION['user'] = serialize($user);
       header('Location: ../../index.php');
       exit();
     } else {
