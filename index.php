@@ -1,3 +1,21 @@
+<?php
+session_start();
+require_once 'config/database.php';
+require_once 'classes/course.php';
+require_once 'classes/videoCourse.php';
+require_once 'classes/documentCourse.php';
+require_once 'classes/student.php';
+require_once 'classes/teacher.php';
+require_once 'classes/admin.php';
+
+if (isset($_SESSION['user'])) {
+  $user = unserialize($_SESSION['user']);
+  $connected = true;
+} else {
+  $connected = false;
+}
+
+?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -31,24 +49,50 @@
               <li>
                 <a href="#" class="text-gray-600 hover:text-orange-600 transition-colors duration-300">Courses</a>
               </li>
-              <li class="relative">
-                <button id="dropdownButton"
-                  class="flex items-center space-x-2 bg-orange-50 text-orange-700 px-4 py-2 rounded-full hover:bg-orange-100 transition-colors duration-300">
-                  <i class="fas fa-user-circle text-lg"></i>
-                  <span>John Doe</span>
-                  <i class="fas fa-chevron-down text-sm"></i>
-                </button>
-                <div id="dropdownMenu"
-                  class="hidden w-full absolute mt-2 bg-white rounded-xl shadow-lg py-2 border border-gray-100">
-                  <a href="#"
-                    class="block px-4 py-2 text-sm text-gray-700 hover:bg-orange-50 hover:text-orange-700">Profile</a>
-                  <a href="#"
-                    class="block px-4 py-2 text-sm text-gray-700 hover:bg-orange-50 hover:text-orange-700">Admin
-                    Dashboard</a>
-                  <a href="#"
-                    class="block px-4 py-2 text-sm text-gray-700 hover:bg-orange-50 hover:text-red-700">Logout</a>
-                </div>
+              <li>
+                <a href="#" class="text-gray-600 hover:text-orange-600 transition-colors duration-300">Contact</a>
               </li>
+              <?php
+              if (!$connected) {
+                echo '<li>
+                <a href="auth/login.php"
+                  class="flex items-center space-x-2 bg-orange-50 text-orange-700 px-4 py-2 rounded-full hover:bg-orange-100 transition-colors duration-300">
+                  <i class="fas fa-sign-in-alt text-lg"></i>
+                  <span>Sign In</span>
+                </a>
+              </li>';
+              } else {
+                ?>
+                <li class="relative">
+                  <button id="dropdownButton"
+                    class="flex items-center space-x-2 bg-orange-50 text-orange-700 px-4 py-2 rounded-full hover:bg-orange-100 transition-colors duration-300">
+                    <i class="fas fa-user-circle text-lg"></i>
+                    <span><?= $user ?></span>
+                    <i class="fas fa-chevron-down text-sm"></i>
+                  </button>
+                  <div id="dropdownMenu"
+                    class="hidden w-full absolute mt-2 bg-white rounded-xl shadow-lg py-2 border border-gray-100">
+                    <a href="#"
+                      class="block px-4 py-2 text-sm text-gray-700 hover:bg-orange-50 hover:text-orange-700">Profile</a>
+                    <?php
+                    if ($user instanceof Admin) {
+                      echo '<a href="#"
+                      class="block px-4 py-2 text-sm text-gray-700 hover:bg-orange-50 hover:text-orange-700">Admin Dashboard</a>';
+                    } elseif ($user instanceof Teacher) {
+                      echo '<a href="#"
+                      class="block px-4 py-2 text-sm text-gray-700 hover:bg-orange-50 hover:text-orange-700">Teacher Dashboard</a>';
+                    } elseif ($user instanceof Student) {
+                      echo '<a href="#"
+                      class="block px-4 py-2 text-sm text-gray-700 hover:bg-orange-50 hover:text-orange-700">My Courses</a>';
+                    }
+                    ?>
+                    <a href="auth/process/logout.php"
+                      class="block px-4 py-2 text-sm text-gray-700 hover:bg-orange-50 hover:text-red-700">Logout</a>
+                  </div>
+                </li>
+                <?php
+              }
+              ?>
             </ul>
           </nav>
         </div>
@@ -59,8 +103,10 @@
   <section class="pt-24 pb-12 bg-gradient-to-b from-orange-100 to-white">
     <div class="container mx-auto px-4 py-16 text-center">
       <h1 class="text-4xl md:text-5xl font-bold text-gray-900 mb-6">Welcome to Youdemy</h1>
-      <p class="text-xl text-gray-600 mb-8 max-w-2xl mx-auto">Join our global community of learners and instructors.
-        Whether you're here to master new skills or share your expertise, Youdemy is your platform for growth.</p>
+      <p class="text-xl text-gray-600 mb-8 max-w-2xl mx-auto">Join our global community of learners and
+        instructors.
+        Whether you're here to master new skills or share your expertise, Youdemy is your platform for growth.
+      </p>
       <a href="#"
         class="inline-block bg-orange-500 text-white px-8 py-3 rounded-full font-medium hover:bg-orange-600 transform hover:-translate-y-0.5 transition">
         Start Today
