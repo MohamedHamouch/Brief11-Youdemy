@@ -65,6 +65,16 @@ abstract class User
     return $this->created_at;
   }
 
+  public function setFirstName($first_name)
+  {
+    $this->first_name = $first_name;
+  }
+
+  public function setLastName($last_name)
+  {
+    $this->last_name = $last_name;
+  }
+
   //static methods
   public static function getUserRole($db, $email)
   {
@@ -116,6 +126,20 @@ abstract class User
     $this->is_suspended = $user['is_suspended'];
 
     return $user;
+  }
+
+  public function updateProfile($db)
+  {
+    $query = "UPDATE users SET first_name = :first_name, last_name = :last_name WHERE id = :id";
+    $stmt = $db->prepare($query);
+    $stmt->bindParam(':first_name', $this->first_name);
+    $stmt->bindParam(':last_name', $this->last_name);
+    $stmt->bindParam(':id', $this->id);
+    if ($stmt->execute()) {
+      return true;
+    } else {
+      return false;
+    }
   }
   public function login($db)
   {
