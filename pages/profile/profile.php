@@ -92,6 +92,27 @@ if (isset($_SESSION['user'])) {
         <div class="px-6 py-4 bg-orange-50 border-b border-gray-100">
           <h1 class="text-xl font-semibold text-gray-800">Profile Information</h1>
         </div>
+        <div class="px-6 pt-6">
+          <?php if (isset($_SESSION['updateProfileError'])) { ?>
+            <div class="mb-6 rounded-lg border border-red-100 bg-red-50 px-4 py-3 text-sm text-red-600">
+              <div class="flex items-center space-x-2">
+                <i class="fas fa-circle-exclamation"></i>
+                <p><?= $_SESSION['updateProfileError'] ?></p>
+              </div>
+            </div>
+            <?php unset($_SESSION['updateProfileError']); ?>
+          <?php } ?>
+
+          <?php if (isset($_SESSION['updateProfileSuccess'])) { ?>
+            <div class="mb-6 rounded-lg border border-green-100 bg-green-50 px-4 py-3 text-sm text-green-600">
+              <div class="flex items-center space-x-2">
+                <i class="fas fa-circle-check"></i>
+                <p><?= $_SESSION['updateProfileSuccess'] ?></p>
+              </div>
+            </div>
+            <?php unset($_SESSION['updateProfileSuccess']); ?>
+          <?php } ?>
+        </div>
         <div class="p-6 space-y-6">
           <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div>
@@ -123,7 +144,7 @@ if (isset($_SESSION['user'])) {
     </div>
   </main>
 
-  <!-- Update Profile Modal -->
+  <!-- Update profile -->
   <div id="formPopup" class="hidden fixed inset-0 bg-black bg-opacity-50 items-center justify-center z-50">
     <div class="bg-white rounded-xl shadow-lg max-w-md w-full mx-4">
       <div class="rounded-t-xl bg-orange-50 px-6 py-4 border-b border-gray-100 flex justify-between items-center">
@@ -134,7 +155,7 @@ if (isset($_SESSION['user'])) {
       </div>
 
       <div class="p-6">
-        <form id="updateProfileForm" class="space-y-4" action="processes/update_profile.php" method="POST">
+        <form id="updateProfileForm" class="space-y-4" action="process/updateProfile.php" method="POST">
           <div>
             <label for="updateFirstName" class="block text-sm font-medium text-gray-700 mb-2">First
               Name</label>
