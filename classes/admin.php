@@ -5,7 +5,7 @@ require_once 'user.php';
 class Admin extends User
 {
 
-  public function __construct($first_name, $last_name, $email, $password, $role = 'admin', $is_active = true, $is_suspended = false)
+  public function __construct($first_name, $last_name, $email, $password = null, $role = 'admin', $is_active = true, $is_suspended = false)
   {
 
     $this->first_name = $first_name;

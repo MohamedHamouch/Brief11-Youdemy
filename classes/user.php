@@ -65,6 +65,19 @@ abstract class User
     return $this->created_at;
   }
 
+  //static methods
+  public static function getUserRole($db, $email)
+  {
+    $query = "SELECT role FROM users WHERE email = :email";
+    $stmt = $db->prepare($query);
+    $stmt->bindParam(':email', $email);
+    $stmt->execute();
+    $role = $stmt->fetch(PDO::FETCH_ASSOC);
+
+    return $role['role'];
+  }
+
+  //methods
   public function loadUserByEmail($db)
   {
     $query = "SELECT * FROM users WHERE email = :email";
@@ -106,7 +119,7 @@ abstract class User
   }
   public function login($db)
   {
-    $query = "SELECT * FROM user WHERE email = :email";
+    $query = "SELECT * FROM users WHERE email = :email";
     $stmt = $db->prepare($query);
     $stmt->bindParam(":email", $this->email);
     $stmt->execute();
@@ -124,7 +137,7 @@ abstract class User
   {
     session_unset();
     session_destroy();
-    return header('Location: login.php');
+    return true;
   }
 
 }

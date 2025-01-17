@@ -7,7 +7,7 @@ class Teacher extends User
 {
   use Register;
 
-  public function __construct($first_name, $last_name, $email, $password, $role = 'teacher', $is_active = false, $is_suspended = false)
+  public function __construct($first_name, $last_name, $email, $password = null, $role = 'teacher', $is_active = false, $is_suspended = false)
   {
 
     $this->first_name = $first_name;

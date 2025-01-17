@@ -1,12 +1,12 @@
 <?php
 
 require_once 'user.php';
-
+require_once 'register.php';
 class Student extends User
 {
   use Register;
 
-  public function __construct($first_name, $last_name, $email, $password, $role = 'student', $is_active = true, $is_suspended = false)
+  public function __construct($first_name, $last_name, $email, $password = null, $role = 'student', $is_active = true, $is_suspended = false)
   {
 
     $this->first_name = $first_name;
