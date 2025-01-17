@@ -22,7 +22,8 @@ trait Register
       if ($this->password !== $confirmPass) {
         return "Passwords do not match.";
       }
-
+      $is_active = $this->is_active ? 1 : 0;
+      $is_suspended = $this->is_suspended ? 1 : 0;
       $hashedPass = password_hash($this->password, PASSWORD_DEFAULT);
 
       $query = "INSERT INTO users (email, first_name, last_name, password, role, is_active, is_suspended) 
@@ -33,7 +34,7 @@ trait Register
       $stmt->bindParam(':first_name', $this->first_name);
       $stmt->bindParam(':last_name', $this->last_name);
       $stmt->bindParam(':password', $hashedPass);
-      $stmt->bindParam(':role', $role);
+      $stmt->bindParam(':role', $this->role);
       $stmt->bindParam(':is_active', $is_active);
       $stmt->bindParam(':is_suspended', $is_suspended);
 
