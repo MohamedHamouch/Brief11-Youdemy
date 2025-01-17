@@ -1,3 +1,13 @@
+<?php
+session_start();
+if (isset($_SESSION['user'])) {
+  header('Location: ../index.php');
+  exit();
+}
+
+
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -45,7 +55,7 @@
     </div>
   </header>
 
-  <main class="flex-grow flex items-center justify-center pt-24 pb-16">
+  <main class="flex-grow flex items-center justify-center p-4">
     <div class="container mx-auto px-4">
       <div class="max-w-md mx-auto">
         <div class="bg-white rounded-xl shadow-sm p-8">
@@ -59,16 +69,16 @@
             </p>
           </div>
 
-          <?php if (isset($_SESSION['register_error'])) { ?>
+          <?php if (isset($_SESSION['registerError'])) { ?>
             <div class="bg-red-50 text-red-500 text-sm p-4 rounded-lg mb-6">
-              <?= $_SESSION['register_error'] ?>
+              <?= $_SESSION['registerError'] ?>
             </div>
-            <?php unset($_SESSION['register_error']); ?>
+            <?php unset($_SESSION['registerError']); ?>
           <?php } ?>
 
-          <form action="../test.php" method="POST">
+          <form action="process/registerProcess.php" method="POST">
             <div class="space-y-6">
-              <!-- Role Selection -->
+
               <div class="grid grid-cols-2 gap-4">
                 <label class="relative cursor-pointer">
                   <input type="radio" name="role" value="student" class="peer sr-only" checked>
@@ -91,8 +101,7 @@
               </div>
 
               <div>
-                <label for="email" class="block text-sm font-medium text-gray-700 mb-2">Email
-                  address</label>
+                <label for="email" class="block text-sm font-medium text-gray-700 mb-2">Email address</label>
                 <input type="email" name="email" id="email" required
                   class="w-full px-4 py-3 rounded-lg border border-gray-200 focus:ring-2 focus:ring-orange-500 focus:border-transparent transition"
                   placeholder="Enter your email">
@@ -100,15 +109,13 @@
 
               <div class="grid grid-cols-2 gap-4">
                 <div>
-                  <label for="first_name" class="block text-sm font-medium text-gray-700 mb-2">First
-                    name</label>
+                  <label for="first_name" class="block text-sm font-medium text-gray-700 mb-2">First name</label>
                   <input type="text" name="first_name" id="first_name" required
                     class="w-full px-4 py-3 rounded-lg border border-gray-200 focus:ring-2 focus:ring-orange-500 focus:border-transparent transition"
                     placeholder="First name">
                 </div>
                 <div>
-                  <label for="last_name" class="block text-sm font-medium text-gray-700 mb-2">Last
-                    name</label>
+                  <label for="last_name" class="block text-sm font-medium text-gray-700 mb-2">Last name</label>
                   <input type="text" name="last_name" id="last_name" required
                     class="w-full px-4 py-3 rounded-lg border border-gray-200 focus:ring-2 focus:ring-orange-500 focus:border-transparent transition"
                     placeholder="Last name">
