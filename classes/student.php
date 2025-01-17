@@ -4,6 +4,7 @@ require_once 'user.php';
 
 class Student extends User
 {
+  use Register;
 
   public function __construct($first_name, $last_name, $email, $password, $role = 'student', $is_active = true, $is_suspended = false)
   {
@@ -18,4 +19,21 @@ class Student extends User
     $this->created_at = date('Y-m-d H:i:s');
   }
 
+  public static function getAllsutdents(PDO $db)
+  {
+    $query = "SELECT * FROM users WHERE role = 'student'";
+    $stmt = $db->query($query);
+    return $stmt->fetchAll();
+  }
+  public function enrollCourse(PDO $db, $course_id)
+  {
+    $query = "INSERT INTO enrollment (student_id, course_id) VALUES (:student_id, :course_id)";
+    $stmt = $db->prepare($query);
+    $stmt->bindParam(':student_id', $this->id);
+    $stmt->bindParam(':course_id', $course_id);
+    $stmt->execute();
+  }
+
 }
+
+?>

@@ -1,9 +1,11 @@
 <?php
 
 require_once 'user.php';
+require_once 'register.php';
 
 class Teacher extends User
 {
+  use Register;
 
   public function __construct($first_name, $last_name, $email, $password, $role = 'teacher', $is_active = false, $is_suspended = false)
   {
@@ -18,4 +20,10 @@ class Teacher extends User
     $this->created_at = date('Y-m-d H:i:s');
   }
 
+  public static function getAllTeachers(PDO $db)
+  {
+    $query = "SELECT * FROM users WHERE role = 'teacher'";
+    $stmt = $db->query($query);
+    return $stmt->fetchAll();
+  }
 }
