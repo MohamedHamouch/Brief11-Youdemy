@@ -44,7 +44,7 @@ if (isset($_SESSION['user'])) {
               <li>
                 <a href="login.php"
                   class="flex items-center space-x-2 bg-orange-50 text-orange-700 px-4 py-2 rounded-full hover:bg-orange-100 transition-colors duration-300">
-                  <i class="fas fa-user-circle text-lg"></i>
+                  <i class="fas fa-sign-in-alt text-lg"></i>
                   <span>Sign In</span>
                 </a>
               </li>
