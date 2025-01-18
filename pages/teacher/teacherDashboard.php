@@ -5,6 +5,9 @@ require_once '../../classes/teacher.php';
 require_once '../../classes/course.php';
 require_once '../../classes/videoCourse.php';
 require_once '../../classes/documentCourse.php';
+require_once '../../classes/category.php';
+require_once '../../classes/tag.php';
+
 
 if (isset($_SESSION['user'])) {
   $user = unserialize($_SESSION['user']);
@@ -16,6 +19,9 @@ if (isset($_SESSION['user'])) {
   header('Location: ../auth/login.php');
   exit();
 }
+
+$tags = Tag::getAllTags($PDOConn);
+$categories = Category::getAllCategories($PDOConn);
 
 ?>
 <!DOCTYPE html>
@@ -184,12 +190,10 @@ if (isset($_SESSION['user'])) {
             <select id="courseCategory" name="category" required
               class="w-full px-4 py-3 rounded-lg border border-gray-200 focus:ring-2 focus:ring-orange-500 focus:border-transparent transition">
               <option value="" selected disabled>Select a category</option>
-              <option value="programming">Programming</option>
-              <option value="design">Design</option>
-              <option value="business">Business</option>
-              <option value="marketing">Marketing</option>
-              <option value="music">Music</option>
-              <option value="photography">Photography</option>
+              <?php foreach ($categories as $category): ?>
+                <option value="<?= htmlspecialchars($category['id']) ?>"><?= htmlspecialchars($category['name']) ?>
+                </option>
+              <?php endforeach; ?>
             </select>
           </div>
 
@@ -198,14 +202,9 @@ if (isset($_SESSION['user'])) {
             <label for="courseTags" class="block text-sm font-medium text-gray-700 mb-2">Tags</label>
             <select id="courseTags" name="tags[]" multiple required
               class="w-full px-4 py-3 rounded-lg border border-gray-200 focus:ring-2 focus:ring-orange-500 focus:border-transparent transition">
-              <option value="beginner">Beginner</option>
-              <option value="intermediate">Intermediate</option>
-              <option value="advanced">Advanced</option>
-              <option value="web">Web</option>
-              <option value="mobile">Mobile</option>
-              <option value="database">Database</option>
-              <option value="ui">UI</option>
-              <option value="ux">UX</option>
+              <?php foreach ($tags as $tag): ?>
+                <option value="<?= htmlspecialchars($tag['id']) ?>"><?= htmlspecialchars($tag['name']) ?></option>
+              <?php endforeach; ?>
             </select>
             <p class="mt-1 text-sm text-gray-500">Hold Ctrl (Cmd on Mac) to select multiple tags</p>
           </div>
