@@ -91,6 +91,21 @@ $categories = Category::getAllCategories($PDOConn);
         <p class="text-gray-600 mt-2">Manage your courses and view statistics</p>
       </div>
 
+      <!-- error/success msg -->
+      <?php if (isset($_SESSION['actionError'])) { ?>
+        <div class="bg-red-50 text-red-500 text-sm p-4 rounded-lg mb-6">
+          <?= $_SESSION['actionError'] ?>
+        </div>
+        <?php unset($_SESSION['actionError']); ?>
+      <?php } ?>
+
+      <?php if (isset($_SESSION['actionSucces'])) { ?>
+        <div class="bg-green-50 text-green-500 text-sm p-4 rounded-lg mb-6">
+          <?= $_SESSION['actionSucces'] ?>
+        </div>
+        <?php unset($_SESSION['actionSucces']); ?>
+      <?php } ?>
+
       <!-- Navigation -->
       <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden mb-6">
         <div class="flex flex-wrap">
@@ -112,7 +127,7 @@ $categories = Category::getAllCategories($PDOConn);
         </div>
       </div>
 
-      <!-- Sections -->
+      <!-- form add cours -->
       <div id="newCourse" class="contentSection flex bg-white rounded-xl shadow-sm p-6 border border-gray-100">
         <form class="w-full space-y-6" action="process/addCourse.php" method="POST" enctype="multipart/form-data">
           <!-- Title -->
@@ -142,14 +157,14 @@ $categories = Category::getAllCategories($PDOConn);
                   <p class="text-sm text-gray-500 text-center">
                     <span class="font-medium">Click to upload</span> or drag and drop
                   </p>
-                  <p class="text-xs text-gray-500">PNG, JPG or JPEG (MAX. 2MB)</p>
+                  <p class="text-xs text-gray-500">PNG, JPG or JPEG (MAX. 5MB)</p>
                 </div>
                 <input id="courseCover" name="image" type="file" class="hidden" accept="image/png, image/jpeg" required>
               </label>
             </div>
           </div>
 
-          <!-- Content Type -->
+          <!-- Type -->
           <div>
             <label for="courseType" class="block text-sm font-medium text-gray-700 mb-2">Content Type</label>
             <select id="courseType" name="type" required
@@ -159,7 +174,7 @@ $categories = Category::getAllCategories($PDOConn);
             </select>
           </div>
 
-          <!-- Dynamic Content Input -->
+          <!-- content text/video -->
           <div id="documentContent" class="">
             <label for="courseDocument" class="block text-sm font-medium text-gray-700 mb-2">Course Content</label>
             <textarea id="courseDocument" name="text" rows="8"
@@ -177,14 +192,15 @@ $categories = Category::getAllCategories($PDOConn);
                   <p class="text-sm text-gray-500">
                     <span class="font-medium">Upload video file</span>
                   </p>
-                  <p class="text-xs text-gray-500">MP4 or WebM (MAX. 500MB)</p>
+                  <p class="text-xs text-gray-500">MP4, MKV or WebM (MAX. 100MB)</p>
                 </div>
-                <input id="courseVideo" name="video" type="file" class="hidden" accept="video/mp4,video/webm">
+                <input id="courseVideo" name="video" type="file" class="hidden" accept="video/mp4,video/webm,video/mkv"
+                  required>
               </label>
             </div>
           </div>
 
-          <!-- Category -->
+          <!-- category -->
           <div>
             <label for="courseCategory" class="block text-sm font-medium text-gray-700 mb-2">Category</label>
             <select id="courseCategory" name="category" required
@@ -209,7 +225,7 @@ $categories = Category::getAllCategories($PDOConn);
             <p class="mt-1 text-sm text-gray-500">Hold Ctrl (Cmd on Mac) to select multiple tags</p>
           </div>
 
-          <!-- Submit Button -->
+          <!-- submit -->
           <div class="flex justify-end">
             <button type="submit"
               class="bg-orange-500 text-white px-8 py-3 rounded-full hover:bg-orange-600 transform hover:-translate-y-0.5 transition">
