@@ -2,13 +2,14 @@
 session_start();
 require_once '../../config/database.php';
 require_once '../../classes/Admin.php';
+require_once '../../classes/Teacher.php';
+require_once '../../classes/User.php';
 require_once '../../classes/course.php';
 require_once '../../classes/videoCourse.php';
 require_once '../../classes/documentCourse.php';
 require_once '../../classes/category.php';
 require_once '../../classes/tag.php';
 
-require_once '../../classes/Teacher.php';
 
 if (isset($_SESSION['user'])) {
   $user = unserialize($_SESSION['user']);
@@ -21,6 +22,9 @@ if (isset($_SESSION['user'])) {
   exit();
 }
 
+$activeUsers = User::getActiveUsers($PDOConn);
+$suspendedUsers = User::getSuspendedUsers($PDOConn);
+$pendingTeachers = Teacher::getPendingTeachers($PDOConn);
 $tags = Tag::getAllTags($PDOConn);
 $categories = Category::getAllCategories($PDOConn);
 
@@ -100,10 +104,15 @@ $categories = Category::getAllCategories($PDOConn);
             <i class="fas fa-chart-bar"></i>
             <span>Statistics</span>
           </button>
-          <button data-section="users"
+          <button data-section="activeUsers"
             class="dashboard-nav-btn flex items-center space-x-2 px-6 py-4 text-gray-600 hover:text-orange-600 font-medium">
             <i class="fas fa-users"></i>
-            <span>Manage Users</span>
+            <span>Active Users</span>
+          </button>
+          <button data-section="suspendedUsers"
+            class="dashboard-nav-btn flex items-center space-x-2 px-6 py-4 text-gray-600 hover:text-orange-600 font-medium">
+            <i class="fas fa-user-slash"></i>
+            <span>Suspended Users</span>
           </button>
           <button data-section="teachers"
             class="dashboard-nav-btn flex items-center space-x-2 px-6 py-4 text-gray-600 hover:text-orange-600 font-medium">
@@ -123,6 +132,7 @@ $categories = Category::getAllCategories($PDOConn);
         </div>
       </div>
 
+
       <!-- Sections -->
       <div id="statistics" class="contentSection flex bg-white rounded-xl shadow-sm p-6 border border-gray-100">
         <div class="w-full text-center text-gray-500">
@@ -131,16 +141,173 @@ $categories = Category::getAllCategories($PDOConn);
         </div>
       </div>
 
-      <div id="users" class="contentSection hidden bg-white rounded-xl shadow-sm p-6 border border-gray-100">
-        <div class="w-full text-center text-gray-500">
-          <i class="fas fa-users text-4xl mb-4"></i>
-          <p>User Management Section - Content Coming Soon</p>
+      <!-- active users -->
+      <div id="activeUsers" class="contentSection hidden bg-white rounded-xl shadow-sm p-6 border border-gray-100">
+        <div class="overflow-x-auto mx-auto bg-white shadow-md rounded-lg w-full max-w-4xl">
+          <table class="min-w-full table-auto">
+            <thead class="bg-orange-100 text-gray-800">
+              <tr>
+                <th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">Full Name</th>
+                <th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">Email</th>
+                <th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">Joined</th>
+                <th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">Role</th>
+                <th class="px-6 py-3 text-center text-xs font-medium uppercase tracking-wider">Actions</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-gray-200">
+              <?php foreach ($activeUsers as $user): ?>
+                <tr class="hover:bg-gray-50">
+                  <td class="px-6 py-4 text-sm text-gray-900">
+                    <?= htmlspecialchars($user['first_name'] . ' ' . $user['last_name']) ?>
+                  </td>
+                  <td class="px-6 py-4 text-sm text-gray-900">
+                    <?= htmlspecialchars($user['email']) ?>
+                  </td>
+                  <td class="px-6 py-4 text-sm text-gray-900">
+                    <?= date('F j, Y', strtotime($user['created_at'])) ?>
+                  </td>
+                  <td class="px-6 py-4 text-sm text-gray-900">
+                    <?= htmlspecialchars(ucfirst($user['role'])) ?>
+                    <?php if ($user['role'] === 'student'): ?>
+                      <i class="fas fa-user-graduate text-blue-500"></i>
+                    <?php elseif ($user['role'] === 'teacher'): ?>
+                      <i class="fas fa-chalkboard-teacher text-green-500"></i>
+                    <?php elseif ($user['role'] === 'admin'): ?>
+                      <i class="fas fa-user-shield text-red-500"></i>
+                    <?php endif; ?>
+                  </td>
+                  <td class="px-6 py-4 text-center text-sm font-medium">
+                    <?php if ($user['role'] !== 'admin'): ?>
+                      <div class="flex justify-center gap-4">
+                        <form action="process/suspendUser.php" method="POST" class="inline">
+                          <input type="hidden" name="userId" value="<?= htmlspecialchars($user['id']) ?>">
+                          <button type="submit"
+                            class="text-yellow-600 hover:text-yellow-800 transform hover:scale-110 transition duration-200">
+                            <i class="fas fa-ban"></i>
+                          </button>
+                        </form>
+                        <form action="process/deleteUser.php" method="POST" class="inline">
+                          <input type="hidden" name="userId" value="<?= htmlspecialchars($user['id']) ?>">
+                          <button type="submit"
+                            class="text-red-600 hover:text-red-800 transform hover:rotate-12 transition duration-200">
+                            <i class="fas fa-trash"></i>
+                          </button>
+                        </form>
+                      </div>
+                    <?php else: ?>
+                      <span class="text-gray-400">No Actions</span>
+                    <?php endif; ?>
+                  </td>
+                </tr>
+              <?php endforeach; ?>
+            </tbody>
+          </table>
         </div>
       </div>
 
-      <div id="teachers" class="contentSection hidden bg-white rounded-xl shadow-sm p-6 border border-gray-100">
 
+      <!-- Suspended Users -->
+      <div id="suspendedUsers" class="contentSection hidden bg-white rounded-xl shadow-sm p-6 border border-gray-100">
+        <div class="overflow-x-auto mx-auto bg-white shadow-md rounded-lg w-full max-w-4xl">
+          <table class="min-w-full table-auto">
+            <thead class="bg-red-100 text-gray-800">
+              <tr>
+                <th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">Full Name</th>
+                <th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">Email</th>
+                <th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">Joined</th>
+                <th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">Role</th>
+                <th class="px-6 py-3 text-center text-xs font-medium uppercase tracking-wider">Actions</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-gray-200">
+              <?php foreach ($suspendedUsers as $user): ?>
+                <?php if ($user['role'] !== 'admin'): ?>
+                  <tr class="hover:bg-gray-50">
+                    <td class="px-6 py-4 text-sm text-gray-900">
+                      <?= htmlspecialchars($user['first_name'] . ' ' . $user['last_name']) ?>
+                    </td>
+                    <td class="px-6 py-4 text-sm text-gray-900">
+                      <?= htmlspecialchars($user['email']) ?>
+                    </td>
+                    <td class="px-6 py-4 text-sm text-gray-900">
+                      <?= date('F j, Y', strtotime($user['created_at'])) ?>
+                    </td>
+                    <td class="px-6 py-4 text-sm text-gray-900">
+                      <?= htmlspecialchars(ucfirst($user['role'])) ?>
+                      <?php if ($user['role'] === 'student'): ?>
+                        <i class="fas fa-user-graduate text-blue-500"></i>
+                      <?php elseif ($user['role'] === 'teacher'): ?>
+                        <i class="fas fa-chalkboard-teacher text-green-500"></i>
+                      <?php endif; ?>
+                    </td>
+                    <td class="px-6 py-4 text-center text-sm font-medium">
+                      <div class="flex justify-center gap-4">
+                        <form action="process/unsuspendUser.php" method="POST" class="inline">
+                          <input type="hidden" name="userId" value="<?= htmlspecialchars($user['id']) ?>">
+                          <button type="submit"
+                            class="text-green-600 hover:text-green-800 transform hover:scale-110 transition duration-200">
+                            <i class="fas fa-check"></i>
+                          </button>
+                        </form>
+                        <form action="process/deleteUser.php" method="POST" class="inline">
+                          <input type="hidden" name="userId" value="<?= htmlspecialchars($user['id']) ?>">
+                          <button type="submit"
+                            class="text-red-600 hover:text-red-800 transform hover:rotate-12 transition duration-200">
+                            <i class="fas fa-trash"></i>
+                          </button>
+                        </form>
+                      </div>
+                    </td>
+                  </tr>
+                <?php endif; ?>
+              <?php endforeach; ?>
+            </tbody>
+          </table>
+        </div>
       </div>
+
+
+      <!-- teacher section -->
+      <div id="teachers" class="contentSection hidden bg-white rounded-xl shadow-sm p-6 border border-gray-100">
+        <div class="overflow-x-auto mx-auto bg-white shadow-md rounded-lg w-full max-w-4xl">
+          <table class="min-w-full table-auto">
+            <thead class="bg-orange-100 text-gray-800">
+              <tr>
+                <th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">Full Name</th>
+                <th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">Email</th>
+                <th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">Joined</th>
+                <th class="px-6 py-3 text-center text-xs font-medium uppercase tracking-wider">Actions</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-gray-200">
+              <?php foreach ($pendingTeachers as $teacher): ?>
+                <tr class="hover:bg-gray-50">
+                  <td class="px-6 py-4 text-sm text-gray-900">
+                    <?= htmlspecialchars("{$teacher['first_name']} {$teacher['last_name']}") ?>
+                  </td>
+                  <td class="px-6 py-4 text-sm text-gray-900"><?= htmlspecialchars($teacher['email']) ?></td>
+                  <td class="px-6 py-4 text-sm text-gray-900"><?= date('F j, Y', strtotime($teacher['created_at'])) ?>
+                  </td>
+                  <td class="px-6 py-4 text-center text-sm font-medium">
+                    <form action="process/approveTeacher.php" method="POST" class="inline">
+                      <input type="hidden" name="teacherId" value="<?= htmlspecialchars($teacher['id']) ?>">
+                      <button type="submit"
+                        class="bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600 transition-colors">
+                        <i class="fas fa-check-circle"></i>
+                        <span class="inline-block">Approve</span>
+                      </button>
+                    </form>
+                  </td>
+                </tr>
+              <?php endforeach; ?>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+
+
+
 
 
 
@@ -252,7 +419,7 @@ $categories = Category::getAllCategories($PDOConn);
           </form>
         </div>
 
-        <div class="overflow-x-auto bg-white shadow-md rounded-lg">
+        <div class="w-8/12 mx-auto overflow-x-auto bg-white shadow-md rounded-lg">
           <table class="min-w-full table-auto">
             <thead class="bg-orange-100 text-gray-800">
               <tr>
