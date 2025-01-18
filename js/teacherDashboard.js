@@ -25,3 +25,45 @@ navButtons.forEach(button => {
   });
 });
 
+
+// Handle content type toggle
+const courseType = document.querySelector('#courseType');
+const documentContent = document.querySelector('#documentContent');
+const videoContent = document.querySelector('#videoContent');
+
+courseType.addEventListener('change', () => {
+  if (courseType.value === 'document') {
+    documentContent.classList.remove('hidden');
+    videoContent.classList.add('hidden');
+    courseVideo.removeAttribute('required');
+    courseDocument.setAttribute('required', '');
+  } else if (courseType.value === 'video') {
+    documentContent.classList.add('hidden');
+    videoContent.classList.remove('hidden');
+    courseDocument.removeAttribute('required');
+    courseVideo.setAttribute('required', '');
+  } else {
+    documentContent.classList.add('hidden');
+    videoContent.classList.add('hidden');
+    courseDocument.removeAttribute('required');
+    courseVideo.removeAttribute('required');
+  }
+});
+
+const coverInput = document.querySelector('#courseCover');
+coverInput.addEventListener('change', (e) => {
+  const fileName = e.target.files[0]?.name;
+  if (fileName) {
+    const fileText = coverInput.parentElement.querySelector('p');
+    fileText.textContent = `Selected: ${fileName}`;
+  }
+});
+
+const videoInput = document.querySelector('#courseVideo');
+videoInput.addEventListener('change', (e) => {
+  const fileName = e.target.files[0]?.name;
+  if (fileName) {
+    const fileText = videoInput.parentElement.querySelector('p');
+    fileText.textContent = `Selected: ${fileName}`;
+  }
+});

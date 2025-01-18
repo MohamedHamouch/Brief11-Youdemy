@@ -108,11 +108,118 @@ if (isset($_SESSION['user'])) {
 
       <!-- Sections -->
       <div id="newCourse" class="contentSection flex bg-white rounded-xl shadow-sm p-6 border border-gray-100">
-        <div class="w-full text-center text-gray-500">
-          <i class="fas fa-plus-circle text-4xl mb-4"></i>
-          <p>New Course Section - Content Coming Soon</p>
-        </div>
+        <form class="w-full space-y-6" action="process/addCourse.php" method="POST" enctype="multipart/form-data">
+          <!-- Title -->
+          <div>
+            <label for="courseTitle" class="block text-sm font-medium text-gray-700 mb-2">Course Title</label>
+            <input type="text" id="courseTitle" name="title" required
+              class="w-full px-4 py-3 rounded-lg border border-gray-200 focus:ring-2 focus:ring-orange-500 focus:border-transparent transition"
+              placeholder="Enter course title">
+          </div>
+
+          <!-- Description -->
+          <div>
+            <label for="courseDescription" class="block text-sm font-medium text-gray-700 mb-2">Description</label>
+            <textarea id="courseDescription" name="description" rows="4" required
+              class="w-full px-4 py-3 rounded-lg border border-gray-200 focus:ring-2 focus:ring-orange-500 focus:border-transparent transition resize-none"
+              placeholder="Enter course description"></textarea>
+          </div>
+
+          <!-- Cover Image -->
+          <div>
+            <label for="courseCover" class="block text-sm font-medium text-gray-700 mb-2">Cover Image</label>
+            <div class="flex items-center justify-center w-full">
+              <label for="courseCover"
+                class="flex flex-col items-center justify-center w-full h-48 border-2 border-gray-200 border-dashed rounded-lg cursor-pointer bg-gray-50 hover:bg-gray-100 transition">
+                <div class="flex flex-col items-center justify-center pt-5 pb-6">
+                  <i class="fas fa-cloud-upload-alt text-3xl text-gray-400 mb-3"></i>
+                  <p class="text-sm text-gray-500 text-center">
+                    <span class="font-medium">Click to upload</span> or drag and drop
+                  </p>
+                  <p class="text-xs text-gray-500">PNG, JPG or JPEG (MAX. 2MB)</p>
+                </div>
+                <input id="courseCover" name="image" type="file" class="hidden" accept="image/png, image/jpeg" required>
+              </label>
+            </div>
+          </div>
+
+          <!-- Content Type -->
+          <div>
+            <label for="courseType" class="block text-sm font-medium text-gray-700 mb-2">Content Type</label>
+            <select id="courseType" name="type" required
+              class="w-full px-4 py-3 rounded-lg border border-gray-200 focus:ring-2 focus:ring-orange-500 focus:border-transparent transition">
+              <option value="document">Document</option>
+              <option value="video">Video</option>
+            </select>
+          </div>
+
+          <!-- Dynamic Content Input -->
+          <div id="documentContent" class="">
+            <label for="courseDocument" class="block text-sm font-medium text-gray-700 mb-2">Course Content</label>
+            <textarea id="courseDocument" name="text" rows="8"
+              class="w-full px-4 py-3 rounded-lg border border-gray-200 focus:ring-2 focus:ring-orange-500 focus:border-transparent transition resize-none"
+              placeholder="Enter your course content here"></textarea>
+          </div>
+
+          <div id="videoContent" class="hidden">
+            <label for="courseVideo" class="block text-sm font-medium text-gray-700 mb-2">Course Video</label>
+            <div class="flex items-center justify-center w-full">
+              <label for="courseVideo"
+                class="flex flex-col items-center justify-center w-full h-32 border-2 border-gray-200 border-dashed rounded-lg cursor-pointer bg-gray-50 hover:bg-gray-100 transition">
+                <div class="flex flex-col items-center justify-center pt-5 pb-6">
+                  <i class="fas fa-video text-3xl text-gray-400 mb-3"></i>
+                  <p class="text-sm text-gray-500">
+                    <span class="font-medium">Upload video file</span>
+                  </p>
+                  <p class="text-xs text-gray-500">MP4 or WebM (MAX. 500MB)</p>
+                </div>
+                <input id="courseVideo" name="video" type="file" class="hidden" accept="video/mp4,video/webm">
+              </label>
+            </div>
+          </div>
+
+          <!-- Category -->
+          <div>
+            <label for="courseCategory" class="block text-sm font-medium text-gray-700 mb-2">Category</label>
+            <select id="courseCategory" name="category" required
+              class="w-full px-4 py-3 rounded-lg border border-gray-200 focus:ring-2 focus:ring-orange-500 focus:border-transparent transition">
+              <option value="" selected disabled>Select a category</option>
+              <option value="programming">Programming</option>
+              <option value="design">Design</option>
+              <option value="business">Business</option>
+              <option value="marketing">Marketing</option>
+              <option value="music">Music</option>
+              <option value="photography">Photography</option>
+            </select>
+          </div>
+
+          <!-- Tags -->
+          <div>
+            <label for="courseTags" class="block text-sm font-medium text-gray-700 mb-2">Tags</label>
+            <select id="courseTags" name="tags[]" multiple required
+              class="w-full px-4 py-3 rounded-lg border border-gray-200 focus:ring-2 focus:ring-orange-500 focus:border-transparent transition">
+              <option value="beginner">Beginner</option>
+              <option value="intermediate">Intermediate</option>
+              <option value="advanced">Advanced</option>
+              <option value="web">Web</option>
+              <option value="mobile">Mobile</option>
+              <option value="database">Database</option>
+              <option value="ui">UI</option>
+              <option value="ux">UX</option>
+            </select>
+            <p class="mt-1 text-sm text-gray-500">Hold Ctrl (Cmd on Mac) to select multiple tags</p>
+          </div>
+
+          <!-- Submit Button -->
+          <div class="flex justify-end">
+            <button type="submit"
+              class="bg-orange-500 text-white px-8 py-3 rounded-full hover:bg-orange-600 transform hover:-translate-y-0.5 transition">
+              Create Course
+            </button>
+          </div>
+        </form>
       </div>
+
 
       <div id="manageCourses" class="contentSection hidden bg-white rounded-xl shadow-sm p-6 border border-gray-100">
         <div class="w-full text-center text-gray-500">
