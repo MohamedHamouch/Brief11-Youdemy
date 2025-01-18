@@ -13,10 +13,10 @@ require_once '../../classes/tag.php';
 
 if (isset($_SESSION['user'])) {
   $user = unserialize($_SESSION['user']);
-  // if (!($user instanceof Admin)) {
-  //   header('Location: ../../index.php');
-  //   exit();
-  // }
+  if (!($user instanceof Admin)) {
+    header('Location: ../../index.php');
+    exit();
+  }
 } else {
   header('Location: ../auth/login.php');
   exit();
@@ -68,17 +68,17 @@ $categories = Category::getAllCategories($PDOConn);
                 <button id="dropdownButton"
                   class="flex items-center space-x-2 bg-orange-50 text-orange-700 px-4 py-2 rounded-full hover:bg-orange-100 transition-colors duration-300">
                   <i class="fas fa-user-circle text-lg"></i>
-                  <span><?= 'hello' ?></span>
+                  <span><?= $user ?></span>
                   <i class="fas fa-chevron-down text-sm"></i>
                 </button>
                 <div id="dropdownMenu"
                   class="hidden w-full absolute mt-2 bg-white rounded-xl shadow-lg py-2 border border-gray-100">
+                  <a href="../profile/profile.php"
+                    class="block px-4 py-2 text-sm text-gray-700 hover:bg-orange-50 hover:text-orange-700">Profile</a>
                   <a href="#"
-                    class="block px-4 py-2 text-sm text-gray-800 font-medium hover:bg-orange-50 hover:text-orange-700">Profile</a>
-                  <a href="#"
-                    class="block px-4 py-2 text-sm text-gray-700 hover:bg-orange-50 hover:text-orange-700">Admin
+                    class="block px-4 py-2 text-sm text-gray-700 font-medium hover:bg-orange-50 hover:text-orange-700">Admin
                     Dashboard</a>
-                  <a href="#"
+                  <a href="../auth/process/logout.php"
                     class="block px-4 py-2 text-sm text-gray-700 hover:bg-orange-50 hover:text-red-700">Logout</a>
                 </div>
               </li>
@@ -95,6 +95,22 @@ $categories = Category::getAllCategories($PDOConn);
         <h1 class="text-3xl font-bold text-gray-900">Admin Dashboard</h1>
         <p class="text-gray-600 mt-2">Manage users, content, and platform settings</p>
       </div>
+
+      <!-- error/success msg -->
+      <?php if (isset($_SESSION['adminActionError'])) { ?>
+        <div class="bg-red-50 text-red-500 text-sm p-4 rounded-lg mb-6">
+          <?= $_SESSION['adminActionError'] ?>
+        </div>
+        <?php unset($_SESSION['adminActionError']); ?>
+      <?php } ?>
+
+      <?php if (isset($_SESSION['adminActionSuccess'])) { ?>
+        <div class="bg-green-50 text-green-500 text-sm p-4 rounded-lg mb-6">
+          <?= $_SESSION['adminActionSuccess'] ?>
+        </div>
+        <?php unset($_SESSION['adminActionSuccess']); ?>
+      <?php } ?>
+
 
       <!-- Dashboard Navigation -->
       <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden mb-6">
@@ -143,7 +159,7 @@ $categories = Category::getAllCategories($PDOConn);
 
       <!-- active users -->
       <div id="activeUsers" class="contentSection hidden bg-white rounded-xl shadow-sm p-6 border border-gray-100">
-        <div class="overflow-x-auto mx-auto bg-white shadow-md rounded-lg w-full max-w-4xl">
+        <div class="overflow-x-auto mx-auto bg-white shadow-md rounded-lg w-full md:w-3/4">
           <table class="min-w-full table-auto">
             <thead class="bg-orange-100 text-gray-800">
               <tr>
@@ -158,7 +174,7 @@ $categories = Category::getAllCategories($PDOConn);
               <?php foreach ($activeUsers as $user): ?>
                 <tr class="hover:bg-gray-50">
                   <td class="px-6 py-4 text-sm text-gray-900">
-                    <?= htmlspecialchars($user['first_name'] . ' ' . $user['last_name']) ?>
+                    <?= htmlspecialchars("{$user['first_name']}  {$user['last_name']}") ?>
                   </td>
                   <td class="px-6 py-4 text-sm text-gray-900">
                     <?= htmlspecialchars($user['email']) ?>
@@ -224,7 +240,7 @@ $categories = Category::getAllCategories($PDOConn);
                 <?php if ($user['role'] !== 'admin'): ?>
                   <tr class="hover:bg-gray-50">
                     <td class="px-6 py-4 text-sm text-gray-900">
-                      <?= htmlspecialchars($user['first_name'] . ' ' . $user['last_name']) ?>
+                      <?= htmlspecialchars("{$user['first_name']} {$user['last_name']}") ?>
                     </td>
                     <td class="px-6 py-4 text-sm text-gray-900">
                       <?= htmlspecialchars($user['email']) ?>
@@ -269,7 +285,7 @@ $categories = Category::getAllCategories($PDOConn);
 
       <!-- teacher section -->
       <div id="teachers" class="contentSection hidden bg-white rounded-xl shadow-sm p-6 border border-gray-100">
-        <div class="overflow-x-auto mx-auto bg-white shadow-md rounded-lg w-full max-w-4xl">
+        <div class="overflow-x-auto mx-auto bg-white shadow-md rounded-lg w-full md:w-3/4">
           <table class="min-w-full table-auto">
             <thead class="bg-orange-100 text-gray-800">
               <tr>
@@ -304,11 +320,6 @@ $categories = Category::getAllCategories($PDOConn);
           </table>
         </div>
       </div>
-
-
-
-
-
 
 
       <!-- category sectio -->
@@ -419,7 +430,7 @@ $categories = Category::getAllCategories($PDOConn);
           </form>
         </div>
 
-        <div class="w-8/12 mx-auto overflow-x-auto bg-white shadow-md rounded-lg">
+        <div class="w-full md:w-1/2 mx-auto overflow-x-auto bg-white shadow-md rounded-lg">
           <table class="min-w-full table-auto">
             <thead class="bg-orange-100 text-gray-800">
               <tr>
