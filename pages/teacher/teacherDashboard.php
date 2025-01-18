@@ -166,6 +166,8 @@ if (isset($_SESSION['user'])) {
   </footer>
 
   <script src="../../js/menu.js"></script>
+  <script src="../../js/teacherDashboard.js"></script>
+
 </body>
 
 </html>
