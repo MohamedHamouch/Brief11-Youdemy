@@ -28,7 +28,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
   $tags = $_POST['tags'] ?? [];
 
   if (empty($title) || empty($description) || empty($type) || empty($category)) {
-    $_SESSION['actionError'] = 'All fields are required';
+    $_SESSION['teacherActionError'] = 'All fields are required';
     header('Location: ../teacherDashboard.php');
     exit();
   }
@@ -38,14 +38,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $image = $_FILES['image'];
 
     if ($image['size'] > 5 * 1024 * 1024) {
-      $_SESSION['actionError'] = 'Cover image size should not exceed 5MB';
+      $_SESSION['teacherActionError'] = 'Cover image size should not exceed 5MB';
       header('Location: ../teacherDashboard.php');
       exit();
     }
 
-    $allowed_image_types = ['image/jpeg', 'image/png', 'image/gif'];
+    $allowed_image_types = ['image/jpeg', 'image/png', 'image/jpg'];
     if (!in_array($image['type'], $allowed_image_types)) {
-      $_SESSION['actionError'] = 'Cover image type not allowed';
+      $_SESSION['teacherActionError'] = 'Cover image type not allowed';
       header('Location: ../teacherDashboard.php');
       exit();
     }
@@ -56,12 +56,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $imagePath = '../../../uploads/covers/' . $imageName;
 
     if (!move_uploaded_file($imageTmpName, $imagePath)) {
-      $_SESSION['actionError'] = 'Cover upload failed';
+      $_SESSION['teacherActionError'] = 'Cover upload failed';
       header('Location: ../teacherDashboard.php');
       exit();
     }
   } else {
-    $_SESSION['actionError'] = 'Cover image is required';
+    $_SESSION['teacherActionError'] = 'Cover image is required';
     header('Location: ../teacherDashboard.php');
     exit();
   }
@@ -70,7 +70,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
   if ($type === 'document') {
     $textContent = trim($_POST['text']);
     if (empty($textContent)) {
-      $_SESSION['actionError'] = 'Text content is required for a document course';
+      $_SESSION['teacherActionError'] = 'Text content is required for a document course';
       header('Location: ../teacherDashboard.php');
       exit();
     }
@@ -79,7 +79,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
   } elseif ($type === 'video') {
 
     if (empty($_FILES['video']['name'])) {
-      $_SESSION['actionError'] = 'Video is required for a video course';
+      $_SESSION['teacherActionError'] = 'Video is required for a video course';
       header('Location: ../teacherDashboard.php');
       exit();
     }
@@ -87,14 +87,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $video = $_FILES['video'];
 
     if ($video['size'] > 100 * 1024 * 1024) {
-      $_SESSION['actionError'] = 'Video size should not exceed 100MB';
+      $_SESSION['teacherActionError'] = 'Video size should not exceed 100MB';
       header('Location: ../teacherDashboard.php');
       exit();
     }
 
-    $allowed_video_types = ['video/mp4', 'video/webm', 'video/mkv'];
+    $allowed_video_types = ['video/mp4', 'video/webm', 'video/x-matroska'];
     if (!in_array($video['type'], $allowed_video_types)) {
-      $_SESSION['actionError'] = 'Video type not allowed';
+      $_SESSION['teacherActionError'] = 'Video type not allowed';
       header('Location: ../teacherDashboard.php');
       exit();
     }
@@ -104,7 +104,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $videoPath = '../../../uploads/videos/' . $videoName;
 
     if (!move_uploaded_file($videoTmpName, $videoPath)) {
-      $_SESSION['actionError'] = 'Video upload failed';
+      $_SESSION['teacherActionError'] = 'Video upload failed';
       header('Location: ../teacherDashboard.php');
       exit();
     }
@@ -113,7 +113,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     var_dump($video);
 
   } else {
-    $_SESSION['actionError'] = 'Invalid course type';
+    $_SESSION['teacherActionError'] = 'Invalid course type';
     header('Location: ../teacherDashboard.php');
     exit();
   }
@@ -121,17 +121,18 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
   $status = $user->addCourse($PDOConn, $course);
   if ($status === false) {
-    $_SESSION['actionError'] = 'Course upload failed';
+    $_SESSION['teacherActionError'] = 'Course upload failed';
     header('Location: ../teacherDashboard.php');
     exit();
   } else {
-    $_SESSION['actionSucces'] = 'Course uploaded successfully';
+    $_SESSION['teacherActionSuccess'] = 'Course uploaded successfully';
     header('Location: ../teacherDashboard.php');
     exit();
   }
 
 
 } else {
-  header('Location: ../../../index.php');
+  $_SESSION['teacherActionError'] = 'Invalid request';
+  header('Location: ../teacherDashboard.php');
   exit();
 }
