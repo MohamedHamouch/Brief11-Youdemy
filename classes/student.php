@@ -19,21 +19,41 @@ class Student extends User
     $this->created_at = date('Y-m-d H:i:s');
   }
 
+  //static method
   public static function getAllsutdents(PDO $db)
   {
     $query = "SELECT * FROM users WHERE role = 'student'";
     $stmt = $db->query($query);
     return $stmt->fetchAll();
   }
-  public function enrollCourse(PDO $db, $course_id)
+
+  // Methods
+  public function enrollCourse(PDO $db, Enrollment $en)
   {
-    $query = "INSERT INTO enrollment (student_id, course_id) VALUES (:student_id, :course_id)";
+    $course_id = $en->getCourseId();
+    $enrollment_date = $en->getEnrollmentDate();
+    $query = "INSERT INTO enrollment (student_id, course_id, enrollment_date) VALUES (:student_id, :course_id, :enrollment_date)";
     $stmt = $db->prepare($query);
-    $stmt->bindParam(':student_id', $this->id);
-    $stmt->bindParam(':course_id', $course_id);
+    $stmt->bindParam(':student_id', $this->id, PDO::PARAM_INT);
+    $stmt->bindParam(':course_id', $course_id, PDO::PARAM_INT);
+    $stmt->bindParam(':enrollment_date', $enrollment_date, PDO::PARAM_STR);
     $stmt->execute();
   }
 
-}
+  public function getEnrolledCourses(PDO $db)
+  {
+    $query = "SELECT c.*, cat.name AS category_name, CONCAT(u.first_name, ' ', u.last_name) AS teacher_name, e.enrollment_date
+        FROM enrollment e
+        JOIN courses c ON e.course_id = c.id
+        JOIN users u ON c.teacher_id = u.id
+        LEFT JOIN categories cat ON c.category_id = cat.id
+        WHERE e.student_id = :student_id";
 
+    $stmt = $db->prepare($query);
+    $stmt->bindParam(':student_id', $this->id, PDO::PARAM_INT);
+    $stmt->execute();
+
+    return $stmt->fetchAll(PDO::FETCH_ASSOC);
+  }
+}
 ?>
