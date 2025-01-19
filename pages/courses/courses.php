@@ -106,8 +106,9 @@ if (isset($_GET['search']) || isset($_GET['category'])) {
       <div class="container mx-auto px-4">
         <h1 class="text-3xl font-bold text-gray-900 text-center mb-8">Discover Courses</h1>
         <div class="max-w-2xl mx-auto">
-          <form method="GET" class="space-y-4">
-            <!-- Search Input -->
+
+          <!-- filtrage form -->
+          <form method="GET" id="filterForm" class="space-y-4">
             <div class="relative">
               <input type="text" name="search" placeholder="Search for courses..."
                 class="w-full px-6 py-4 pr-12 rounded-full border border-gray-200 focus:border-orange-500 focus:ring-2 focus:ring-orange-200 outline-none transition-all shadow-sm">
@@ -117,9 +118,8 @@ if (isset($_GET['search']) || isset($_GET['category'])) {
               </button>
             </div>
 
-            <!-- Category Select -->
             <div class="relative flex items-center justify-center">
-              <select name="category"
+              <select id="categorySelect" name="category"
                 class="flex-grow max-w-xs px-6 py-3 rounded-full border border-gray-200 focus:border-orange-500 focus:ring-2 focus:ring-orange-200 outline-none transition-all shadow-sm text-gray-600">
                 <option value="">All Categories</option>
                 <?php
@@ -138,42 +138,51 @@ if (isset($_GET['search']) || isset($_GET['category'])) {
     </section>
 
 
-    <!-- Courses Grid -->
+    <!-- Courses -->
     <section class="py-12">
       <div class="container mx-auto px-4">
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-          <div
-            class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden hover:shadow-md transition-shadow duration-300">
-            <div class="relative h-48 bg-gray-100">
-              <img src="/api/placeholder/400/320" alt="Course thumbnail" class="w-full h-full object-cover">
-              <span class="absolute top-4 right-4 bg-orange-100 text-orange-600 text-xs px-2 py-1 rounded-full">
-                Development
-              </span>
-            </div>
-            <div class="p-6">
-              <a href="#" class="block">
-                <h3
-                  class="text-lg font-semibold text-gray-900 mb-2 hover:text-orange-600 transition-colors duration-300">
-                  Complete Web Development Bootcamp
-                </h3>
-              </a>
-              <p class="text-sm text-gray-600 mb-4 line-clamp-2">
-                Learn web development from scratch with this comprehensive course covering HTML, CSS,
-                JavaScript, and more.
-              </p>
-              <div class="flex items-center justify-between">
-                <div class="flex items-center space-x-3">
-                  <div class="w-8 h-8 bg-orange-100 rounded-full flex items-center justify-center">
-                    <i class="fas fa-user text-orange-500"></i>
+          <?php
+          foreach ($courses as $course) {
+            ?>
+            <div
+              class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden hover:shadow-md transition-shadow duration-300">
+              <div class="relative h-48 bg-gray-100">
+                <img src="../../uploads/covers/<?= htmlspecialchars($course['image']) ?>" alt="Course thumbnail"
+                  class="w-full h-full object-cover">
+                <span class="absolute top-4 right-4 bg-orange-100 text-orange-600 text-xs px-2 py-1 rounded-full">
+                  <?= htmlspecialchars($course['category_name']) ?>
+                </span>
+                </span>
+              </div>
+              <div class="p-6">
+                <a href="#" class="block">
+                  <h3
+                    class="text-lg font-semibold text-gray-900 mb-2 hover:text-orange-600 transition-colors duration-300">
+                    <?= htmlspecialchars($course['title']) ?>
+                  </h3>
+                </a>
+                <p class="text-sm text-gray-600 mb-4 line-clamp-2">
+                  <?= htmlspecialchars($course['description']) ?>
+                </p>
+                <div class="flex items-center justify-between">
+                  <div class="flex items-center space-x-3">
+                    <div class="w-8 h-8 bg-orange-100 rounded-full flex items-center justify-center">
+                      <i class="fas fa-user text-orange-500"></i>
+                    </div>
+                    <p class="text-sm text-gray-600">
+                      <?= htmlspecialchars("{$course['first_name']} {$course['last_name']}") ?>
+                    </p>
                   </div>
-                  <p class="text-sm text-gray-600">John Doe</p>
-                </div>
-                <div class="text-sm text-gray-500">
-                  January 19, 2024
+                  <div class="text-sm text-gray-500">
+                    <?= date('F j, Y', strtotime($course['created_at'])) ?>
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
+            <?php
+          }
+          ?>
         </div>
 
         <!-- Pagination -->
@@ -235,6 +244,9 @@ if (isset($_GET['search']) || isset($_GET['category'])) {
   </footer>
 
   <script src="../../js/menu.js"></script>
+  <script src="../../js/courses.js"></script>
+
+
 </body>
 
 </html>
