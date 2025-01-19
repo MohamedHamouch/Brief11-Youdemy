@@ -1,43 +1,44 @@
 <?php
 class Tag
 {
-    private $id;
-    private $name;
+  private $id;
+  private $name;
 
-    public function __construct($id = null, $name)
-    {
-        $this->id = $id;
-        $this->name = $name;
-    }
-    
-    public static function tagCount(PDO $db){
-        $query = "SELECT COUNT(*) FROM tags";
-        $stmt = $db->query($query);
-        return $stmt->fetchColumn();
-    }
+  public function __construct($id, $name)
+  {
+    $this->id = $id;
+    $this->name = $name;
+  }
 
-    public static function getAllTags(PDO $db)
-    {
-        $query = "SELECT * FROM tags";
-        $stmt = $db->prepare($query);
-        $stmt->execute();
+  public static function tagCount(PDO $db)
+  {
+    $query = "SELECT COUNT(*) FROM tags";
+    $stmt = $db->query($query);
+    return $stmt->fetchColumn();
+  }
 
-        return $stmt->fetchAll(PDO::FETCH_ASSOC);
-    }
+  public static function getAllTags(PDO $db)
+  {
+    $query = "SELECT * FROM tags";
+    $stmt = $db->prepare($query);
+    $stmt->execute();
 
-    public function getId()
-    {
-        return $this->id;
-    }
+    return $stmt->fetchAll(PDO::FETCH_ASSOC);
+  }
 
-    public function getName()
-    {
-        return $this->name;
-    }
+  public function getId()
+  {
+    return $this->id;
+  }
 
-    public function setName($name)
-    {
-        $this->name = $name;
-    }
+  public function getName()
+  {
+    return $this->name;
+  }
+
+  public function setName($name)
+  {
+    $this->name = $name;
+  }
 }
 ?>

@@ -5,7 +5,7 @@ class Category
   private $name;
   private $description;
 
-  public function __construct($id = null, $name, $description)
+  public function __construct($id, $name, $description = null)
   {
     $this->id = $id;
     $this->name = $name;

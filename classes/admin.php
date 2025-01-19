@@ -30,7 +30,11 @@ class Admin extends User
     $query = "UPDATE users SET is_active = 1 WHERE id = :id";
     $stmt = $db->prepare($query);
     $stmt->bindParam(':id', $user_id);
-    $stmt->execute();
+    if ($stmt->execute()) {
+      return true;
+    } else {
+      return false;
+    }
   }
 
   public function suspendUser(PDO $db, $user_id)
@@ -38,7 +42,11 @@ class Admin extends User
     $query = "UPDATE users SET is_suspended = 1 WHERE id = :id";
     $stmt = $db->prepare($query);
     $stmt->bindParam(':id', $user_id);
-    $stmt->execute();
+    if ($stmt->execute()) {
+      return true;
+    } else {
+      return false;
+    }
   }
 
   public function unsuspendUser(PDO $db, $user_id)
@@ -46,7 +54,11 @@ class Admin extends User
     $query = "UPDATE users SET is_suspended = 0 WHERE id = :id";
     $stmt = $db->prepare($query);
     $stmt->bindParam(':id', $user_id);
-    $stmt->execute();
+    if ($stmt->execute()) {
+      return true;
+    } else {
+      return false;
+    }
   }
 
   public function deleteUser(PDO $db, $user_id)
@@ -54,7 +66,11 @@ class Admin extends User
     $query = "DELETE FROM users WHERE id = :id";
     $stmt = $db->prepare($query);
     $stmt->bindParam(':id', $user_id);
-    $stmt->execute();
+    if ($stmt->execute()) {
+      return true;
+    } else {
+      return false;
+    }
   }
 
   public function addCategory(PDO $db, Category $category)
@@ -78,10 +94,29 @@ class Admin extends User
       $stmt->bindParam(':name', $categoryName);
       $stmt->bindParam(':description', $categoryDescription);
       if ($stmt->execute()) {
-        return "'$categoryName' category added successfully.";
+        return true;
       } else {
         return "Failed to add '$categoryName' category.";
       }
+    }
+  }
+
+  public function updateCategory(PDO $db, Category $category)
+  {
+    $categoryName = $category->getName();
+    $categoryDescription = $category->getDescription();
+    $categoryId = $category->getId();
+
+    $query = "UPDATE categories SET name = :name, description = :description WHERE id = :id";
+    $stmt = $db->prepare($query);
+    $stmt->bindParam(':name', $categoryName);
+    $stmt->bindParam(':description', $categoryDescription);
+    $stmt->bindParam(':id', $categoryId);
+
+    if ($stmt->execute()) {
+      return true;
+    } else {
+      return "Failed to update '$categoryName' category.";
     }
   }
 
@@ -90,7 +125,12 @@ class Admin extends User
     $query = "DELETE FROM categories WHERE id = :id";
     $stmt = $db->prepare($query);
     $stmt->bindParam(':id', $category_id);
-    $stmt->execute();
+
+    if ($stmt->execute()) {
+      return true;
+    } else {
+      return "Failed to delete category.";
+    }
   }
 
   public function addTag(PDO $db, Tag $tag)
@@ -113,10 +153,27 @@ class Admin extends User
       $stmt->bindParam(':name', $tagName);
 
       if ($stmt->execute()) {
-        return "'$tagName' tag added successfully.";
+        return true;
       } else {
         return "Failed to add '$tagName' tag.";
       }
+    }
+  }
+
+  public function updateTag(PDO $db, Tag $tag)
+  {
+    $tagName = $tag->getName();
+    $tagId = $tag->getId();
+
+    $query = "UPDATE tags SET name = :name WHERE id = :id";
+    $stmt = $db->prepare($query);
+    $stmt->bindParam(':name', $tagName);
+    $stmt->bindParam(':id', $tagId);
+
+    if ($stmt->execute()) {
+      return true;
+    } else {
+      return "Failed to update '$tagName' tag.";
     }
   }
 
@@ -125,6 +182,10 @@ class Admin extends User
     $query = "DELETE FROM tags WHERE id = :id";
     $stmt = $db->prepare($query);
     $stmt->bindParam(':id', $tag_id);
-    $stmt->execute();
+    if ($stmt->execute()) {
+      return true;
+    } else {
+      return "Failed to delete tag.";
+    }
   }
 }
