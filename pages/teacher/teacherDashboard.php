@@ -129,7 +129,7 @@ $courses = $user->getTeacherCourses($PDOConn);
         </div>
       </div>
       <?php
-      if ($user->isActive()) {
+      if ($user->isActive() && !$user->isSuspended()) {
         ?>
 
         <!-- add course form section -->
@@ -241,9 +241,6 @@ $courses = $user->getTeacherCourses($PDOConn);
           </form>
         </div>
 
-
-
-
         <!-- courses -->
         <div id="manageCourses" class="contentSection hidden bg-white rounded-xl shadow-sm p-6 border border-gray-100">
           <div class="overflow-x-auto mx-auto bg-white shadow-md rounded-lg w-full">
@@ -263,7 +260,11 @@ $courses = $user->getTeacherCourses($PDOConn);
               <tbody class="divide-y divide-gray-200">
                 <?php foreach ($courses as $course): ?>
                   <tr class="hover:bg-gray-50">
-                    <td class="px-6 py-4 text-sm text-gray-900"><?= htmlspecialchars($course['title']) ?>
+                    <td class="px-6 py-4 text-sm text-gray-900">
+                      <a href="../courses/courseDetails.php?id=<?= urlencode($course['id']) ?>"
+                        class="text-gray-700 font-medium hover:text-orange-700 hover:underline focus:outline-none focus:ring-2 focus:ring-orange-500">
+                        <?= htmlspecialchars($course['title']) ?>
+                      </a>
                     </td>
                     <td class="px-6 py-4 text-sm text-gray-900">
                       <?= htmlspecialchars(ucfirst($course['type'])) ?>
@@ -285,9 +286,9 @@ $courses = $user->getTeacherCourses($PDOConn);
                           </button>
                         </form>
                         <!-- Delete Form -->
-                        <form action="ProcessdeleteCourse.php" method="POST" class="inline"
+                        <form action="process/deleteCourse.php" method="POST" class="inline"
                           onsubmit="return confirm('Are you sure you want to delete this course?')">
-                          <input type="hidden" name="id" value="<?= htmlspecialchars($course['id']) ?>">
+                          <input type="hidden" name="courseId" value="<?= htmlspecialchars($course['id']) ?>">
                           <button type="submit"
                             class="text-red-600 hover:text-red-800 transform hover:rotate-12 transition duration-200">
                             <i class="fas fa-trash"></i>
@@ -310,7 +311,7 @@ $courses = $user->getTeacherCourses($PDOConn);
           </div>
         </div>
 
-      <?php } else { ?>
+      <?php } elseif (!$user->isActive()) { ?>
 
         <!-- not approved acc -->
         <div class="bg-gray-50 flex items-center justify-center p-4">
@@ -331,8 +332,7 @@ $courses = $user->getTeacherCourses($PDOConn);
                   <div class="ml-3">
                     <p class="text-sm text-orange-700">
                       Our admin team will review your application shortly. You'll receive an email
-                      notification once your
-                      account is approved.
+                      notification once your account is approved.
                     </p>
                   </div>
                 </div>
@@ -342,7 +342,9 @@ $courses = $user->getTeacherCourses($PDOConn);
                 <ul class="space-y-3">
                   <li class="flex items-start">
                     <i class="fas fa-check text-green-500 mt-1 mr-3"></i>
-                    <span class="text-gray-600">Browse available courses</span>
+                    <span class="text-gray-600">
+                      Browse available <a href="../courses/courses.php" class="text-orange-500 underline">courses</a>
+                    </span>
                   </li>
                   <li class="flex items-start">
                     <i class="fas fa-check text-green-500 mt-1 mr-3"></i>
@@ -365,8 +367,58 @@ $courses = $user->getTeacherCourses($PDOConn);
           </div>
         </div>
 
+        <!-- suspended acc -->
+      <?php } elseif ($user->isSuspended()) { ?>
+        <div class="bg-gray-50 flex items-center justify-center p-4">
+          <div class="max-w-md w-full bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
+            <div class="p-6">
+              <div class="text-center mb-6">
+                <div class="inline-flex items-center justify-center w-16 h-16 bg-red-100 rounded-full mb-4">
+                  <i class="fas fa-ban text-2xl text-red-500"></i>
+                </div>
+                <h2 class="text-2xl font-bold text-gray-900 mb-2">Account Suspended</h2>
+                <p class="text-gray-600">Your account has been suspended due to a policy violation or pending
+                  investigation.</p>
+              </div>
+              <div class="bg-red-50 rounded-lg p-4 mb-6">
+                <div class="flex items-start">
+                  <div class="flex-shrink-0">
+                    <i class="fas fa-info-circle text-red-500 mt-1"></i>
+                  </div>
+                  <div class="ml-3">
+                    <p class="text-sm text-red-700">
+                      Please contact our support team to resolve this issue. Include any relevant details to expedite the
+                      process.
+                    </p>
+                  </div>
+                </div>
+              </div>
+              <div class="space-y-4">
+                <h3 class="text-lg font-medium text-gray-900">You may also:</h3>
+                <ul class="space-y-3">
+                  <li class="flex items-start">
+                    <i class="fas fa-check text-green-500 mt-1 mr-3"></i>
+                    <span class="text-gray-600">Review our <a href="#" class="text-orange-500 underline">terms of
+                        service</a></span>
+                  </li>
+                  <li class="flex items-start">
+                    <i class="fas fa-check text-green-500 mt-1 mr-3"></i>
+                    <span class="text-gray-600">Update your account information</span>
+                  </li>
+                </ul>
+              </div>
 
+              <div class="mt-8">
+                <a href="../contact/contact.php"
+                  class="block w-full bg-red-500 text-white text-center px-6 py-3 rounded-lg hover:bg-red-600 transition-colors">
+                  Contact Support
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
       <?php } ?>
+
     </div>
   </main>
 

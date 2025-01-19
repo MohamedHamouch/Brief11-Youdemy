@@ -55,9 +55,9 @@ class Teacher extends User
 
   public function getTeacherCourses(PDO $db)
   {
-    $query = "SELECT c.*, cat.name as category_name
+    $query = "SELECT c.*, COALESCE(cat.name, 'General') AS category_name
               FROM courses c
-              JOIN categories cat ON c.category_id = cat.id
+              LEFT JOIN categories cat ON c.category_id = cat.id
               WHERE c.teacher_id = :teacher_id";
 
     $stmt = $db->prepare($query);
@@ -67,4 +67,23 @@ class Teacher extends User
     return $stmt->fetchAll(PDO::FETCH_ASSOC);
   }
 
+  public function deleteCourse(PDO $db, $course_id)
+  {
+    $query = "DELETE FROM course_tags WHERE course_id = :course_id";
+    $stmt = $db->prepare($query);
+    $stmt->bindParam(':course_id', $course_id);
+    $stmt->execute();
+
+
+    $query = "DELETE FROM courses WHERE id = :course_id AND teacher_id = :teacher_id";
+    $stmt = $db->prepare($query);
+    $stmt->bindParam(':course_id', $course_id);
+    $stmt->bindParam(':teacher_id', $this->id);
+
+    if ($stmt->execute()) {
+      return true;
+    } else {
+      return "Failed to delete course";
+    }
+  }
 }

@@ -32,11 +32,8 @@ if (!($_SERVER['REQUEST_METHOD'] == 'POST')) {
   }
   $courseId = $_POST['courseId'];
   $courseType = Course::checkCourseType($PDOConn, $courseId);
-  if ($courseType == 'video') {
-    $course = new VideoCourse($courseId);
-  } else {
-    $course = new DocumentCourse($courseId);
-  }
+  $course = ($courseType == 'video') ? new VideoCourse($courseId) : new DocumentCourse($courseId);
+
 
   $course->loadCourse($PDOConn);
 }
