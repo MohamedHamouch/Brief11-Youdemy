@@ -50,7 +50,6 @@ if (isset($_GET['search']) || isset($_GET['category'])) {
               Youdemy
             </div>
           </div>
-
           <nav class="flex items-center">
             <ul class="hidden md:flex items-center space-x-6">
               <li>
@@ -58,39 +57,53 @@ if (isset($_GET['search']) || isset($_GET['category'])) {
                   class="text-gray-600 hover:text-orange-600 transition-colors duration-300">Home</a>
               </li>
               <li>
-                <a href="#" class="text-gray-600 hover:text-orange-600 transition-colors duration-300">Courses</a>
+                <a href="#"
+                  class="text-gray-800 font-medium hover:text-orange-600 transition-colors duration-300">Courses</a>
               </li>
               <li>
                 <a href="#" class="text-gray-600 hover:text-orange-600 transition-colors duration-300">Contact</a>
               </li>
-              <li class="relative">
-                <button id="dropdownButton"
+              <?php
+              if (!$connected) {
+                echo '<li>
+                <a href="../auth/login.php"
                   class="flex items-center space-x-2 bg-orange-50 text-orange-700 px-4 py-2 rounded-full hover:bg-orange-100 transition-colors duration-300">
-                  <i class="fas fa-user-circle text-lg"></i>
-                  <span><?= $user ?></span>
-                  <i class="fas fa-chevron-down text-sm"></i>
-                </button>
-                <div id="dropdownMenu"
-                  class="hidden w-full absolute mt-2 bg-white rounded-xl shadow-lg py-2 border border-gray-100">
-                  <a href="#"
-                    class="block px-4 py-2 text-sm text-gray-800 font-medium hover:bg-orange-50 hover:text-orange-700">Profile</a>
-                  <?php if ($user instanceof Admin) { ?>
-                    <a href="../admin/adminDashboard.php"
-                      class="block px-4 py-2 text-sm text-gray-700 hover:bg-orange-50 hover:text-orange-700">Admin
-                      Dashboard</a>
-                  <?php } elseif ($user instanceof Teacher) { ?>
-                    <a href="../teacher/teacherDashboard.php"
-                      class="block px-4 py-2 text-sm text-gray-700 hover:bg-orange-50 hover:text-orange-700">Teacher
-                      Dashboard</a>
-                  <?php } elseif ($user instanceof Student) { ?>
-                    <a href="../admin/adminDashboard.php"
-                      class="block px-4 py-2 text-sm text-gray-700 hover:bg-orange-50 hover:text-orange-700">My
-                      Courses</a>
-                  <?php } ?>
-                  <a href="../auth/process/logout.php"
-                    class="block px-4 py-2 text-sm text-gray-700 hover:bg-orange-50 hover:text-red-700">Logout</a>
-                </div>
-              </li>
+                  <i class="fas fa-sign-in-alt text-lg"></i>
+                  <span>Sign In</span>
+                </a>
+              </li>';
+              } else {
+                ?>
+                <li class="relative">
+                  <button id="dropdownButton"
+                    class="flex items-center space-x-2 bg-orange-50 text-orange-700 px-4 py-2 rounded-full hover:bg-orange-100 transition-colors duration-300">
+                    <i class="fas fa-user-circle text-lg"></i>
+                    <span><?= $user ?></span>
+                    <i class="fas fa-chevron-down text-sm"></i>
+                  </button>
+                  <div id="dropdownMenu"
+                    class="hidden w-full absolute mt-2 bg-white rounded-xl shadow-lg py-2 border border-gray-100">
+                    <a href="../profile/profile.php"
+                      class="block px-4 py-2 text-sm text-gray-700 hover:bg-orange-50 hover:text-orange-700">Profile</a>
+                    <?php
+                    if ($user instanceof Admin) {
+                      echo '<a href="../admin/adminDashboard.php"
+                      class="block px-4 py-2 text-sm text-gray-700 hover:bg-orange-50 hover:text-orange-700">Admin Dashboard</a>';
+                    } elseif ($user instanceof Teacher) {
+                      echo '<a href="../teacher/teacherDashboard.php"
+                      class="block px-4 py-2 text-sm text-gray-700 hover:bg-orange-50 hover:text-orange-700">Teacher Dashboard</a>';
+                    } elseif ($user instanceof Student) {
+                      echo '<a href="../student/myCourses.php"
+                      class="block px-4 py-2 text-sm text-gray-700 hover:bg-orange-50 hover:text-orange-700">My Courses</a>';
+                    }
+                    ?>
+                    <a href="../auth/process/logout.php"
+                      class="block px-4 py-2 text-sm text-gray-700 hover:bg-orange-50 hover:text-red-700">Logout</a>
+                  </div>
+                </li>
+                <?php
+              }
+              ?>
             </ul>
           </nav>
         </div>
@@ -100,7 +113,6 @@ if (isset($_GET['search']) || isset($_GET['category'])) {
 
 
   <main class="flex-grow">
-
 
     <section class="bg-gradient-to-b from-orange-100 to-white pt-24 pb-12">
       <div class="container mx-auto px-4">
@@ -156,13 +168,13 @@ if (isset($_GET['search']) || isset($_GET['category'])) {
                 </span>
               </div>
               <div class="p-6">
-                <a href="#" class="block">
+                <a href="courseDetails.php?id=<?= $course['id'] ?>" class="block">
                   <h3
-                    class="text-lg font-semibold text-gray-900 mb-2 hover:text-orange-600 transition-colors duration-300">
+                    class="text-lg font-semibold text-gray-900 mb-2 hover:text-orange-600 transition-colors duration-300 break-words line-clamp-2">
                     <?= htmlspecialchars($course['title']) ?>
                   </h3>
                 </a>
-                <p class="text-sm text-gray-600 mb-4 line-clamp-2">
+                <p class="text-sm text-gray-600 mb-4 break-words line-clamp-2">
                   <?= htmlspecialchars($course['description']) ?>
                 </p>
                 <div class="flex items-center justify-between">
