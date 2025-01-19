@@ -59,7 +59,8 @@ $categories = Category::getAllCategories($PDOConn);
                   class="text-gray-800 hover:text-orange-600 transition-colors duration-300">Home</a>
               </li>
               <li>
-                <a href="#" class="text-gray-600 hover:text-orange-600 transition-colors duration-300">Courses</a>
+                <a href="../courses/courses.php"
+                  class="text-gray-600 hover:text-orange-600 transition-colors duration-300">Courses</a>
               </li>
               <li>
                 <a href="#" class="text-gray-600 hover:text-orange-600 transition-colors duration-300">Contact</a>
