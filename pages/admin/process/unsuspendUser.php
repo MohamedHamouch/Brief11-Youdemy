@@ -29,8 +29,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
       header('Location: ../adminDashboard.php');
       exit();
     }
+  } else {
+    $_SESSION['adminActionError'] = 'User ID is required';
+    header('Location: ../adminDashboard.php');
+    exit();
   }
 } else {
+
+  $_SESSION['adminActionError'] = 'Invalid request';
   header('Location: ../adminDashboard.php');
   exit();
 }
