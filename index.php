@@ -15,6 +15,8 @@ if (isset($_SESSION['user'])) {
   $connected = false;
 }
 
+$latestCourses = Course::getLatestCourses($PDOConn);
+
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -39,7 +41,6 @@ if (isset($_SESSION['user'])) {
               Youdemy
             </div>
           </div>
-
           <nav class="flex items-center">
             <ul class="hidden md:flex items-center space-x-6">
               <li>
@@ -47,7 +48,8 @@ if (isset($_SESSION['user'])) {
                   class="text-gray-800 font-medium hover:text-orange-600 transition-colors duration-300">Home</a>
               </li>
               <li>
-                <a href="#" class="text-gray-600 hover:text-orange-600 transition-colors duration-300">Courses</a>
+                <a href="pages/courses/courses.php"
+                  class="text-gray-600 hover:text-orange-600 transition-colors duration-300">Courses</a>
               </li>
               <li>
                 <a href="#" class="text-gray-600 hover:text-orange-600 transition-colors duration-300">Contact</a>
@@ -72,17 +74,17 @@ if (isset($_SESSION['user'])) {
                   </button>
                   <div id="dropdownMenu"
                     class="hidden w-full absolute mt-2 bg-white rounded-xl shadow-lg py-2 border border-gray-100">
-                    <a href="#"
+                    <a href="pages/profile/profile.php"
                       class="block px-4 py-2 text-sm text-gray-700 hover:bg-orange-50 hover:text-orange-700">Profile</a>
                     <?php
                     if ($user instanceof Admin) {
-                      echo '<a href="#"
+                      echo '<a href="pages/admin/adminDashboard.php"
                       class="block px-4 py-2 text-sm text-gray-700 hover:bg-orange-50 hover:text-orange-700">Admin Dashboard</a>';
                     } elseif ($user instanceof Teacher) {
-                      echo '<a href="#"
+                      echo '<a href="pages/teacher/teacherDashboard.php"
                       class="block px-4 py-2 text-sm text-gray-700 hover:bg-orange-50 hover:text-orange-700">Teacher Dashboard</a>';
                     } elseif ($user instanceof Student) {
-                      echo '<a href="#"
+                      echo '<a href="pages/student/myCourses.php"
                       class="block px-4 py-2 text-sm text-gray-700 hover:bg-orange-50 hover:text-orange-700">My Courses</a>';
                     }
                     ?>
@@ -100,49 +102,94 @@ if (isset($_SESSION['user'])) {
     </div>
   </header>
 
-  <section class="pt-24 pb-12 bg-gradient-to-b from-orange-100 to-white">
+  <section class="pt-20 pb-12 bg-gradient-to-b from-orange-100 to-white">
     <div class="container mx-auto px-4 py-16 text-center">
-      <h1 class="text-4xl md:text-5xl font-bold text-gray-900 mb-6">Welcome to Youdemy</h1>
-      <p class="text-xl text-gray-600 mb-8 max-w-2xl mx-auto">Join our global community of learners and
-        instructors.
-        Whether you're here to master new skills or share your expertise, Youdemy is your platform for growth.
-      </p>
-      <a href="#"
-        class="inline-block bg-orange-500 text-white px-8 py-3 rounded-full font-medium hover:bg-orange-600 transform hover:-translate-y-0.5 transition">
-        Start Today
-      </a>
+      <i class="fas fa-graduation-cap text-5xl text-orange-500 mb-6"></i>
+      <?php
+      if (!$connected) {
+        ?>
+        <h1 class="text-4xl md:text-5xl font-bold text-gray-900 mb-6">Welcome to Youdemy</h1>';
+        <p class="text-xl text-gray-600 mb-8 max-w-2xl mx-auto">Join our global community of learners and
+          instructors.
+          Whether you're here to master new skills or share your expertise, Youdemy is your platform for growth.
+        </p>
+        <a href="pages/auth/register.php"
+          class="inline-block bg-orange-500 text-white px-8 py-3 rounded-full font-medium hover:bg-orange-600 transform hover:-translate-y-0.5 transition">
+          Start Today
+        </a>'
+        <?php
+      } else {
+        ?>
+        <h1 class="text-4xl md:text-5xl font-bold text-gray-900 mb-6"><?= "Welcome back, {$user->getFirstName()}" ?>
+        </h1>
+        <?php
+        if ($user instanceof Student) {
+          echo '<p class="text-xl text-gray-600 mb-8 max-w-2xl mx-auto">Unlock your potential with Youdemy. As a student, you have access to a vast library of courses that help you develop new skills, advance your knowledge, and achieve your goals. Start learning today!</p>';
+          echo '<a href="pages/student/myCourses.php"
+          class="inline-block bg-orange-500 text-white px-8 py-3 rounded-full font-medium hover:bg-orange-600 transform hover:-translate-y-0.5 transition">
+          My Courses
+        </a>';
+        } elseif ($user instanceof Teacher) {
+          echo '<p class="text-xl text-gray-600 mb-8 max-w-2xl mx-auto">Share your knowledge and inspire the next generation of learners on Youdemy. As a teacher, you can create and manage your own courses, reach a global audience, and make a real impact in the lives of students.</p>';
+          echo '<a href="pages/teacher/teacherDashboard.php"
+          class="inline-block bg-orange-500 text-white px-8 py-3 rounded-full font-medium hover:bg-orange-600 transform hover:-translate-y-0.5 transition">
+          Teacher Dashboard
+        </a>';
+        } elseif ($user instanceof Admin) {
+          echo '<p class="text-xl text-gray-600 mb-8 max-w-2xl mx-auto">Take charge of the Youdemy platform and help shape its growth. As an admin, you manage user roles, monitor course content, and ensure the platform runs smoothly, creating an exceptional experience for all.</p>';
+          echo '<a href="pages/admin/adminDashboard.php"
+          class="inline-block bg-orange-500 text-white px-8 py-3 rounded-full font-medium hover:bg-orange-600 transform hover:-translate-y-0.5 transition">
+          Admin Dashboard
+        </a>';
+        }
+      }
+      ?>
     </div>
   </section>
 
-  <section class="py-16 bg-white">
+  <section class="pt-4 pb-16 bg-white">
     <div class="container mx-auto px-4">
       <h2 class="text-3xl font-bold text-center text-gray-900 mb-12">Latest Courses</h2>
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-        <article
-          class="bg-white rounded-xl shadow-sm hover:shadow-md transition-all duration-300 border border-gray-100 overflow-hidden group">
-          <div class="aspect-w-16 aspect-h-9 overflow-hidden">
-            <img src="placeholder.jpg" alt="Course Title"
-              class="w-full h-48 object-cover transition-transform duration-300 group-hover:scale-105">
+
+        <!-- course -->
+        <?php
+        foreach ($latestCourses as $course) {
+          ?>
+          <div
+            class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden hover:shadow-md transition-shadow duration-300">
+            <div class="relative h-48 bg-gray-100">
+              <img src="uploads/covers/<?= $course['image'] ?>" alt="Course thumbnail" class="w-full h-full object-cover">
+            </div>
+            <div class="p-6">
+              <span
+                class="bg-orange-100 text-orange-600 text-xs px-2 py-1 rounded-full"><?= htmlspecialchars($course['category_name']) ?></span>
+              <a href="#" class="block">
+                <h3 class="text-lg font-semibold text-gray-900 my-3 hover:text-orange-600 transition-colors duration-300">
+                  <?= htmlspecialchars($course['title']) ?>
+                </h3>
+              </a>
+              <div class="flex items-center justify-between">
+                <div class="flex items-center space-x-3">
+                  <div class="w-8 h-8 bg-orange-100 rounded-full flex items-center justify-center">
+                    <i class="fas fa-user text-orange-500"></i>
+                  </div>
+                  <p class="text-sm text-gray-600">
+                    <?= htmlspecialchars("{$course['first_name']} {$course['last_name']}") ?>
+                  </p>
+                </div>
+                <div class="text-sm text-gray-500">
+                  <?= date('F j, Y', strtotime($course['created_at'])) ?>
+                </div>
+              </div>
+            </div>
           </div>
-          <div class="p-6">
-            <p class="text-sm text-orange-500 font-medium mb-2">January 15, 2024</p>
-            <h2 class="text-xl font-semibold text-gray-900 mb-3 line-clamp-2">
-              Sample Course Title
-            </h2>
-            <p class="text-gray-600 mb-4 line-clamp-3">
-              This is a sample Course description. The content would go here.
-            </p>
-            <a href="#"
-              class="inline-flex items-center text-orange-500 hover:text-orange-600 font-medium group-hover:translate-x-1 transition-transform duration-200">
-              Read More
-              <i class="fas fa-arrow-right ml-2 text-sm"></i>
-            </a>
-          </div>
-        </article>
-        <!-- More Courses would go here -->
+          <?php
+        }
+        ?>
       </div>
       <div class="text-center mt-12">
-        <a href="#"
+        <a href="pages/courses/courses.php"
           class="inline-block bg-gray-900 text-white px-8 py-3 rounded-full font-medium hover:bg-gray-800 transform hover:-translate-y-0.5 transition">
           View All Courses
         </a>
