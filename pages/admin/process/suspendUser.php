@@ -3,7 +3,6 @@ session_start();
 require_once '../../../config/database.php';
 require_once '../../../classes/Admin.php';
 
-
 if (!isset($_SESSION['user'])) {
   header('Location: ../../auth/login.php');
   exit();
@@ -15,17 +14,18 @@ if (!isset($_SESSION['user'])) {
   }
 }
 
-
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-  if (isset($_POST['teacherId'])) {
-    $teacherId = $_POST['teacherId'];
-    $status = $user->activateUser($PDOConn, $teacherId);
+
+  if (isset($_POST['userId'])) {
+    $userId = $_POST['userId'];
+    $status = $user->suspendUser($PDOConn, $userId);
     if ($status) {
-      $_SESSION['adminActionSuccess'] = 'Teacher activated successfully';
+
+      $_SESSION['adminActionSuccess'] = 'User suspended successfully';
       header('Location: ../adminDashboard.php');
       exit();
     } else {
-      $_SESSION['adminActionError'] = 'Teacher activation failed';
+      $_SESSION['adminActionError'] = 'User suspension failed';
       header('Location: ../adminDashboard.php');
       exit();
     }

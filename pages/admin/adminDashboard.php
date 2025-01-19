@@ -167,7 +167,7 @@ $categories = Category::getAllCategories($PDOConn);
                 <th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">Email</th>
                 <th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">Joined</th>
                 <th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">Role</th>
-                <th class="px-6 py-3 text-center text-xs font-medium uppercase tracking-wider">Actions</th>
+                <th class="px-6 py-3 text-center text-xs font-medium uppercase tracking-wider">Suspend</th>
               </tr>
             </thead>
             <tbody class="divide-y divide-gray-200">
@@ -200,13 +200,6 @@ $categories = Category::getAllCategories($PDOConn);
                           <button type="submit"
                             class="text-yellow-600 hover:text-yellow-800 transform hover:scale-110 transition duration-200">
                             <i class="fas fa-ban"></i>
-                          </button>
-                        </form>
-                        <form action="process/deleteUser.php" method="POST" class="inline">
-                          <input type="hidden" name="userId" value="<?= htmlspecialchars($user['id']) ?>">
-                          <button type="submit"
-                            class="text-red-600 hover:text-red-800 transform hover:rotate-12 transition duration-200">
-                            <i class="fas fa-trash"></i>
                           </button>
                         </form>
                       </div>
