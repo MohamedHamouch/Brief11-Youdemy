@@ -80,11 +80,25 @@ abstract class User
   {
     $query = "SELECT role FROM users WHERE email = :email";
     $stmt = $db->prepare($query);
-    $stmt->bindParam(':email', $email);
+    $stmt->bindParam(':email', $email, PDO::PARAM_STR);
     $stmt->execute();
     $role = $stmt->fetch(PDO::FETCH_ASSOC);
 
     return $role['role'];
+  }
+
+  public static function getActiveUsers($db)
+  {
+    $query = "SELECT * FROM users WHERE is_active = 1 AND is_suspended = 0";
+    $stmt = $db->query($query);
+    return $stmt->fetchAll();
+  }
+
+  public static function getSuspendedUsers($db)
+  {
+    $query = "SELECT * FROM users WHERE is_suspended = 1";
+    $stmt = $db->query($query);
+    return $stmt->fetchAll();
   }
 
   //methods
@@ -92,7 +106,7 @@ abstract class User
   {
     $query = "SELECT * FROM users WHERE email = :email";
     $stmt = $db->prepare($query);
-    $stmt->bindParam(':email', $this->email);
+    $stmt->bindParam(':email', $this->email, PDO::PARAM_STR);
     $stmt->execute();
     $user = $stmt->fetch(PDO::FETCH_ASSOC);
 
@@ -112,7 +126,7 @@ abstract class User
   {
     $query = "SELECT * FROM users WHERE id = :id";
     $stmt = $db->prepare($query);
-    $stmt->bindParam(':id', $this->id);
+    $stmt->bindParam(':id', $this->id, PDO::PARAM_INT);
     $stmt->execute();
     $user = $stmt->fetch(PDO::FETCH_ASSOC);
 
@@ -132,9 +146,9 @@ abstract class User
   {
     $query = "UPDATE users SET first_name = :first_name, last_name = :last_name WHERE id = :id";
     $stmt = $db->prepare($query);
-    $stmt->bindParam(':first_name', $this->first_name);
-    $stmt->bindParam(':last_name', $this->last_name);
-    $stmt->bindParam(':id', $this->id);
+    $stmt->bindParam(':first_name', $this->first_name, PDO::PARAM_STR);
+    $stmt->bindParam(':last_name', $this->last_name, PDO::PARAM_STR);
+    $stmt->bindParam(':id', $this->id, PDO::PARAM_INT);
     if ($stmt->execute()) {
       return true;
     } else {
@@ -145,7 +159,7 @@ abstract class User
   {
     $query = "SELECT * FROM users WHERE email = :email";
     $stmt = $db->prepare($query);
-    $stmt->bindParam(":email", $this->email);
+    $stmt->bindParam(":email", $this->email, PDO::PARAM_STR);
     $stmt->execute();
 
     $user = $stmt->fetch(PDO::FETCH_ASSOC);
