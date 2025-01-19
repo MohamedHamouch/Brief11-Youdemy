@@ -113,10 +113,10 @@ abstract class Course
   //static methods
   public static function getAllCourses(PDO $db)
   {
-    $query = "SELECT c.*, u.first_name, u.last_name, cat.name AS category_name
+    $query = "SELECT c.*, u.first_name, u.last_name, COALESCE(cat.name, 'General') AS category_name
               FROM courses c
               JOIN users u ON c.teacher_id = u.id
-              JOIN categories cat ON c.category_id = cat.id
+              LEFT JOIN categories cat ON c.category_id = cat.id
               ORDER BY c.created_at DESC";
 
     $stmt = $db->query($query);
@@ -125,10 +125,10 @@ abstract class Course
 
   public static function getLatestCourses(PDO $db, $limit = 4)
   {
-    $query = "SELECT c.*, u.first_name, u.last_name, cat.name AS category_name
+    $query = "SELECT c.*, u.first_name, u.last_name, COALESCE(cat.name, 'General') AS category_name
               FROM courses c
               JOIN users u ON c.teacher_id = u.id
-              JOIN categories cat ON c.category_id = cat.id
+              LEFT JOIN categories cat ON c.category_id = cat.id
               ORDER BY c.created_at DESC
               LIMIT :limit";
     $stmt = $db->prepare($query);
@@ -140,9 +140,9 @@ abstract class Course
 
   public static function filterCourses($pdo, $search = '', $category = '')
   {
-    $query = "SELECT c.*, u.first_name, u.last_name, cat.name AS category_name
+    $query = "SELECT c.*, u.first_name, u.last_name, COALESCE(cat.name, 'General') AS category_name
               FROM courses c
-              JOIN categories cat ON c.category_id = cat.id
+              LEFT JOIN categories cat ON c.category_id = cat.id
               JOIN users u ON c.teacher_id = u.id
               WHERE 1";
     $params = [];
@@ -172,6 +172,15 @@ abstract class Course
     return $stmt->fetchColumn();
   }
 
+  public static function checkCourseExsistance(PDO $db, $course_id)
+  {
+    $query = "SELECT COUNT(*) FROM courses WHERE id = :course_id";
+    $stmt = $db->prepare($query);
+    $stmt->bindParam(':course_id', $course_id, PDO::PARAM_INT);
+    $stmt->execute();
+
+    return $stmt->fetchColumn() > 0;
+  }
 
   public static function coursesCount(PDO $db)
   {
@@ -251,7 +260,7 @@ abstract class Course
     $stmt->bindParam(':category_id', $this->category_id, PDO::PARAM_INT);
     $stmt->execute();
 
-    return $stmt->fetchColumn();
+    return $stmt->fetchColumn() ?: 'General';
   }
 
   public function courseEnrollmentCount(PDO $db)
