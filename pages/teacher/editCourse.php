@@ -19,7 +19,7 @@ if (isset($_SESSION['user'])) {
   header('Location: ../auth/login.php');
   exit();
 }
-if (!$_SERVER['REQUEST_METHOD'] == 'POST') {
+if (!($_SERVER['REQUEST_METHOD'] == 'POST')) {
 
   $_SESSION['teacherActionError'] = 'Invalid request';
   header('Location: ../teacher/teacherDashboard.php');
@@ -226,8 +226,11 @@ $categories = Category::getAllCategories($PDOConn);
             </div>
           </div>
 
-          <!-- Submit Button -->
-          <div class="flex justify-end pt-2">
+          <div class="flex justify-end pt-2 space-x-4">
+            <a href="teacherDashboard.php"
+              class="bg-gray-300 text-gray-700 px-6 py-2 rounded-full hover:bg-gray-400 transform hover:-translate-y-0.5 transition">
+              Cancel
+            </a>
             <button type="submit"
               class="bg-orange-500 text-white px-6 py-2 rounded-full hover:bg-orange-600 transform hover:-translate-y-0.5 transition">
               Update Course

@@ -41,8 +41,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
   if (!isset($_POST['type'])) {
     $_SESSION['teacherActionError'] = 'Type is required';
-    echo $_POST['type'];
-    // header('Location: ../teacherDashboard.php');
+    header('Location: ../teacherDashboard.php');
     exit();
   }
 
