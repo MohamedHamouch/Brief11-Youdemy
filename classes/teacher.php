@@ -61,7 +61,7 @@ class Teacher extends User
               WHERE c.teacher_id = :teacher_id";
 
     $stmt = $db->prepare($query);
-    $stmt->bindParam(':teacher_id', $this->id);
+    $stmt->bindParam(':teacher_id', $this->id, PDO::PARAM_INT);
     $stmt->execute();
 
     return $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -71,14 +71,14 @@ class Teacher extends User
   {
     $query = "DELETE FROM course_tags WHERE course_id = :course_id";
     $stmt = $db->prepare($query);
-    $stmt->bindParam(':course_id', $course_id);
+    $stmt->bindParam(':course_id', $course_id, PDO::PARAM_INT);
     $stmt->execute();
 
 
     $query = "DELETE FROM courses WHERE id = :course_id AND teacher_id = :teacher_id";
     $stmt = $db->prepare($query);
-    $stmt->bindParam(':course_id', $course_id);
-    $stmt->bindParam(':teacher_id', $this->id);
+    $stmt->bindParam(':course_id', $course_id, PDO::PARAM_INT);
+    $stmt->bindParam(':teacher_id', $this->id, PDO::PARAM_INT);
 
     if ($stmt->execute()) {
       return true;

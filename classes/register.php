@@ -12,7 +12,7 @@ trait Register
 
       $query = "SELECT id FROM users WHERE email = :email";
       $stmt = $db->prepare($query);
-      $stmt->bindParam(':email', $this->email);
+      $stmt->bindParam(':email', $this->email, PDO::PARAM_STR);
       $stmt->execute();
 
       if ($stmt->fetchColumn()) {
@@ -30,13 +30,13 @@ trait Register
                 VALUES (:email, :first_name, :last_name, :password, :role, :is_active, :is_suspended)";
 
       $stmt = $db->prepare($query);
-      $stmt->bindParam(':email', $this->email);
-      $stmt->bindParam(':first_name', $this->first_name);
-      $stmt->bindParam(':last_name', $this->last_name);
-      $stmt->bindParam(':password', $hashedPass);
-      $stmt->bindParam(':role', $this->role);
-      $stmt->bindParam(':is_active', $is_active);
-      $stmt->bindParam(':is_suspended', $is_suspended);
+      $stmt->bindParam(':email', $this->email, PDO::PARAM_STR);
+      $stmt->bindParam(':first_name', $this->first_name, PDO::PARAM_STR);
+      $stmt->bindParam(':last_name', $this->last_name, PDO::PARAM_STR);
+      $stmt->bindParam(':password', $hashedPass, PDO::PARAM_STR);
+      $stmt->bindParam(':role', $this->role, PDO::PARAM_STR);
+      $stmt->bindParam(':is_active', $is_active, PDO::PARAM_INT);
+      $stmt->bindParam(':is_suspended', $is_suspended, PDO::PARAM_INT);
 
       if ($stmt->execute()) {
         return true;

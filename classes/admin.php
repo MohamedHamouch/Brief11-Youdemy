@@ -29,7 +29,7 @@ class Admin extends User
   {
     $query = "UPDATE users SET is_active = 1 WHERE id = :id";
     $stmt = $db->prepare($query);
-    $stmt->bindParam(':id', $user_id);
+    $stmt->bindParam(':id', $user_id, PDO::PARAM_INT);
     if ($stmt->execute()) {
       return true;
     } else {
@@ -41,7 +41,7 @@ class Admin extends User
   {
     $query = "UPDATE users SET is_suspended = 1 WHERE id = :id";
     $stmt = $db->prepare($query);
-    $stmt->bindParam(':id', $user_id);
+    $stmt->bindParam(':id', $user_id, PDO::PARAM_INT);
     if ($stmt->execute()) {
       return true;
     } else {
@@ -53,7 +53,7 @@ class Admin extends User
   {
     $query = "UPDATE users SET is_suspended = 0 WHERE id = :id";
     $stmt = $db->prepare($query);
-    $stmt->bindParam(':id', $user_id);
+    $stmt->bindParam(':id', $user_id, PDO::PARAM_INT);
     if ($stmt->execute()) {
       return true;
     } else {
@@ -65,7 +65,7 @@ class Admin extends User
   {
     $query = "DELETE FROM users WHERE id = :id";
     $stmt = $db->prepare($query);
-    $stmt->bindParam(':id', $user_id);
+    $stmt->bindParam(':id', $user_id, PDO::PARAM_INT);
     if ($stmt->execute()) {
       return true;
     } else {
@@ -80,7 +80,7 @@ class Admin extends User
 
     $query = "SELECT COUNT(*) FROM categories WHERE name = :name";
     $stmt = $db->prepare($query);
-    $stmt->bindParam(':name', $categoryName);
+    $stmt->bindParam(':name', $categoryName, PDO::PARAM_STR);
     $stmt->execute();
 
     $count = $stmt->fetchColumn();
@@ -91,8 +91,8 @@ class Admin extends User
 
       $query = "INSERT INTO categories (name, description) VALUES (:name, :description)";
       $stmt = $db->prepare($query);
-      $stmt->bindParam(':name', $categoryName);
-      $stmt->bindParam(':description', $categoryDescription);
+      $stmt->bindParam(':name', $categoryName, PDO::PARAM_STR);
+      $stmt->bindParam(':description', $categoryDescription, PDO::PARAM_STR);
       if ($stmt->execute()) {
         return true;
       } else {
@@ -109,9 +109,9 @@ class Admin extends User
 
     $query = "UPDATE categories SET name = :name, description = :description WHERE id = :id";
     $stmt = $db->prepare($query);
-    $stmt->bindParam(':name', $categoryName);
-    $stmt->bindParam(':description', $categoryDescription);
-    $stmt->bindParam(':id', $categoryId);
+    $stmt->bindParam(':name', $categoryName, PDO::PARAM_STR);
+    $stmt->bindParam(':description', $categoryDescription, PDO::PARAM_STR);
+    $stmt->bindParam(':id', $categoryId, PDO::PARAM_INT);
 
     if ($stmt->execute()) {
       return true;
@@ -124,7 +124,7 @@ class Admin extends User
   {
     $query = "DELETE FROM categories WHERE id = :id";
     $stmt = $db->prepare($query);
-    $stmt->bindParam(':id', $category_id);
+    $stmt->bindParam(':id', $category_id, PDO::PARAM_INT);
 
     if ($stmt->execute()) {
       return true;
@@ -139,7 +139,7 @@ class Admin extends User
 
     $query = "SELECT COUNT(*) FROM tags WHERE name = :name";
     $stmt = $db->prepare($query);
-    $stmt->bindParam(':name', $tagName);
+    $stmt->bindParam(':name', $tagName, PDO::PARAM_STR);
     $stmt->execute();
 
     $count = $stmt->fetchColumn();
@@ -150,7 +150,7 @@ class Admin extends User
 
       $query = "INSERT INTO tags (name) VALUES (:name)";
       $stmt = $db->prepare($query);
-      $stmt->bindParam(':name', $tagName);
+      $stmt->bindParam(':name', $tagName, PDO::PARAM_STR);
 
       if ($stmt->execute()) {
         return true;
@@ -167,8 +167,8 @@ class Admin extends User
 
     $query = "UPDATE tags SET name = :name WHERE id = :id";
     $stmt = $db->prepare($query);
-    $stmt->bindParam(':name', $tagName);
-    $stmt->bindParam(':id', $tagId);
+    $stmt->bindParam(':name', $tagName, PDO::PARAM_STR);
+    $stmt->bindParam(':id', $tagId, PDO::PARAM_INT);
 
     if ($stmt->execute()) {
       return true;
@@ -181,7 +181,7 @@ class Admin extends User
   {
     $query = "DELETE FROM tags WHERE id = :id";
     $stmt = $db->prepare($query);
-    $stmt->bindParam(':id', $tag_id);
+    $stmt->bindParam(':id', $tag_id, PDO::PARAM_INT);
     if ($stmt->execute()) {
       return true;
     } else {

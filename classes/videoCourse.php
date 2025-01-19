@@ -22,7 +22,7 @@ class videoCourse extends Course
   {
     $query = "SELECT * FROM courses WHERE id = :id";
     $stmt = $db->prepare($query);
-    $stmt->bindParam(':id', $this->id);
+    $stmt->bindParam(':id', $this->id, PDO::PARAM_INT);
     $stmt->execute();
 
     $course = $stmt->fetch(PDO::FETCH_ASSOC);
@@ -51,14 +51,14 @@ class videoCourse extends Course
 
     $stmt = $db->prepare($query);
 
-    $stmt->bindParam(':title', $this->title);
-    $stmt->bindParam(':description', $this->description);
-    $stmt->bindParam(':type', $this->type);
-    $stmt->bindParam(':category_id', $this->category_id);
-    $stmt->bindParam(':teacher_id', $this->teacher_id);
-    $stmt->bindParam(':created_at', $this->created_at);
-    $stmt->bindParam(':image', $this->image);
-    $stmt->bindParam(':video_path', $this->video_path);
+    $stmt->bindParam(':title', $this->title, PDO::PARAM_STR);
+    $stmt->bindParam(':description', $this->description, PDO::PARAM_STR);
+    $stmt->bindParam(':type', $this->type, PDO::PARAM_STR);
+    $stmt->bindParam(':category_id', $this->category_id, PDO::PARAM_INT);
+    $stmt->bindParam(':teacher_id', $this->teacher_id, PDO::PARAM_INT);
+    $stmt->bindParam(':created_at', $this->created_at, PDO::PARAM_STR);
+    $stmt->bindParam(':image', $this->image, PDO::PARAM_STR);
+    $stmt->bindParam(':video_path', $this->video_path, PDO::PARAM_STR);
 
     if ($stmt->execute()) {
 
@@ -75,12 +75,12 @@ class videoCourse extends Course
     $query = "UPDATE courses SET title = :title, description = :description, category_id = :category_id, image = :image, video_path = :video_path WHERE id = :id";
     $stmt = $db->prepare($query);
 
-    $stmt->bindParam(':title', $this->title);
-    $stmt->bindParam(':description', $this->description);
-    $stmt->bindParam(':category_id', $this->category_id);
-    $stmt->bindParam(':image', $this->image);
-    $stmt->bindParam(':video_path', $this->video_path);
-    $stmt->bindParam(':id', $this->id);
+    $stmt->bindParam(':title', $this->title, PDO::PARAM_STR);
+    $stmt->bindParam(':description', $this->description, PDO::PARAM_STR);
+    $stmt->bindParam(':category_id', $this->category_id, PDO::PARAM_INT);
+    $stmt->bindParam(':image', $this->image, PDO::PARAM_STR);
+    $stmt->bindParam(':video_path', $this->video_path, PDO::PARAM_STR);
+    $stmt->bindParam(':id', $this->id, PDO::PARAM_INT);
 
     if ($stmt->execute()) {
       $this->updateTags($db);
