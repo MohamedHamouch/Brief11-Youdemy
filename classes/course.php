@@ -166,7 +166,7 @@ abstract class Course
   {
     $query = "SELECT type FROM courses WHERE id = :course_id";
     $stmt = $db->prepare($query);
-    $stmt->bindParam(':course_id', $course_id);
+    $stmt->bindParam(':course_id', $course_id, PDO::PARAM_INT);
     $stmt->execute();
 
     return $stmt->fetchColumn();
@@ -186,9 +186,6 @@ abstract class Course
   abstract public function saveCourse(PDO $db);
   abstract public function saveCourseUpdate(PDO $db);
 
-  //abstract public function getCourseDetails(PDO $db);
-
-
   //methods
 
   public function saveTags(PDO $db)
@@ -197,8 +194,8 @@ abstract class Course
     $stmt = $db->prepare($query);
 
     foreach ($this->tags as $tag) {
-      $stmt->bindParam(':course_id', $this->id);
-      $stmt->bindParam(':tag_id', $tag);
+      $stmt->bindParam(':course_id', $this->id, PDO::PARAM_INT);
+      $stmt->bindParam(':tag_id', $tag, PDO::PARAM_STR);
       $stmt->execute();
     }
   }
@@ -207,7 +204,7 @@ abstract class Course
   {
     $query = "SELECT tag_id FROM course_tags WHERE course_id = :course_id";
     $stmt = $db->prepare($query);
-    $stmt->bindParam(':course_id', $this->id);
+    $stmt->bindParam(':course_id', $this->id, PDO::PARAM_INT);
     $stmt->execute();
 
     $this->tags = $stmt->fetchAll(PDO::FETCH_COLUMN);
@@ -217,35 +214,21 @@ abstract class Course
   {
     $query = "DELETE FROM course_tags WHERE course_id = :course_id";
     $stmt = $db->prepare($query);
-    $stmt->bindParam(':course_id', $this->id);
+    $stmt->bindParam(':course_id', $this->id, PDO::PARAM_INT);
     $stmt->execute();
 
     $this->saveTags($db);
   }
 
-  // public function getCourseDetails(PDO $db)
-  // {
-  //   $query = "
-  //        SELECT 
-  //            c.id AS course_id,
-  //            c.name AS course_name,
-  //            c.description AS course_description,
-  //            cat.name AS category_name,
-  //            CONCAT(u.first_name, ' ', u.last_name) AS user_full_name
-  //        FROM Courses c
-  //        JOIN Categories cat ON c.category_id = cat.id
-  //        JOIN Users u ON c.user_id = u.id
-  //        WHERE c.id = :course_id";
+  public function getCourseTeacherName(PDO $db)
+  {
+    $query = "SELECT CONCAT(first_name, ' ', last_name) AS teacher_name FROM users WHERE id = :teacher_id";
+    $stmt = $db->prepare($query);
+    $stmt->bindParam(':teacher_id', $this->teacher_id, PDO::PARAM_INT);
+    $stmt->execute();
 
-  //   $stmt = $db->prepare($query);
-  //   $stmt->bindParam(':course_id', $this->id);
-  //   $stmt->execute();
-
-  //   return $stmt->fetch(PDO::FETCH_ASSOC);
-  // }
-
-
-
+    return $stmt->fetchColumn();
+  }
   public function getCourseTags(PDO $db)
   {
     $query = "
@@ -255,10 +238,41 @@ abstract class Course
          WHERE ct.course_id = :course_id";
 
     $stmt = $db->prepare($query);
-    $stmt->bindParam(':course_id', $this->id);
+    $stmt->bindParam(':course_id', $this->id, PDO::PARAM_INT);
     $stmt->execute();
 
     return $stmt->fetchAll(PDO::FETCH_ASSOC);
+  }
+
+  public function getCourseCategoryName(PDO $db)
+  {
+    $query = "SELECT name FROM categories WHERE id = :category_id";
+    $stmt = $db->prepare($query);
+    $stmt->bindParam(':category_id', $this->category_id, PDO::PARAM_INT);
+    $stmt->execute();
+
+    return $stmt->fetchColumn();
+  }
+
+  public function courseEnrollmentCount(PDO $db)
+  {
+    $query = "SELECT COUNT(*) FROM Enrollments WHERE course_id = :course_id";
+    $stmt = $db->prepare($query);
+    $stmt->bindParam(':course_id', $this->id, PDO::PARAM_INT);
+    $stmt->execute();
+
+    return $stmt->fetchColumn();
+  }
+
+  public function checkUserEnrollment(PDO $db, $user_id)
+  {
+    $query = "SELECT COUNT(*) FROM Enrollments WHERE course_id = :course_id AND user_id = :user_id";
+    $stmt = $db->prepare($query);
+    $stmt->bindParam(':course_id', $this->id, PDO::PARAM_INT);
+    $stmt->bindParam(':user_id', $user_id, PDO::PARAM_INT);
+    $stmt->execute();
+
+    return $stmt->fetchColumn() > 0;
   }
 
   public function getCourseEnrollments(PDO $db)
@@ -269,7 +283,7 @@ abstract class Course
          WHERE e.course_id = :course_id";
 
     $stmt = $db->prepare($query);
-    $stmt->bindParam(':course_id', $this->id);
+    $stmt->bindParam(':course_id', $this->id, PDO::PARAM_INT);
     $stmt->execute();
 
     return $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -293,7 +307,7 @@ abstract class Course
 
 
     $stmt = $db->prepare($query);
-    $stmt->bindParam(':course_id', $this->id);
+    $stmt->bindParam(':course_id', $this->id, PDO::PARAM_INT);
     $stmt->execute();
 
     return $stmt->fetchAll(PDO::FETCH_ASSOC);
