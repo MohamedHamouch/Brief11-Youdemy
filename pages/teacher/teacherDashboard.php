@@ -243,65 +243,75 @@ $courses = $user->getTeacherCourses($PDOConn);
 
         <!-- courses -->
         <div id="manageCourses" class="contentSection hidden bg-white rounded-xl shadow-sm p-6 border border-gray-100">
-          <div class="overflow-x-auto mx-auto bg-white shadow-md rounded-lg w-full">
-            <table class="min-w-full table-auto">
-              <thead class="bg-blue-100 text-gray-800">
-                <tr>
-                  <th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">Title</th>
-                  <th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">Type</th>
-                  <th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">Category
-                  </th>
-                  <th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">Created At
-                  </th>
-                  <th class="px-6 py-3 text-center text-xs font-medium uppercase tracking-wider">Actions
-                  </th>
-                </tr>
-              </thead>
-              <tbody class="divide-y divide-gray-200">
-                <?php foreach ($courses as $course): ?>
-                  <tr class="hover:bg-gray-50">
-                    <td class="px-6 py-4 text-sm text-gray-900">
-                      <a href="../courses/courseDetails.php?id=<?= urlencode($course['id']) ?>"
-                        class="text-gray-700 font-medium hover:text-orange-700 hover:underline focus:outline-none focus:ring-2 focus:ring-orange-500">
-                        <?= htmlspecialchars($course['title']) ?>
-                      </a>
-                    </td>
-                    <td class="px-6 py-4 text-sm text-gray-900">
-                      <?= htmlspecialchars(ucfirst($course['type'])) ?>
-                    </td>
-                    <td class="px-6 py-4 text-sm text-gray-900">
-                      <?= htmlspecialchars($course['category_name']) ?>
-                    </td>
-                    <td class="px-6 py-4 text-sm text-gray-900">
-                      <?= date('F j, Y', strtotime($course['created_at'])) ?>
-                    </td>
-                    <td class="px-6 py-4 text-center text-sm font-medium">
-                      <div class="flex justify-center gap-4">
-                        <!-- Edit Form -->
-                        <form action="editCourse.php" method="POST" class="inline">
-                          <input type="hidden" name="courseId" value="<?= htmlspecialchars($course['id']) ?>">
-                          <button type="submit"
-                            class="text-blue-600 hover:text-blue-800 transform hover:scale-110 transition duration-200">
-                            <i class="fas fa-edit"></i>
-                          </button>
-                        </form>
-                        <!-- Delete Form -->
-                        <form action="process/deleteCourse.php" method="POST" class="inline"
-                          onsubmit="return confirm('Are you sure you want to delete this course?')">
-                          <input type="hidden" name="courseId" value="<?= htmlspecialchars($course['id']) ?>">
-                          <button type="submit"
-                            class="text-red-600 hover:text-red-800 transform hover:rotate-12 transition duration-200">
-                            <i class="fas fa-trash"></i>
-                          </button>
-                        </form>
-                      </div>
-                    </td>
+          <?php if (!empty($courses)): ?>
+            <div class="text-center py-8 mx-auto">
+              <i class="fas fa-chalkboard-teacher text-gray-400 text-4xl mb-4"></i>
+              <p class="text-gray-500 mb-4">You haven’t shared your expertise yet. Start your teaching journey by adding
+                your first course!</p>
+              <button data-section="newCourse"
+                class="dashboard-nav-btn bg-orange-500 text-white px-6 py-2 rounded-full hover:bg-orange-600 transform hover:-translate-y-0.5 transition">
+                Add Your First Course
+              </button>
+            </div>
+          <?php else: ?>
+            <div class="overflow-x-auto mx-auto bg-white shadow-md rounded-lg w-full">
+              <table class="min-w-full table-auto">
+                <thead class="bg-blue-100 text-gray-800">
+                  <tr>
+                    <th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">Title</th>
+                    <th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">Type</th>
+                    <th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">Category</th>
+                    <th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">Created At</th>
+                    <th class="px-6 py-3 text-center text-xs font-medium uppercase tracking-wider">Actions</th>
                   </tr>
-                <?php endforeach; ?>
-              </tbody>
-            </table>
-          </div>
+                </thead>
+                <tbody class="divide-y divide-gray-200">
+                  <?php foreach ($courses as $course): ?>
+                    <tr class="hover:bg-gray-50">
+                      <td class="px-6 py-4 text-sm text-gray-900">
+                        <a href="../courses/courseDetails.php?id=<?= urlencode($course['id']) ?>"
+                          class="text-gray-700 font-medium hover:text-orange-700 hover:underline focus:outline-none focus:ring-2 focus:ring-orange-500">
+                          <?= htmlspecialchars($course['title']) ?>
+                        </a>
+                      </td>
+                      <td class="px-6 py-4 text-sm text-gray-900">
+                        <?= htmlspecialchars(ucfirst($course['type'])) ?>
+                      </td>
+                      <td class="px-6 py-4 text-sm text-gray-900">
+                        <?= htmlspecialchars($course['category_name']) ?>
+                      </td>
+                      <td class="px-6 py-4 text-sm text-gray-900">
+                        <?= date('F j, Y', strtotime($course['created_at'])) ?>
+                      </td>
+                      <td class="px-6 py-4 text-center text-sm font-medium">
+                        <div class="flex justify-center gap-4">
+                          <!-- Edit Form -->
+                          <form action="editCourse.php" method="POST" class="inline">
+                            <input type="hidden" name="courseId" value="<?= htmlspecialchars($course['id']) ?>">
+                            <button type="submit"
+                              class="text-blue-600 hover:text-blue-800 transform hover:scale-110 transition duration-200">
+                              <i class="fas fa-edit"></i>
+                            </button>
+                          </form>
+                          <!-- Delete Form -->
+                          <form action="process/deleteCourse.php" method="POST" class="inline"
+                            onsubmit="return confirm('Are you sure you want to delete this course?')">
+                            <input type="hidden" name="courseId" value="<?= htmlspecialchars($course['id']) ?>">
+                            <button type="submit"
+                              class="text-red-600 hover:text-red-800 transform hover:rotate-12 transition duration-200">
+                              <i class="fas fa-trash"></i>
+                            </button>
+                          </form>
+                        </div>
+                      </td>
+                    </tr>
+                  <?php endforeach; ?>
+                </tbody>
+              </table>
+            </div>
+          <?php endif; ?>
         </div>
+
 
         <!-- statistics -->
         <div id="statistics" class="contentSection hidden bg-white rounded-xl shadow-sm p-6 border border-gray-100">

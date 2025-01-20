@@ -6,7 +6,6 @@ require_once '../../classes/course.php';
 require_once '../../classes/videoCourse.php';
 require_once '../../classes/documentCourse.php';
 
-// Access control
 if (isset($_SESSION['user'])) {
   $user = unserialize($_SESSION['user']);
   if (!($user instanceof Student)) {
@@ -18,7 +17,6 @@ if (isset($_SESSION['user'])) {
   exit();
 }
 
-// Get enrolled courses
 $enrolledCourses = $user->getEnrolledCourses($PDOConn);
 ?>
 
@@ -83,89 +81,141 @@ $enrolledCourses = $user->getEnrolledCourses($PDOConn);
     </div>
   </header>
 
-  <main class="flex-1 mx-auto px-6 pt-24 max-w-6xl">
-    <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
-      <div class="px-6 py-4 bg-orange-50 border-b border-gray-100">
-        <h1 class="text-xl font-semibold text-gray-800">My Enrolled Courses</h1>
-        <p class="text-gray-600 text-sm mt-1">
-          Here's a list of courses you're currently enrolled in. Stay on track and keep learning!
-        </p>
-      </div>
+  <main class="flex-1 mx-auto px-6 pt-16 max-w-6xl">
+    <?php if (!$user->isSuspended()) { ?>
+      <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
+        <div class="px-6 pb-8 bg-orange-50 border-b border-gray-100">
+          <h1 class="text-xl font-semibold text-gray-800">My Enrolled Courses</h1>
+          <p class="text-gray-600 text-sm mt-1">
+            Here's a list of courses you're currently enrolled in. Stay on track and keep learning!
+          </p>
+        </div>
 
-      <div class="p-6">
-        <?php if (empty($enrolledCourses)): ?>
-          <div class="text-center py-8">
-            <i class="fas fa-book-open text-gray-400 text-4xl mb-4"></i>
-            <p class="text-gray-500">You haven't enrolled in any courses yet.</p>
-            <a href="../courses/courses.php"
-              class="inline-block mt-4 bg-orange-500 text-white px-6 py-2 rounded-full hover:bg-orange-600 transform hover:-translate-y-0.5 transition"">
+        <div class="p-6">
+          <?php if (empty($enrolledCourses)) { ?>
+            <div class="text-center py-8">
+              <i class="fas fa-book-open text-gray-400 text-4xl mb-4"></i>
+              <p class="text-gray-500">You haven't enrolled in any courses yet.</p>
+              <a href="../courses/courses.php"
+                class="inline-block mt-4 bg-orange-500 text-white px-6 py-2 rounded-full hover:bg-orange-600 transform hover:-translate-y-0.5 transition"">
               Browse Courses
             </a>
           </div>
-        <?php else: ?>
+        <?php } else { ?>
           <div class=" mb-6">
-              <p class="text-gray-700 text-sm">
-                Total Courses Enrolled: <span class="font-semibold"><?= count($enrolledCourses) ?></span>
-              </p>
-          </div>
-          <div class="overflow-x-auto">
-            <table class="min-w-full w-full table-auto">
-              <thead class="bg-orange-50 text-gray-800">
-                <tr>
-                  <th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">Title</th>
-                  <th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">Teacher</th>
-                  <th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">Category</th>
-                  <th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">Type</th>
-                  <th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">Enrolled On</th>
-                  <th class="px-6 py-3 text-center text-xs font-medium uppercase tracking-wider">Actions</th>
-                </tr>
-              </thead>
-              <tbody class="divide-y divide-gray-200">
-                <?php foreach ($enrolledCourses as $course): ?>
-                  <tr class="hover:bg-gray-50">
-                    <td class="px-6 py-4 text-sm text-gray-900">
-                      <a href="../courses/courseDetails.php?id=<?= urlencode($course['id']) ?>"
-                        class="font-medium text-gray-800 hover:text-orange-600">
-                        <?= htmlspecialchars($course['title']) ?>
-                      </a>
-                    </td>
-                    <td class="px-6 py-4 text-sm text-gray-900">
-                      <?= htmlspecialchars($course['teacher_name']) ?>
-                    </td>
-                    <td class="px-6 py-4 text-sm text-gray-900">
-                      <?= htmlspecialchars($course['category_name']) ?>
-                    </td>
-                    <td class="px-6 py-4 text-sm text-gray-900">
-                      <?= htmlspecialchars(ucfirst($course['type'])) ?>
-                    </td>
-                    <td class="px-6 py-4 text-sm text-gray-900">
-                      <?= date('F j, Y', strtotime($course['enrollment_date'])) ?>
-                    </td>
-                    <td class="px-6 py-4 text-center">
-                      <form action="process/cancelEnrollment.php" method="POST"
-                        onsubmit="return confirm('Are you sure you want to cancel your enrollment in this course?')"
-                        class="inline">
-                        <input type="hidden" name="courseId" value="<?= htmlspecialchars($course['id']) ?>">
-                        <button type="submit"
-                          class="group relative text-sm text-gray-600 bg-gray-100 hover:bg-red-50 hover:text-red-600 px-3 py-2 rounded-full transition duration-200">
+                <p class="text-gray-700 text-sm">
+                  Total Courses Enrolled: <span class="font-semibold"><?= count($enrolledCourses) ?></span>
+                </p>
+            </div>
+            <div class="overflow-x-auto">
+              <table class="min-w-full w-full table-auto">
+                <thead class="bg-orange-50 text-gray-800">
+                  <tr>
+                    <th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">Title</th>
+                    <th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">Teacher</th>
+                    <th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">Category</th>
+                    <th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">Type</th>
+                    <th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">Enrolled On</th>
+                    <th class="px-6 py-3 text-center text-xs font-medium uppercase tracking-wider">Actions</th>
+                  </tr>
+                </thead>
+                <tbody class="divide-y divide-gray-200">
+                  <?php foreach ($enrolledCourses as $course): ?>
+                    <tr class="hover:bg-gray-50">
+                      <td class="px-6 py-4 text-sm text-gray-900">
+                        <a href="../courses/courseDetails.php?id=<?= urlencode($course['id']) ?>"
+                          class="font-medium text-gray-800 hover:text-orange-600">
+                          <?= htmlspecialchars($course['title']) ?>
+                        </a>
+                      </td>
+                      <td class="px-6 py-4 text-sm text-gray-900">
+                        <?= htmlspecialchars($course['teacher_name']) ?>
+                      </td>
+                      <td class="px-6 py-4 text-sm text-gray-900">
+                        <?= htmlspecialchars($course['category_name']) ?>
+                      </td>
+                      <td class="px-6 py-4 text-sm text-gray-900">
+                        <?= htmlspecialchars(ucfirst($course['type'])) ?>
+                      </td>
+                      <td class="px-6 py-4 text-sm text-gray-900">
+                        <?= date('F j, Y', strtotime($course['enrollment_date'])) ?>
+                      </td>
+                      <td class="px-6 py-4 text-center">
+                        <form action="process/cancelEnrollment.php" method="POST"
+                          onsubmit="return confirm('Are you sure you want to cancel your enrollment in this course?')"
+                          class="inline">
+                          <input type="hidden" name="courseId" value="<?= htmlspecialchars($course['id']) ?>">
+                          <button type="submit"
+                            class="group relative text-sm text-gray-600 bg-gray-100 hover:bg-red-50 hover:text-red-600 px-3 py-2 rounded-full transition duration-200">
 
-                          <i class="fas fa-times-circle text-lg"></i>
-                          <!-- <span
+                            <i class="fas fa-times-circle text-lg"></i>
+                            <!-- <span
                             class="absolute bottom-full left-1/2 transform -translate-x-1/2 translate-y-2 opacity-0 group-hover:opacity-100 bg-gray-700 text-white text-xs rounded px-2 py-1 transition-opacity duration-200">
                             Cancel Enrollment
                           </span> -->
-                        </button>
-                      </form>
-                    </td>
+                          </button>
+                        </form>
+                      </td>
 
-                  </tr>
-                <?php endforeach; ?>
-              </tbody>
-            </table>
-          </div>
-        <?php endif; ?>
+                    </tr>
+                  <?php endforeach; ?>
+                </tbody>
+              </table>
+            </div>
+          <?php } ?>
+        </div>
+
       </div>
-    </div>
+    <?php } else { ?>
+      <div class="bg-gray-50 flex items-center justify-center pb-10">
+        <div class="max-w-md w-full bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
+          <div class="p-6">
+            <div class="text-center mb-6">
+              <div class="inline-flex items-center justify-center w-16 h-16 bg-red-100 rounded-full mb-4">
+                <i class="fas fa-ban text-2xl text-red-500"></i>
+              </div>
+              <h2 class="text-2xl font-bold text-gray-900 mb-2">Account Suspended</h2>
+              <p class="text-gray-600">Your account has been suspended due to a policy violation or pending
+                investigation.</p>
+            </div>
+            <div class="bg-red-50 rounded-lg p-4 mb-6">
+              <div class="flex items-start">
+                <div class="flex-shrink-0">
+                  <i class="fas fa-info-circle text-red-500 mt-1"></i>
+                </div>
+                <div class="ml-3">
+                  <p class="text-sm text-red-700">
+                    Please contact our support team to resolve this issue. Include any relevant details to expedite the
+                    process.
+                  </p>
+                </div>
+              </div>
+            </div>
+            <div class="space-y-4">
+              <h3 class="text-lg font-medium text-gray-900">You may also:</h3>
+              <ul class="space-y-3">
+                <li class="flex items-start">
+                  <i class="fas fa-check text-green-500 mt-1 mr-3"></i>
+                  <span class="text-gray-600">Review our <a href="#" class="text-orange-500 underline">terms of
+                      service</a></span>
+                </li>
+                <li class="flex items-start">
+                  <i class="fas fa-check text-green-500 mt-1 mr-3"></i>
+                  <span class="text-gray-600">Update your account information</span>
+                </li>
+              </ul>
+            </div>
+
+            <div class="mt-8">
+              <a href="../contact/contact.php"
+                class="block w-full bg-red-500 text-white text-center px-6 py-3 rounded-lg hover:bg-red-600 transition-colors">
+                Contact Support
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    <?php } ?>
   </main>
 
 
