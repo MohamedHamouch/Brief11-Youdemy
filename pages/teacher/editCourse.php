@@ -197,27 +197,36 @@ $categories = Category::getAllCategories($PDOConn);
                     placeholder="Enter your course content here"><?= htmlspecialchars($course->getTextContent()) ?></textarea>
                 </div>
               <?php else: ?>
-                <div>
-                  <label class="block text-sm font-medium text-gray-700 mb-1">Current Video</label>
-                  <div class="p-4 bg-gray-50 rounded-lg border border-gray-200">
-                    <p class="text-sm text-gray-600 break-all"><?= htmlspecialchars($course->getVideoPath()) ?></p>
-                  </div>
-                </div>
-                <div id="videoContent">
-                  <label for="courseVideo" class="block text-sm font-medium text-gray-700 mb-1">Update Course
-                    Video</label>
-                  <label for="courseVideo"
-                    class="flex flex-col items-center justify-center w-full h-64 border-2 border-gray-200 border-dashed rounded-lg cursor-pointer bg-gray-50 hover:bg-gray-100 transition">
-                    <div class="flex flex-col items-center justify-center pt-3 pb-4">
-                      <i class="fas fa-video text-2xl text-gray-400 mb-2"></i>
-                      <p class="text-sm text-gray-500">
-                        <span class="font-medium">Upload new video file</span>
-                      </p>
-                      <p class="text-xs text-gray-500">MP4, MKV or WebM (MAX. 100MB)</p>
+                <div class="space-y-4">
+                  <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Current Video</label>
+                    <div class="rounded-lg border border-gray-200 overflow-hidden">
+                      <video class="w-full" controls controlsList="nodownload" preload="metadata">
+                        <source src="../../uploads/videos/<?= htmlspecialchars($course->getVideoPath()) ?>"
+                          type="video/mp4">
+                        Your browser does not support the video tag.
+                      </video>
                     </div>
-                    <input id="courseVideo" name="video" type="file" class="hidden"
-                      accept="video/mp4,video/webm,video/mkv">
-                  </label>
+                    <p class="mt-1 text-xs text-gray-500">Current file: <?= htmlspecialchars($course->getVideoPath()) ?>
+                    </p>
+                  </div>
+
+                  <div id="videoContent">
+                    <label for="courseVideo" class="block text-sm font-medium text-gray-700 mb-1">Update Course
+                      Video</label>
+                    <label for="courseVideo"
+                      class="flex flex-col items-center justify-center w-full h-32 border-2 border-gray-200 border-dashed rounded-lg cursor-pointer bg-gray-50 hover:bg-gray-100 transition">
+                      <div class="flex flex-col items-center justify-center pt-3 pb-4">
+                        <i class="fas fa-video text-2xl text-gray-400 mb-2"></i>
+                        <p class="text-sm text-gray-500">
+                          <span class="font-medium">Upload new video file</span>
+                        </p>
+                        <p class="text-xs text-gray-500">MP4, MKV or WebM (MAX. 100MB)</p>
+                      </div>
+                      <input id="courseVideo" name="video" type="file" class="hidden"
+                        accept="video/mp4,video/webm,video/mkv">
+                    </label>
+                  </div>
                 </div>
               <?php endif; ?>
             </div>
