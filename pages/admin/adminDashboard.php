@@ -22,7 +22,20 @@ if (isset($_SESSION['user'])) {
   exit();
 }
 
-$activeUsers = User::getActiveUsers($PDOConn);
+if (isset($_GET['search']) || isset($_GET['role'])) {
+
+  $search = trim($_GET['search']) ?? '';
+  $role = trim($_GET['role']) ?? '';
+  $acUsers = User::getActiveUsers($PDOConn);
+  $activeUsers = $user->filterActiveUsers($acUsers, $search, $role);
+
+
+} else {
+  $activeUsers = User::getActiveUsers($PDOConn);
+
+}
+
+
 $suspendedUsers = User::getSuspendedUsers($PDOConn);
 $pendingTeachers = Teacher::getPendingTeachers($PDOConn);
 $tags = Tag::getAllTags($PDOConn);
@@ -38,6 +51,8 @@ $categories = Category::getAllCategories($PDOConn);
   <title>Youdemy - Admin Dashboard</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.1/css/all.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
 </head>
 
 <body class="bg-gray-50 min-h-screen flex flex-col">
@@ -100,30 +115,39 @@ $categories = Category::getAllCategories($PDOConn);
 
       <!-- error/success msg -->
       <?php if (isset($_SESSION['adminActionError'])) { ?>
-        <div class="bg-red-50 text-red-500 text-sm p-4 rounded-lg mb-6">
-          <?= $_SESSION['adminActionError'] ?>
+        <div class="message bg-red-50 border border-red-300 p-4 rounded-lg mb-6 flex justify-between items-center">
+          <div class="flex items-center">
+            <i class="fas fa-times-circle text-red-500 text-xl mr-3"></i>
+            <p class="text-red-700 font-medium"><?= htmlspecialchars($_SESSION['adminActionError']) ?></p>
+          </div>
+          <button class="dismiss-button text-red-600 hover:underline focus:outline-none">
+            Dismiss
+          </button>
         </div>
         <?php unset($_SESSION['adminActionError']); ?>
       <?php } ?>
 
       <?php if (isset($_SESSION['adminActionSuccess'])) { ?>
-        <div class="bg-green-50 text-green-500 text-sm p-4 rounded-lg mb-6">
-          <?= $_SESSION['adminActionSuccess'] ?>
+        <div class="message bg-green-50 border border-green-300 p-4 rounded-lg mb-6 flex justify-between items-center">
+          <div class="flex items-center">
+            <i class="fas fa-check-circle text-green-500 text-xl mr-3"></i>
+            <p class="text-green-700 font-medium"><?= htmlspecialchars($_SESSION['adminActionSuccess']) ?></p>
+          </div>
+          <button class="dismiss-button text-green-600 hover:underline focus:outline-none">
+            Dismiss
+          </button>
         </div>
         <?php unset($_SESSION['adminActionSuccess']); ?>
       <?php } ?>
 
 
+
       <!-- Dashboard Navigation -->
       <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden mb-6">
         <div class="flex flex-wrap">
-          <button data-section="statistics"
-            class="dashboard-nav-btn flex items-center space-x-2 px-6 py-4 text-orange-600 border-b-2 border-orange-500 font-medium">
-            <i class="fas fa-chart-bar"></i>
-            <span>Statistics</span>
-          </button>
+
           <button data-section="activeUsers"
-            class="dashboard-nav-btn flex items-center space-x-2 px-6 py-4 text-gray-600 hover:text-orange-600 font-medium">
+            class="dashboard-nav-btn flex items-center space-x-2 px-6 py-4 text-orange-600 border-b-2 border-orange-500 font-medium">
             <i class="fas fa-users"></i>
             <span>Active Users</span>
           </button>
@@ -147,29 +171,61 @@ $categories = Category::getAllCategories($PDOConn);
             <i class="fas fa-tags"></i>
             <span>Tags</span>
           </button>
-        </div>
-      </div>
-
-
-      <!-- Sections -->
-      <div id="statistics" class="contentSection flex bg-white rounded-xl shadow-sm p-6 border border-gray-100">
-        <div class="w-full text-center text-gray-500">
-          <i class="fas fa-chart-bar text-4xl mb-4"></i>
-          <p>Statistics Section - Content Coming Soon</p>
+          <button data-section="statistics"
+            class="dashboard-nav-btn flex items-center space-x-2 px-6 py-4 text-gray-600 hover:text-orange-600 font-medium">
+            <i class="fas fa-chart-bar"></i>
+            <span>Statistics</span>
+          </button>
         </div>
       </div>
 
       <!-- active users -->
-      <div id="activeUsers" class="contentSection hidden bg-white rounded-xl shadow-sm p-6 border border-gray-100">
-        <div class="overflow-x-auto mx-auto bg-white shadow-md rounded-lg w-full md:w-3/4">
+      <div id="activeUsers"
+        class="contentSection flex flex-col bg-white rounded-xl shadow-sm p-6 border border-gray-100">
+
+
+        <div class="mb-6 w-full lg:w-3/4 mx-auto">
+          <form action="" method="GET" id="filterForm"
+            class="grid grid-cols-1 md:grid-cols-[60%,30%] justify-between gap-4">
+            <div class="relative">
+              <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                <i class="fas fa-search text-gray-400"></i>
+              </div>
+              <input type="text" name="search" placeholder="Search by name..."
+                class="block w-full pl-10 pr-3 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent">
+            </div>
+            <div class="relative">
+              <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                <i class="fas fa-filter text-gray-400"></i>
+              </div>
+              <select name="role" id="roleInput"
+                class="block w-full pl-10 pr-3 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent appearance-none">
+                <option value="" <?= (isset($_GET['role']) && $_GET['role'] === '') ? 'selected' : '' ?>>All Roles</option>
+                <option value="admin" <?= (isset($_GET['role']) && $_GET['role'] === 'admin') ? 'selected' : '' ?>>Admin
+                </option>
+                <option value="teacher" <?= (isset($_GET['role']) && $_GET['role'] === 'teacher') ? 'selected' : '' ?>>
+                  Teacher</option>
+                <option value="student" <?= (isset($_GET['role']) && $_GET['role'] === 'student') ? 'selected' : '' ?>>
+                  Student</option>
+              </select>
+              <div class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
+                <i class="fas fa-chevron-down text-gray-400"></i>
+              </div>
+            </div>
+          </form>
+        </div>
+
+        <div class="overflow-x-auto mx-auto bg-white shadow-md rounded-lg w-full lg:w-3/4">
           <table class="min-w-full table-auto">
             <thead class="bg-orange-100 text-gray-800">
               <tr>
-                <th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">Full Name</th>
+                <th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">Full Name
+                </th>
                 <th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">Email</th>
                 <th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">Joined</th>
                 <th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">Role</th>
-                <th class="px-6 py-3 text-center text-xs font-medium uppercase tracking-wider">Suspend</th>
+                <th class="px-6 py-3 text-center text-xs font-medium uppercase tracking-wider">Suspend
+                </th>
               </tr>
             </thead>
             <tbody class="divide-y divide-gray-200">
@@ -220,104 +276,125 @@ $categories = Category::getAllCategories($PDOConn);
       <!-- Suspended Users -->
       <div id="suspendedUsers" class="contentSection hidden bg-white rounded-xl shadow-sm p-6 border border-gray-100">
         <div class="overflow-x-auto mx-auto bg-white shadow-md rounded-lg w-full max-w-4xl">
-          <table class="min-w-full table-auto">
-            <thead class="bg-red-100 text-gray-800">
-              <tr>
-                <th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">Full Name</th>
-                <th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">Email</th>
-                <th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">Joined</th>
-                <th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">Role</th>
-                <th class="px-6 py-3 text-center text-xs font-medium uppercase tracking-wider">Actions</th>
-              </tr>
-            </thead>
-            <tbody class="divide-y divide-gray-200">
-              <?php foreach ($suspendedUsers as $user): ?>
-                <?php if ($user['role'] !== 'admin'): ?>
-                  <tr class="hover:bg-gray-50">
-                    <td class="px-6 py-4 text-sm text-gray-900">
-                      <?= htmlspecialchars("{$user['first_name']} {$user['last_name']}") ?>
-                    </td>
-                    <td class="px-6 py-4 text-sm text-gray-900">
-                      <?= htmlspecialchars($user['email']) ?>
-                    </td>
-                    <td class="px-6 py-4 text-sm text-gray-900">
-                      <?= date('F j, Y', strtotime($user['created_at'])) ?>
-                    </td>
-                    <td class="px-6 py-4 text-sm text-gray-900">
-                      <?= htmlspecialchars(ucfirst($user['role'])) ?>
-                      <?php if ($user['role'] === 'student'): ?>
-                        <i class="fas fa-user-graduate text-blue-500"></i>
-                      <?php elseif ($user['role'] === 'teacher'): ?>
-                        <i class="fas fa-chalkboard-teacher text-green-500"></i>
-                      <?php endif; ?>
-                    </td>
-                    <td class="px-6 py-4 text-center text-sm font-medium">
-                      <div class="flex justify-center gap-4">
-                        <form action="process/unsuspendUser.php" method="POST" class="inline">
-                          <input type="hidden" name="userId" value="<?= htmlspecialchars($user['id']) ?>">
-                          <button type="submit"
-                            class="text-green-600 hover:text-green-800 transform hover:scale-110 transition duration-200">
-                            <i class="fas fa-check"></i>
-                          </button>
-                        </form>
-                        <form action="process/deleteUser.php" method="POST" class="inline">
-                          <input type="hidden" name="userId" value="<?= htmlspecialchars($user['id']) ?>">
-                          <button type="submit"
-                            class="text-red-600 hover:text-red-800 transform hover:rotate-12 transition duration-200">
-                            <i class="fas fa-trash"></i>
-                          </button>
-                        </form>
-                      </div>
-                    </td>
-                  </tr>
-                <?php endif; ?>
-              <?php endforeach; ?>
-            </tbody>
-          </table>
+          <?php if (empty($suspendedUsers)): ?>
+            <div class="text-center py-12">
+              <i class="fas fa-user-shield text-gray-300 text-5xl mb-4"></i>
+              <h3 class="text-lg font-medium text-gray-900 mb-2">No Suspended Users</h3>
+              <p class="text-gray-500">All users are currently active on the platform.</p>
+            </div>
+          <?php else: ?>
+            <table class="min-w-full table-auto">
+              <thead class="bg-red-100 text-gray-800">
+                <tr>
+                  <th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">Full Name
+                  </th>
+                  <th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">Email</th>
+                  <th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">Joined</th>
+                  <th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">Role</th>
+                  <th class="px-6 py-3 text-center text-xs font-medium uppercase tracking-wider">Actions
+                  </th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-gray-200">
+                <?php foreach ($suspendedUsers as $user): ?>
+                  <?php if ($user['role'] !== 'admin'): ?>
+                    <tr class="hover:bg-gray-50">
+                      <td class="px-6 py-4 text-sm text-gray-900">
+                        <?= htmlspecialchars("{$user['first_name']} {$user['last_name']}") ?>
+                      </td>
+                      <td class="px-6 py-4 text-sm text-gray-900">
+                        <?= htmlspecialchars($user['email']) ?>
+                      </td>
+                      <td class="px-6 py-4 text-sm text-gray-900">
+                        <?= date('F j, Y', strtotime($user['created_at'])) ?>
+                      </td>
+                      <td class="px-6 py-4 text-sm text-gray-900">
+                        <?= htmlspecialchars(ucfirst($user['role'])) ?>
+                        <?php if ($user['role'] === 'student'): ?>
+                          <i class="fas fa-user-graduate text-blue-500"></i>
+                        <?php elseif ($user['role'] === 'teacher'): ?>
+                          <i class="fas fa-chalkboard-teacher text-green-500"></i>
+                        <?php endif; ?>
+                      </td>
+                      <td class="px-6 py-4 text-center text-sm font-medium">
+                        <div class="flex justify-center gap-4">
+                          <form action="process/unsuspendUser.php" method="POST" class="inline">
+                            <input type="hidden" name="userId" value="<?= htmlspecialchars($user['id']) ?>">
+                            <button type="submit"
+                              class="text-green-600 hover:text-green-800 transform hover:scale-110 transition duration-200">
+                              <i class="fas fa-check"></i>
+                            </button>
+                          </form>
+                          <form action="process/deleteUser.php" method="POST" class="deleteForm inline">
+                            <input type="hidden" name="userId" value="<?= htmlspecialchars($user['id']) ?>">
+                            <button type="submit"
+                              class="text-red-600 hover:text-red-800 transform hover:rotate-12 transition duration-200">
+                              <i class="fas fa-trash"></i>
+                            </button>
+                          </form>
+                        </div>
+                      </td>
+                    </tr>
+                  <?php endif; ?>
+                <?php endforeach; ?>
+              </tbody>
+            </table>
+          <?php endif; ?>
         </div>
       </div>
-
 
       <!-- teacher section -->
       <div id="teachers" class="contentSection hidden bg-white rounded-xl shadow-sm p-6 border border-gray-100">
         <div class="overflow-x-auto mx-auto bg-white shadow-md rounded-lg w-full md:w-3/4">
-          <table class="min-w-full table-auto">
-            <thead class="bg-orange-100 text-gray-800">
-              <tr>
-                <th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">Full Name</th>
-                <th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">Email</th>
-                <th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">Joined</th>
-                <th class="px-6 py-3 text-center text-xs font-medium uppercase tracking-wider">Actions</th>
-              </tr>
-            </thead>
-            <tbody class="divide-y divide-gray-200">
-              <?php foreach ($pendingTeachers as $teacher): ?>
-                <tr class="hover:bg-gray-50">
-                  <td class="px-6 py-4 text-sm text-gray-900">
-                    <?= htmlspecialchars("{$teacher['first_name']} {$teacher['last_name']}") ?>
-                  </td>
-                  <td class="px-6 py-4 text-sm text-gray-900"><?= htmlspecialchars($teacher['email']) ?></td>
-                  <td class="px-6 py-4 text-sm text-gray-900"><?= date('F j, Y', strtotime($teacher['created_at'])) ?>
-                  </td>
-                  <td class="px-6 py-4 text-center text-sm font-medium">
-                    <form action="process/approveTeacher.php" method="POST" class="inline">
-                      <input type="hidden" name="teacherId" value="<?= htmlspecialchars($teacher['id']) ?>">
-                      <button type="submit"
-                        class="bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600 transition-colors">
-                        <i class="fas fa-check-circle"></i>
-                        <span class="inline-block">Approve</span>
-                      </button>
-                    </form>
-                  </td>
+          <?php if (empty($pendingTeachers)): ?>
+            <div class="text-center py-12">
+              <i class="fas fa-chalkboard-teacher text-gray-300 text-5xl mb-4"></i>
+              <h3 class="text-lg font-medium text-gray-900 mb-2">No Pending Teacher Applications</h3>
+              <p class="text-gray-500">There are currently no teachers waiting for approval.</p>
+            </div>
+          <?php else: ?>
+            <table class="min-w-full table-auto">
+              <thead class="bg-orange-100 text-gray-800">
+                <tr>
+                  <th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">Full Name
+                  </th>
+                  <th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">Email</th>
+                  <th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">Joined</th>
+                  <th class="px-6 py-3 text-center text-xs font-medium uppercase tracking-wider">Actions
+                  </th>
                 </tr>
-              <?php endforeach; ?>
-            </tbody>
-          </table>
+              </thead>
+              <tbody class="divide-y divide-gray-200">
+                <?php foreach ($pendingTeachers as $teacher): ?>
+                  <tr class="hover:bg-gray-50">
+                    <td class="px-6 py-4 text-sm text-gray-900">
+                      <?= htmlspecialchars("{$teacher['first_name']} {$teacher['last_name']}") ?>
+                    </td>
+                    <td class="px-6 py-4 text-sm text-gray-900"><?= htmlspecialchars($teacher['email']) ?>
+                    </td>
+                    <td class="px-6 py-4 text-sm text-gray-900">
+                      <?= date('F j, Y', strtotime($teacher['created_at'])) ?>
+                    </td>
+                    <td class="px-6 py-4 text-center text-sm font-medium">
+                      <form action="process/approveTeacher.php" method="POST" class="inline">
+                        <input type="hidden" name="teacherId" value="<?= htmlspecialchars($teacher['id']) ?>">
+                        <button type="submit"
+                          class="bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600 transition-colors">
+                          <i class="fas fa-check-circle"></i>
+                          <span class="inline-block">Approve</span>
+                        </button>
+                      </form>
+                    </td>
+                  </tr>
+                <?php endforeach; ?>
+              </tbody>
+            </table>
+          <?php endif; ?>
         </div>
       </div>
 
 
-      <!-- category sectio -->
+      <!-- category section -->
       <div id="categories"
         class="contentSection hidden bg-white rounded-xl shadow-sm p-6 border flex-col border-gray-100">
 
@@ -343,16 +420,22 @@ $categories = Category::getAllCategories($PDOConn);
           <table class="min-w-full table-auto">
             <thead class="bg-orange-100 text-gray-800">
               <tr>
-                <th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">Category Name</th>
-                <th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">Description</th>
-                <th class="px-6 py-3 text-right text-xs font-medium uppercase tracking-wider">Actions</th>
+                <th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">Category
+                  Name</th>
+                <th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">Description
+                </th>
+                <th class="px-6 py-3 text-right text-xs font-medium uppercase tracking-wider">Actions
+                </th>
               </tr>
             </thead>
             <tbody class="divide-y divide-gray-200">
               <?php foreach ($categories as $category): ?>
                 <tr class="hover:bg-gray-50">
-                  <td class="px-6 py-4 text-sm text-gray-900"><?= htmlspecialchars($category['name']) ?></td>
-                  <td class="px-6 py-4 text-sm text-gray-600"><?= htmlspecialchars($category['description']) ?></td>
+                  <td class="px-6 py-4 text-sm text-gray-900"><?= htmlspecialchars($category['name']) ?>
+                  </td>
+                  <td class="px-6 py-4 text-sm text-gray-600">
+                    <?= htmlspecialchars($category['description']) ?>
+                  </td>
                   <td class="px-6 py-4 text-right text-sm font-medium">
                     <div class="flex justify-end gap-4">
                       <button data-category-id="<?= htmlspecialchars($category['id']) ?>"
@@ -361,7 +444,7 @@ $categories = Category::getAllCategories($PDOConn);
                         class="edit-category-btn text-blue-600 hover:text-blue-800 transform hover:scale-110 transition duration-200">
                         <i class="fas fa-edit"></i>
                       </button>
-                      <form action="process/deleteCategory.php" method="POST" class="inline">
+                      <form action="process/deleteCategory.php" method="POST" class="deleteForm inline">
                         <input type="hidden" name="categoryId" value="<?= htmlspecialchars($category['id']) ?>">
                         <button type="submit"
                           class="text-red-600 hover:text-red-800 transform hover:rotate-12 transition duration-200">
@@ -429,8 +512,10 @@ $categories = Category::getAllCategories($PDOConn);
           <table class="min-w-full table-auto">
             <thead class="bg-orange-100 text-gray-800">
               <tr>
-                <th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">Tag Name</th>
-                <th class="px-6 py-3 text-right text-xs font-medium uppercase tracking-wider">Actions</th>
+                <th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">Tag Name
+                </th>
+                <th class="px-6 py-3 text-right text-xs font-medium uppercase tracking-wider">Actions
+                </th>
               </tr>
             </thead>
             <tbody class="divide-y divide-gray-200">
@@ -444,7 +529,7 @@ $categories = Category::getAllCategories($PDOConn);
                         class="edit-tag-btn text-blue-600 hover:text-blue-800 transform hover:scale-110 transition duration-200">
                         <i class="fas fa-edit"></i>
                       </button>
-                      <form action="process/deleteTag.php" method="POST" class="inline">
+                      <form action="process/deleteTag.php" method="POST" class="deleteForm inline">
                         <input type="hidden" name="tagId" value="<?= htmlspecialchars($tag['id']) ?>">
                         <button type="submit"
                           class="text-red-600 hover:text-red-800 transform hover:rotate-12 transition duration-200">
@@ -484,6 +569,17 @@ $categories = Category::getAllCategories($PDOConn);
           </div>
         </div>
       </div>
+
+
+
+      <!-- Sections -->
+      <div id="statistics" class="contentSection hidden bg-white rounded-xl shadow-sm p-6 border border-gray-100">
+        <div class="w-full text-center text-gray-500">
+          <i class="fas fa-chart-bar text-4xl mb-4"></i>
+          <p>Statistics Section - Content Coming Soon</p>
+        </div>
+      </div>
+
     </div>
   </main>
 
@@ -496,7 +592,8 @@ $categories = Category::getAllCategories($PDOConn);
         </div>
         <div class="flex justify-center">
           <ul class="space-y-1 text-center">
-            <li><a href="../../index.php" class="text-gray-400 hover:text-white transition text-sm">Home</a></li>
+            <li><a href="../../index.php" class="text-gray-400 hover:text-white transition text-sm">Home</a>
+            </li>
             <li><a href="../courses/courses.php" class="text-gray-400 hover:text-white transition text-sm">Courses</a>
             </li>
             <li><a href="../contact/contact.php" class="text-gray-400 hover:text-white transition text-sm">Contact</a>
@@ -525,6 +622,8 @@ $categories = Category::getAllCategories($PDOConn);
   </footer>
 
   <script src="../../js/menu.js"></script>
+  <script src="../../js/messages.js"></script>
+  <script src="../../js/alert.js"></script>
   <script src="../../js/adminDashboard.js"></script>
 </body>
 
