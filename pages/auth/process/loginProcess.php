@@ -6,12 +6,27 @@ require_once '../../../classes/student.php';
 require_once '../../../classes/teacher.php';
 require_once '../../../classes/admin.php';
 
+if (isset($_SESSION['user'])) {
+  header("Location: ../../../index.php");
+  exit();
+}
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   if (isset($_POST['email']) && isset($_POST['password'])) {
 
     $email = trim($_POST['email']);
     $password = $_POST['password'];
+
+    if (empty($email)) {
+      $_SESSION['loginError'] = "Email is required.";
+      header("location: ../login.php");
+      exit();
+    }
+    if (empty($password)) {
+      $_SESSION['loginError'] = "Password is required.";
+      header("location: ../login.php");
+      exit();
+    }
 
     $role = User::getUserRole($PDOConn, $email);
     if ($role === 'student') {
@@ -37,6 +52,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 
     if ($status === true) {
+      
       $_SESSION['user'] = serialize($user);
       header("Location: ../../../index.php");
       exit();
@@ -55,7 +71,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   }
 } else {
 
-  header("Location: ../../../index.php");
+  $_SESSION['loginError'] = "Invalid request";
+  header("location: ../register.php");
   exit();
 }
 

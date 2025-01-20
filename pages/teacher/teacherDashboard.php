@@ -34,6 +34,7 @@ $courses = $user->getTeacherCourses($PDOConn);
   <title>Youdemy - Teacher Dashboard</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.1/css/all.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 
 <body class="bg-gray-50 min-h-screen flex flex-col">
@@ -307,8 +308,7 @@ $courses = $user->getTeacherCourses($PDOConn);
                             </button>
                           </form>
                           <!-- Delete Form -->
-                          <form action="process/deleteCourse.php" method="POST" class="inline"
-                            onsubmit="return confirm('Are you sure you want to delete this course?')">
+                          <form action="process/deleteCourse.php" method="POST" class="deleteForm inline">
                             <input type="hidden" name="courseId" value="<?= htmlspecialchars($course['id']) ?>">
                             <button type="submit"
                               class="text-red-600 hover:text-red-800 transform hover:rotate-12 transition duration-200">
@@ -484,6 +484,7 @@ $courses = $user->getTeacherCourses($PDOConn);
 
   <script src="../../js/menu.js"></script>
   <script src="../../js/messages.js"></script>
+  <script src="../../js/alert.js"></script>
   <script src="../../js/teacherDashboard.js"></script>
 
 </body>

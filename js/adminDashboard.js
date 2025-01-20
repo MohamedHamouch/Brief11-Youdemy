@@ -24,6 +24,13 @@ navButtons.forEach(button => {
   });
 });
 
+//users section 
+const roleInput = document.querySelector('#roleInput');
+const filterForm = document.querySelector('#filterForm');
+filterForm.addEventListener('change', function () {
+  filterForm.submit();
+});
+
 
 //tags section
 const editTagPopup = document.querySelector('#editTagPopup');
