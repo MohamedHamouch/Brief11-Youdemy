@@ -75,18 +75,21 @@ if (isset($_SESSION['user'])) {
           </div>
 
           <?php if (isset($_SESSION['loginError'])) { ?>
-            <div class="bg-red-50 text-red-500 text-sm p-4 rounded-lg mb-6">
+            <div class="bg-red-50 border border-red-300 text-red-500 text-sm p-4 rounded-lg mb-6 flex items-center">
+              <i class="fas fa-exclamation-circle text-red-500 mr-2"></i>
               <?= $_SESSION['loginError'] ?>
             </div>
             <?php unset($_SESSION['loginError']); ?>
           <?php } ?>
 
           <?php if (isset($_SESSION['loginSuccess'])) { ?>
-            <div class="bg-green-50 text-green-500 text-sm p-4 rounded-lg mb-6">
+            <div class="bg-green-50 border border-green-300 text-green-500 text-sm p-4 rounded-lg mb-6 flex items-center">
+              <i class="fas fa-check-circle text-green-500 mr-2"></i>
               <?= $_SESSION['loginSuccess'] ?>
             </div>
             <?php unset($_SESSION['loginSuccess']); ?>
           <?php } ?>
+
 
           <form action="process/loginProcess.php" method="POST">
             <div class="space-y-6">

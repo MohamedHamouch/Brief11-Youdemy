@@ -92,32 +92,38 @@ if (isset($_SESSION['user'])) {
   <main class="py-12 px-4">
 
     <div class="max-w-3xl mx-auto">
+      <?php if (isset($_SESSION['updateProfileError'])) { ?>
+        <div class="message bg-red-50 border border-red-300 p-4 rounded-lg mb-6 flex justify-between items-center">
+          <div class="flex items-center">
+            <i class="fas fa-times-circle text-red-500 text-xl mr-3"></i>
+            <p class="text-red-700 font-medium"><?= htmlspecialchars($_SESSION['updateProfileError']) ?></p>
+          </div>
+          <button class="dismiss-button text-red-600 hover:underline focus:outline-none">
+            Dismiss
+          </button>
+        </div>
+        <?php unset($_SESSION['updateProfileError']); ?>
+      <?php } ?>
+
+      <?php if (isset($_SESSION['updateProfileSuccess'])) { ?>
+        <div class="message bg-green-50 border border-green-300 p-4 rounded-lg mb-6 flex justify-between items-center">
+          <div class="flex items-center">
+            <i class="fas fa-check-circle text-green-500 text-xl mr-3"></i>
+            <p class="text-green-700 font-medium"><?= htmlspecialchars($_SESSION['updateProfileSuccess']) ?></p>
+          </div>
+          <button class="dismiss-button text-green-600 hover:underline focus:outline-none">
+            Dismiss
+          </button>
+        </div>
+        <?php unset($_SESSION['updateProfileSuccess']); ?>
+      <?php } ?>
       <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
+
+
+
         <div class="px-6 py-4 bg-orange-50 border-b border-gray-100">
           <h1 class="text-xl font-semibold text-gray-800">Profile Information</h1>
         </div>
-        <div class="px-6 pt-6">
-          <?php if (isset($_SESSION['updateProfileError'])) { ?>
-            <div class="mb-6 rounded-lg border border-red-100 bg-red-50 px-4 py-3 text-sm text-red-600">
-              <div class="flex items-center space-x-2">
-                <i class="fas fa-circle-exclamation"></i>
-                <p><?= $_SESSION['updateProfileError'] ?></p>
-              </div>
-            </div>
-            <?php unset($_SESSION['updateProfileError']); ?>
-          <?php } ?>
-
-          <?php if (isset($_SESSION['updateProfileSuccess'])) { ?>
-            <div class="mb-6 rounded-lg border border-green-100 bg-green-50 px-4 py-3 text-sm text-green-600">
-              <div class="flex items-center space-x-2">
-                <i class="fas fa-circle-check"></i>
-                <p><?= $_SESSION['updateProfileSuccess'] ?></p>
-              </div>
-            </div>
-            <?php unset($_SESSION['updateProfileSuccess']); ?>
-          <?php } ?>
-        </div>
-
         <div class="p-6 space-y-6">
           <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div>
@@ -222,6 +228,7 @@ if (isset($_SESSION['user'])) {
   </footer>
 
   <script src="../../js/profile.js"></script>
+  <script src="../../js/messages.js"></script>
   <script src="../../js/menu.js"></script>
 </body>
 

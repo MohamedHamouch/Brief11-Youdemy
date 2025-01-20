@@ -96,15 +96,27 @@ $courses = $user->getTeacherCourses($PDOConn);
 
       <!-- error/success msg -->
       <?php if (isset($_SESSION['teacherActionError'])) { ?>
-        <div class="bg-red-50 text-red-500 text-sm p-4 rounded-lg mb-6">
-          <?= $_SESSION['teacherActionError'] ?>
+        <div class="message bg-red-50 border border-red-300 p-4 rounded-lg mb-6 flex justify-between items-center">
+          <div class="flex items-center">
+            <i class="fas fa-times-circle text-red-500 text-xl mr-3"></i>
+            <p class="text-red-700 font-medium"><?= htmlspecialchars($_SESSION['teacherActionError']) ?></p>
+          </div>
+          <button class="dismiss-button text-red-600 hover:underline focus:outline-none">
+            Dismiss
+          </button>
         </div>
         <?php unset($_SESSION['teacherActionError']); ?>
       <?php } ?>
 
       <?php if (isset($_SESSION['teacherActionSuccess'])) { ?>
-        <div class="bg-green-50 text-green-500 text-sm p-4 rounded-lg mb-6">
-          <?= $_SESSION['teacherActionSuccess'] ?>
+        <div class="message bg-green-50 border border-green-300 p-4 rounded-lg mb-6 flex justify-between items-center">
+          <div class="flex items-center">
+            <i class="fas fa-check-circle text-green-500 text-xl mr-3"></i>
+            <p class="text-green-700 font-medium"><?= htmlspecialchars($_SESSION['teacherActionSuccess']) ?></p>
+          </div>
+          <button class="dismiss-button text-green-600 hover:underline focus:outline-none">
+            Dismiss
+          </button>
         </div>
         <?php unset($_SESSION['teacherActionSuccess']); ?>
       <?php } ?>
@@ -244,7 +256,7 @@ $courses = $user->getTeacherCourses($PDOConn);
 
         <!-- courses -->
         <div id="manageCourses" class="contentSection hidden bg-white rounded-xl shadow-sm p-6 border border-gray-100">
-          <?php if (!empty($courses)): ?>
+          <?php if (empty($courses)): ?>
             <div class="text-center py-8 mx-auto">
               <i class="fas fa-chalkboard-teacher text-gray-400 text-4xl mb-4"></i>
               <p class="text-gray-500 mb-4">You haven’t shared your expertise yet. Start your teaching journey by adding
@@ -471,6 +483,7 @@ $courses = $user->getTeacherCourses($PDOConn);
   </footer>
 
   <script src="../../js/menu.js"></script>
+  <script src="../../js/messages.js"></script>
   <script src="../../js/teacherDashboard.js"></script>
 
 </body>

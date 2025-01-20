@@ -86,22 +86,33 @@ $enrolledCourses = $user->getEnrolledCourses($PDOConn);
     <?php if (!$user->isSuspended()) { ?>
       <!-- error/success msg -->
       <?php if (isset($_SESSION['enrollError'])) { ?>
-        <div class="bg-red-50 text-red-500 text-sm p-4 rounded-lg mb-6">
-          <?= $_SESSION['enrollError'] ?>
+        <div class="message bg-red-50 border border-red-300 p-4 rounded-lg mb-6 flex justify-between items-center">
+          <div class="flex items-center">
+            <i class="fas fa-times-circle text-red-500 text-xl mr-3"></i>
+            <p class="text-red-700 font-medium"><?= htmlspecialchars($_SESSION['enrollError']) ?></p>
+          </div>
+          <button class="dismiss-button text-red-600 hover:underline focus:outline-none">
+            Dismiss
+          </button>
         </div>
         <?php unset($_SESSION['enrollError']); ?>
       <?php } ?>
 
       <?php if (isset($_SESSION['enrollSuccess'])) { ?>
-        <div class="bg-green-50 text-green-500 text-sm p-4 rounded-lg mb-6">
-          <?= $_SESSION['enrollSuccess'] ?>
+        <div class="message bg-green-50 border border-green-300 p-4 rounded-lg mb-6 flex justify-between items-center">
+          <div class="flex items-center">
+            <i class="fas fa-check-circle text-green-500 text-xl mr-3"></i>
+            <p class="text-green-700 font-medium"><?= htmlspecialchars($_SESSION['enrollSuccess']) ?></p>
+          </div>
+          <button class="dismiss-button text-green-600 hover:underline focus:outline-none">
+            Dismiss
+          </button>
         </div>
         <?php unset($_SESSION['enrollSuccess']); ?>
       <?php } ?>
+
+
       <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
-
-
-
         <div class="px-6 pb-8 bg-orange-50 border-b border-gray-100">
           <h1 class="text-xl font-semibold text-gray-800 pt-4">My Enrolled Courses</h1>
           <p class="text-gray-600 text-sm mt-1">
@@ -123,7 +134,7 @@ $enrolledCourses = $user->getEnrolledCourses($PDOConn);
           <div class=" mb-6">
                 <p class="text-gray-700 text-sm flex items-center">
                   <i class="fas fa-layer-group text-orange-500 mr-2"></i>
-                  Total Courses Enrolled: <span class="font-semibold"><?= count($enrolledCourses) ?></span>
+                  Total Courses Enrolled : <span class="font-semibold"><?= count($enrolledCourses) ?></span>
                 </p>
             </div>
             <div class="overflow-x-auto">
@@ -276,6 +287,8 @@ $enrolledCourses = $user->getEnrolledCourses($PDOConn);
   </footer>
 
   <script src="../../js/menu.js"></script>
+  <script src="../../js/messages.js"></script>
+
 </body>
 
 </html>

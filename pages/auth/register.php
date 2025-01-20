@@ -75,11 +75,13 @@ if (isset($_SESSION['user'])) {
           </div>
 
           <?php if (isset($_SESSION['registerError'])) { ?>
-            <div class="bg-red-50 text-red-500 text-sm p-4 rounded-lg mb-6">
+            <div class="bg-red-50 border border-red-300 text-red-500 text-sm p-4 rounded-lg mb-6 flex items-center">
+              <i class="fas fa-exclamation-circle text-red-500 mr-2"></i>
               <?= $_SESSION['registerError'] ?>
             </div>
             <?php unset($_SESSION['registerError']); ?>
           <?php } ?>
+
 
           <form action="process/registerProcess.php" method="POST">
             <div class="space-y-6">
