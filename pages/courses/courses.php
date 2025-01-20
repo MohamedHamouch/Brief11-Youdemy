@@ -18,14 +18,24 @@ if (isset($_SESSION['user'])) {
 }
 
 $categories = Category::getAllCategories($PDOConn);
+$currentPage = isset($_GET['page']) ? (int) $_GET['page'] : 1;
+$coursePerPage = 12;
+
 if (isset($_GET['search']) || isset($_GET['category'])) {
 
   $search = $_GET['search'] ?? '';
   $category = $_GET['category'] ?? '';
   $courses = Course::filterCourses($PDOConn, $search, $category);
+  $totalCourses = count($courses);
 } else {
-  $courses = Course::getAllCourses($PDOConn);
+
+  $courses = Course::handelPagination($PDOConn, $currentPage, $coursePerPage);
+  $totalCourses = Course::coursesCount($PDOConn);
 }
+
+$totalPages = ceil($totalCourses / $coursePerPage);
+
+
 ?>
 
 <!DOCTYPE html>
@@ -120,7 +130,7 @@ if (isset($_GET['search']) || isset($_GET['category'])) {
         <h1 class="text-3xl font-bold text-gray-900 text-center mb-8">Discover Courses</h1>
         <div class="max-w-2xl mx-auto">
 
-          <!-- filtrage form -->
+          <!-- filtrage -->
           <form method="GET" id="filterForm" class="space-y-4">
             <div class="relative">
               <input type="text" name="search" placeholder="Search for courses..."
@@ -137,8 +147,10 @@ if (isset($_GET['search']) || isset($_GET['category'])) {
                 <option value="">All Categories</option>
                 <?php
                 foreach ($categories as $category) {
+                  $selected = (isset($_GET['category']) && $_GET['category'] == $category['id']) ? 'selected' : '';
                   ?>
-                  <option value="<?= htmlspecialchars($category['id']) ?>"><?= htmlspecialchars($category['name']) ?>
+                  <option value="<?= htmlspecialchars($category['id']) ?>" <?= $selected ?>>
+                    <?= htmlspecialchars($category['name']) ?>
                   </option>
                   <?php
                 }
@@ -151,7 +163,7 @@ if (isset($_GET['search']) || isset($_GET['category'])) {
     </section>
 
 
-    <!-- Courses -->
+    <!-- cours -->
     <section class="py-12">
       <div class="container mx-auto px-4">
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
@@ -184,7 +196,7 @@ if (isset($_GET['search']) || isset($_GET['category'])) {
                       <i class="fas fa-user text-orange-500"></i>
                     </div>
                     <p class="text-sm text-gray-600">
-                      <?= htmlspecialchars("{$course['first_name']} {$course['last_name']}") ?>
+                      <?= htmlspecialchars($course['teacher_name']) ?>
                     </p>
                   </div>
                   <div class="text-sm text-gray-500">
@@ -198,25 +210,40 @@ if (isset($_GET['search']) || isset($_GET['category'])) {
           ?>
         </div>
 
-        <!-- Pagination -->
+        <!-- page -->
         <div class="mt-12 flex justify-center">
           <nav class="flex items-center space-x-2">
-            <button
-              class="p-2 rounded-lg border border-gray-200 text-gray-500 hover:bg-orange-50 hover:text-orange-600 transition-colors">
-              <i class="fas fa-chevron-left"></i>
-            </button>
-            <button
-              class="px-4 py-2 rounded-lg border border-orange-500 bg-orange-50 text-orange-600 font-medium">1</button>
-            <button
-              class="px-4 py-2 rounded-lg border border-gray-200 text-gray-600 hover:bg-orange-50 hover:text-orange-600 hover:border-orange-500 transition-colors">2</button>
-            <button
-              class="px-4 py-2 rounded-lg border border-gray-200 text-gray-600 hover:bg-orange-50 hover:text-orange-600 hover:border-orange-500 transition-colors">3</button>
-            <button
-              class="p-2 rounded-lg border border-gray-200 text-gray-500 hover:bg-orange-50 hover:text-orange-600 transition-colors">
-              <i class="fas fa-chevron-right"></i>
-            </button>
+            <?php if ($currentPage > 1): ?>
+              <a href="?page=<?= $currentPage - 1 ?>"
+                class="p-2 rounded-lg border border-gray-200 text-gray-500 hover:bg-orange-50 hover:text-orange-600 transition-colors">
+                <i class="fas fa-chevron-left"></i>
+              </a>
+            <?php endif; ?>
+
+            <?php for ($page = 1; $page <= $totalPages; $page++): ?>
+              <?php if ($page == $currentPage): ?>
+                <a href="?page=<?= $page ?>"
+                  class="px-4 py-2 rounded-lg border border-orange-500 bg-orange-50 text-orange-600 font-medium">
+                  <?= $page ?>
+                </a>
+              <?php else: ?>
+                <a href="?page=<?= $page ?>"
+                  class="px-4 py-2 rounded-lg border border-gray-200 text-gray-600 hover:bg-orange-50 hover:text-orange-600 hover:border-orange-500 transition-colors">
+                  <?= $page ?>
+                </a>
+              <?php endif; ?>
+            <?php endfor; ?>
+
+            <?php if ($currentPage < $totalPages): ?>
+              <a href="?page=<?= $currentPage + 1 ?>"
+                class="p-2 rounded-lg border border-gray-200 text-gray-500 hover:bg-orange-50 hover:text-orange-600 transition-colors">
+                <i class="fas fa-chevron-right"></i>
+              </a>
+            <?php endif; ?>
           </nav>
         </div>
+
+
       </div>
     </section>
   </main>
