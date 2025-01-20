@@ -32,22 +32,42 @@ class Student extends User
   {
     $course_id = $en->getCourseId();
     $enrollment_date = $en->getEnrollmentDate();
-    $query = "INSERT INTO enrollment (student_id, course_id, enrollment_date) VALUES (:student_id, :course_id, :enrollment_date)";
+    $query = "INSERT INTO enrollments (user_id, course_id, enrollment_date) VALUES (:student_id, :course_id, :enrollment_date)";
     $stmt = $db->prepare($query);
     $stmt->bindParam(':student_id', $this->id, PDO::PARAM_INT);
     $stmt->bindParam(':course_id', $course_id, PDO::PARAM_INT);
     $stmt->bindParam(':enrollment_date', $enrollment_date, PDO::PARAM_STR);
-    $stmt->execute();
+
+    if ($stmt->execute()) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  public function cancelEnrollment(PDO $db, Enrollment $en)
+  {
+    $course_id = $en->getCourseId();
+    $query = "DELETE FROM enrollments WHERE user_id = :student_id AND course_id = :course_id";
+    $stmt = $db->prepare($query);
+    $stmt->bindParam(':student_id', $this->id, PDO::PARAM_INT);
+    $stmt->bindParam(':course_id', $course_id, PDO::PARAM_INT);
+
+    if ($stmt->execute()) {
+      return true;
+    } else {
+      return false;
+    }
   }
 
   public function getEnrolledCourses(PDO $db)
   {
     $query = "SELECT c.*, cat.name AS category_name, CONCAT(u.first_name, ' ', u.last_name) AS teacher_name, e.enrollment_date
-        FROM enrollment e
+        FROM enrollments e
         JOIN courses c ON e.course_id = c.id
         JOIN users u ON c.teacher_id = u.id
         LEFT JOIN categories cat ON c.category_id = cat.id
-        WHERE e.student_id = :student_id";
+        WHERE e.user_id = :student_id";
 
     $stmt = $db->prepare($query);
     $stmt->bindParam(':student_id', $this->id, PDO::PARAM_INT);

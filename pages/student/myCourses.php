@@ -119,80 +119,79 @@ $enrolledCourses = $user->getEnrolledCourses($PDOConn);
             Here's a list of courses you're currently enrolled in. Stay on track and keep learning!
           </p>
         </div>
-
-        <div class="p-6">
-          <?php if (empty($enrolledCourses)) { ?>
-            <div class="text-center py-8">
-              <i class="fas fa-book-open text-gray-400 text-4xl mb-4"></i>
-              <p class="text-gray-500">You haven't enrolled in any courses yet.</p>
-              <a href="../courses/courses.php"
-                class="inline-block mt-4 bg-orange-500 text-white px-6 py-2 rounded-full hover:bg-orange-600 transform hover:-translate-y-0.5 transition"">
+        <?php if (empty($enrolledCourses)) { ?>
+          <div class="text-center py-8">
+            <i class="fas fa-book-open text-gray-400 text-4xl mb-4"></i>
+            <p class="text-gray-500">You haven't enrolled in any courses yet.</p>
+            <a href="../courses/courses.php"
+              class="inline-block mt-4 bg-orange-500 text-white px-6 py-2 rounded-full hover:bg-orange-600 transform hover:-translate-y-0.5 transition"">
               Browse Courses
             </a>
           </div>
         <?php } else { ?>
-          <div class=" mb-6">
+        <div class=" p-6">
+              <div class=" mb-6">
                 <p class="text-gray-700 text-sm flex items-center">
                   <i class="fas fa-layer-group text-orange-500 mr-2"></i>
                   Total Courses Enrolled : <span class="font-semibold"><?= count($enrolledCourses) ?></span>
                 </p>
-            </div>
-            <div class="overflow-x-auto">
-              <table class="min-w-full w-full table-auto">
-                <thead class="bg-orange-50 text-gray-800">
-                  <tr class="">
-                    <th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">Title</th>
-                    <th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">Teacher</th>
-                    <th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">Category</th>
-                    <th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">Type</th>
-                    <th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">Enrolled On</th>
-                    <th class="px-6 py-3 text-center text-xs font-medium uppercase tracking-wider">Actions</th>
-                  </tr>
-                </thead>
-                <tbody class="divide-y divide-gray-200">
-                  <?php foreach ($enrolledCourses as $course): ?>
-                    <tr class="hover:bg-gray-50">
-                      <td class="px-6 py-4 text-sm text-gray-900">
-                        <a href="../courses/courseDetails.php?id=<?= urlencode($course['id']) ?>"
-                          class="font-medium text-gray-800 hover:text-orange-600">
-                          <?= htmlspecialchars($course['title']) ?>
-                        </a>
-                      </td>
-                      <td class="px-6 py-4 text-sm text-gray-900">
-                        <?= htmlspecialchars($course['teacher_name']) ?>
-                      </td>
-                      <td class="px-6 py-4 text-sm text-gray-900">
-                        <?= htmlspecialchars($course['category_name']) ?>
-                      </td>
-                      <td class="px-6 py-4 text-sm text-gray-900">
-                        <?= htmlspecialchars(ucfirst($course['type'])) ?>
-                      </td>
-                      <td class="px-6 py-4 text-sm text-gray-900">
-                        <?= date('F j, Y', strtotime($course['enrollment_date'])) ?>
-                      </td>
-                      <td class="px-6 py-4 text-center">
-                        <form action="process/cancelEnrollment.php" method="POST"
-                          onsubmit="return confirm('Are you sure you want to cancel your enrollment in this course?')"
-                          class="inline">
-                          <input type="hidden" name="courseId" value="<?= htmlspecialchars($course['id']) ?>">
-                          <button type="submit"
-                            class="group relative text-sm text-gray-600 bg-gray-100 hover:bg-red-50 hover:text-red-600 px-3 py-2 rounded-full transition duration-200">
+              </div>
+              <div class="overflow-x-auto">
+                <table class="min-w-full w-full table-auto">
+                  <thead class="bg-orange-50 text-gray-800">
+                    <tr class="">
+                      <th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">Title</th>
+                      <th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">Teacher</th>
+                      <th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">Category</th>
+                      <th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">Type</th>
+                      <th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">Enrolled On</th>
+                      <th class="px-6 py-3 text-center text-xs font-medium uppercase tracking-wider">Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody class="divide-y divide-gray-200">
+                    <?php foreach ($enrolledCourses as $course): ?>
+                      <tr class="hover:bg-gray-50">
+                        <td class="px-6 py-4 text-sm text-gray-900">
+                          <a href="../courses/courseDetails.php?id=<?= urlencode($course['id']) ?>"
+                            class="font-medium text-gray-800 hover:text-orange-600">
+                            <?= htmlspecialchars($course['title']) ?>
+                          </a>
+                        </td>
+                        <td class="px-6 py-4 text-sm text-gray-900">
+                          <?= htmlspecialchars($course['teacher_name']) ?>
+                        </td>
+                        <td class="px-6 py-4 text-sm text-gray-900">
+                          <?= htmlspecialchars($course['category_name']) ?>
+                        </td>
+                        <td class="px-6 py-4 text-sm text-gray-900">
+                          <?= htmlspecialchars(ucfirst($course['type'])) ?>
+                        </td>
+                        <td class="px-6 py-4 text-sm text-gray-900">
+                          <?= date('F j, Y', strtotime($course['enrollment_date'])) ?>
+                        </td>
+                        <td class="px-6 py-4 text-center">
+                          <form action="process/cancelEnrollment.php" method="POST"
+                            onsubmit="return confirm('Are you sure you want to cancel your enrollment in this course?')"
+                            class="inline">
+                            <input type="hidden" name="courseId" value="<?= htmlspecialchars($course['id']) ?>">
+                            <button type="submit"
+                              class="group relative text-sm text-gray-600 bg-gray-100 hover:bg-red-50 hover:text-red-600 px-3 py-2 rounded-full transition duration-200">
 
-                            <i class="fas fa-times-circle text-lg"></i>
-                            <!-- <span
+                              <i class="fas fa-times-circle text-lg"></i>
+                              <!-- <span
                             class="absolute bottom-full left-1/2 transform -translate-x-1/2 translate-y-2 opacity-0 group-hover:opacity-100 bg-gray-700 text-white text-xs rounded px-2 py-1 transition-opacity duration-200">
                             Cancel Enrollment
                           </span> -->
-                          </button>
-                        </form>
-                      </td>
+                            </button>
+                          </form>
+                        </td>
 
-                    </tr>
-                  <?php endforeach; ?>
-                </tbody>
-              </table>
-            </div>
-          <?php } ?>
+                      </tr>
+                    <?php endforeach; ?>
+                  </tbody>
+                </table>
+              </div>
+            <?php } ?>
         </div>
 
       </div>
