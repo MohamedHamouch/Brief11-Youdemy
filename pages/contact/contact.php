@@ -19,7 +19,7 @@ if (isset($_SESSION['user'])) {
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Youdemy - Admin Dashboard</title>
+  <title>Youdemy - Contact Us</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.1/css/all.min.css">
 </head>
@@ -253,9 +253,11 @@ if (isset($_SESSION['user'])) {
         </div>
         <div class="flex justify-center">
           <ul class="space-y-1 text-center">
-            <li><a href="#" class="text-gray-400 hover:text-white transition text-sm">Home</a></li>
-            <li><a href="#" class="text-gray-400 hover:text-white transition text-sm">Courses</a></li>
-            <li><a href="#" class="text-gray-400 hover:text-white transition text-sm">Contact</a></li>
+            <li><a href="../../index.php" class="text-gray-400 hover:text-white transition text-sm">Home</a></li>
+            <li><a href="../courses/courses.php" class="text-gray-400 hover:text-white transition text-sm">Courses</a>
+            </li>
+            <li><a href="#" class="text-gray-400 hover:text-white transition text-sm">Contact</a>
+            </li>
           </ul>
         </div>
         <div class="flex flex-col items-end">

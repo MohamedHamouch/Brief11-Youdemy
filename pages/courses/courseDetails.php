@@ -428,9 +428,11 @@ if (isset($_SESSION['user'])) {
         </div>
         <div class="flex justify-center">
           <ul class="space-y-1 text-center">
-            <li><a href="#" class="text-gray-400 hover:text-white transition text-sm">Home</a></li>
-            <li><a href="#" class="text-gray-400 hover:text-white transition text-sm">Courses</a></li>
-            <li><a href="#" class="text-gray-400 hover:text-white transition text-sm">Contact</a></li>
+            <li><a href="../../index.php" class="text-gray-400 hover:text-white transition text-sm">Home</a></li>
+            <li><a href="../courses/courses.php" class="text-gray-400 hover:text-white transition text-sm">Courses</a>
+            </li>
+            <li><a href="../contact/contact.php" class="text-gray-400 hover:text-white transition text-sm">Contact</a>
+            </li>
           </ul>
         </div>
         <div class="flex flex-col items-end">

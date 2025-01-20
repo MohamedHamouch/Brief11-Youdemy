@@ -43,13 +43,15 @@ if (isset($_SESSION['user'])) {
             <ul class="hidden md:flex items-center space-x-6">
               <li>
                 <a href="../../index.php"
-                  class="text-gray-800 hover:text-orange-600 transition-colors duration-300">Home</a>
+                  class="text-gray-600 hover:text-orange-600 transition-colors duration-300">Home</a>
               </li>
               <li>
-                <a href="#" class="text-gray-600 hover:text-orange-600 transition-colors duration-300">Courses</a>
+                <a href="../courses/courses.php"
+                  class="text-gray-600 hover:text-orange-600 transition-colors duration-300">Courses</a>
               </li>
               <li>
-                <a href="#" class="text-gray-600 hover:text-orange-600 transition-colors duration-300">Contact</a>
+                <a href="../contact/contact.php"
+                  class="text-gray-600 hover:text-orange-600 transition-colors duration-300">Contact</a>
               </li>
               <li class="relative">
                 <button id="dropdownButton"
@@ -63,18 +65,19 @@ if (isset($_SESSION['user'])) {
                   <a href="#"
                     class="block px-4 py-2 text-sm text-gray-800 font-medium hover:bg-orange-50 hover:text-orange-700">Profile</a>
                   <?php if ($user instanceof Admin) { ?>
-                    <a href="#"
+                    <a href="../admin/adminDashboard.php"
                       class="block px-4 py-2 text-sm text-gray-700 hover:bg-orange-50 hover:text-orange-700">Admin
                       Dashboard</a>
                   <?php } elseif ($user instanceof Teacher) { ?>
-                    <a href="#"
+                    <a href="../teacher/teacherDashboard.php"
                       class="block px-4 py-2 text-sm text-gray-700 hover:bg-orange-50 hover:text-orange-700">Teacher
                       Dashboard</a>
                   <?php } elseif ($user instanceof Student) { ?>
-                    <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-orange-50 hover:text-orange-700">My
+                    <a href="../admin/adminDashboard.php"
+                      class="block px-4 py-2 text-sm text-gray-700 hover:bg-orange-50 hover:text-orange-700">My
                       Courses</a>
                   <?php } ?>
-                  <a href="process/logout.php"
+                  <a href="../auth/process/logout.php"
                     class="block px-4 py-2 text-sm text-gray-700 hover:bg-orange-50 hover:text-red-700">Logout</a>
                 </div>
               </li>
@@ -87,6 +90,7 @@ if (isset($_SESSION['user'])) {
 
   <!-- Profile -->
   <main class="py-12 px-4">
+
     <div class="max-w-3xl mx-auto">
       <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
         <div class="px-6 py-4 bg-orange-50 border-b border-gray-100">
@@ -113,6 +117,7 @@ if (isset($_SESSION['user'])) {
             <?php unset($_SESSION['updateProfileSuccess']); ?>
           <?php } ?>
         </div>
+
         <div class="p-6 space-y-6">
           <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div>
@@ -145,7 +150,7 @@ if (isset($_SESSION['user'])) {
   </main>
 
   <!-- Update profile -->
-  <div id="formPopup" class="hidden fixed inset-0 bg-black bg-opacity-50 items-center justify-center z-50">
+  <section id="formPopup" class="hidden fixed inset-0 bg-black bg-opacity-50 items-center justify-center z-50">
     <div class="bg-white rounded-xl shadow-lg max-w-md w-full mx-4">
       <div class="rounded-t-xl bg-orange-50 px-6 py-4 border-b border-gray-100 flex justify-between items-center">
         <h3 class="text-xl font-semibold text-gray-800">Update Profile</h3>
@@ -177,7 +182,7 @@ if (isset($_SESSION['user'])) {
         </form>
       </div>
     </div>
-  </div>
+  </section>
 
   <footer class="bg-gray-900 text-white mt-auto">
     <div class="container mx-auto px-4 py-6">
@@ -188,9 +193,11 @@ if (isset($_SESSION['user'])) {
         </div>
         <div class="flex justify-center">
           <ul class="space-y-1 text-center">
-            <li><a href="#" class="text-gray-400 hover:text-white transition text-sm">Home</a></li>
-            <li><a href="#" class="text-gray-400 hover:text-white transition text-sm">Courses</a></li>
-            <li><a href="#" class="text-gray-400 hover:text-white transition text-sm">Contact</a></li>
+            <li><a href="../../index.php" class="text-gray-400 hover:text-white transition text-sm">Home</a></li>
+            <li><a href="../courses/courses.php" class="text-gray-400 hover:text-white transition text-sm">Courses</a>
+            </li>
+            <li><a href="../contact/contact.php" class="text-gray-400 hover:text-white transition text-sm">Contact</a>
+            </li>
           </ul>
         </div>
         <div class="flex flex-col items-end">

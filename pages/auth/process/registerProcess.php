@@ -20,12 +20,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     } elseif ($role === 'teacher') {
       $user = new Teacher($first_name, $last_name, $email, $password);
       $status = $user->register($PDOConn, $confirm_password);
-    }else {
+    } else {
       $status = "Invalid role.";
     }
-    
-    if ($status === true) {
 
+    if ($status === true) {
+      $_SESSION['loginSuccess'] = "Account created successfully, you can now login.";
       header("location: ../login.php");
       exit();
     } else {

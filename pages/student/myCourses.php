@@ -54,7 +54,8 @@ $enrolledCourses = $user->getEnrolledCourses($PDOConn);
                   class="text-gray-600 hover:text-orange-600 transition-colors duration-300">Courses</a>
               </li>
               <li>
-                <a href="#" class="text-gray-600 hover:text-orange-600 transition-colors duration-300">Contact</a>
+                <a href="../contact/contact.php"
+                  class="text-gray-600 hover:text-orange-600 transition-colors duration-300">Contact</a>
               </li>
               <li class="relative">
                 <button id="dropdownButton"
@@ -83,9 +84,26 @@ $enrolledCourses = $user->getEnrolledCourses($PDOConn);
 
   <main class="flex-1 mx-auto px-6 pt-16 max-w-6xl">
     <?php if (!$user->isSuspended()) { ?>
+      <!-- error/success msg -->
+      <?php if (isset($_SESSION['enrollError'])) { ?>
+        <div class="bg-red-50 text-red-500 text-sm p-4 rounded-lg mb-6">
+          <?= $_SESSION['enrollError'] ?>
+        </div>
+        <?php unset($_SESSION['enrollError']); ?>
+      <?php } ?>
+
+      <?php if (isset($_SESSION['enrollSuccess'])) { ?>
+        <div class="bg-green-50 text-green-500 text-sm p-4 rounded-lg mb-6">
+          <?= $_SESSION['enrollSuccess'] ?>
+        </div>
+        <?php unset($_SESSION['enrollSuccess']); ?>
+      <?php } ?>
       <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
+
+
+
         <div class="px-6 pb-8 bg-orange-50 border-b border-gray-100">
-          <h1 class="text-xl font-semibold text-gray-800">My Enrolled Courses</h1>
+          <h1 class="text-xl font-semibold text-gray-800 pt-4">My Enrolled Courses</h1>
           <p class="text-gray-600 text-sm mt-1">
             Here's a list of courses you're currently enrolled in. Stay on track and keep learning!
           </p>
@@ -103,14 +121,15 @@ $enrolledCourses = $user->getEnrolledCourses($PDOConn);
           </div>
         <?php } else { ?>
           <div class=" mb-6">
-                <p class="text-gray-700 text-sm">
+                <p class="text-gray-700 text-sm flex items-center">
+                  <i class="fas fa-layer-group text-orange-500 mr-2"></i>
                   Total Courses Enrolled: <span class="font-semibold"><?= count($enrolledCourses) ?></span>
                 </p>
             </div>
             <div class="overflow-x-auto">
               <table class="min-w-full w-full table-auto">
                 <thead class="bg-orange-50 text-gray-800">
-                  <tr>
+                  <tr class="">
                     <th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">Title</th>
                     <th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">Teacher</th>
                     <th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">Category</th>
@@ -228,9 +247,11 @@ $enrolledCourses = $user->getEnrolledCourses($PDOConn);
         </div>
         <div class="flex justify-center">
           <ul class="space-y-1 text-center">
-            <li><a href="#" class="text-gray-400 hover:text-white transition text-sm">Home</a></li>
-            <li><a href="#" class="text-gray-400 hover:text-white transition text-sm">Courses</a></li>
-            <li><a href="#" class="text-gray-400 hover:text-white transition text-sm">Contact</a></li>
+            <li><a href="../../index.php" class="text-gray-400 hover:text-white transition text-sm">Home</a></li>
+            <li><a href="../courses/courses.php" class="text-gray-400 hover:text-white transition text-sm">Courses</a>
+            </li>
+            <li><a href="../contact/contact.php" class="text-gray-400 hover:text-white transition text-sm">Contact</a>
+            </li>
           </ul>
         </div>
         <div class="flex flex-col items-end">

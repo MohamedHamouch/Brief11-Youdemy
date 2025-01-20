@@ -36,10 +36,15 @@ if (isset($_SESSION['user'])) {
             <ul class="hidden md:flex items-center space-x-6">
               <li>
                 <a href="../../index.php"
-                  class="text-gray-800 hover:text-orange-600 transition-colors duration-300">Home</a>
+                  class="text-gray-600 hover:text-orange-600 transition-colors duration-300">Home</a>
               </li>
               <li>
-                <a href="#" class="text-gray-600 hover:text-orange-600 transition-colors duration-300">Courses</a>
+                <a href="../courses/courses.php"
+                  class="text-gray-600 hover:text-orange-600 transition-colors duration-300">Courses</a>
+              </li>
+              <li>
+                <a href="../contact/contact.php"
+                  class="text-gray-600 hover:text-orange-600 transition-colors duration-300">Contact</a>
               </li>
               <li>
                 <a href="login.php"
@@ -157,9 +162,11 @@ if (isset($_SESSION['user'])) {
         </div>
         <div class="flex justify-center">
           <ul class="space-y-1 text-center">
-            <li><a href="#" class="text-gray-400 hover:text-white transition text-sm">Home</a></li>
-            <li><a href="#" class="text-gray-400 hover:text-white transition text-sm">Courses</a></li>
-            <li><a href="#" class="text-gray-400 hover:text-white transition text-sm">Contact</a></li>
+            <li><a href="../../index.php" class="text-gray-400 hover:text-white transition text-sm">Home</a></li>
+            <li><a href="../courses/courses.php" class="text-gray-400 hover:text-white transition text-sm">Courses</a>
+            </li>
+            <li><a href="../contact/contact.php" class="text-gray-400 hover:text-white transition text-sm">Contact</a>
+            </li>
           </ul>
         </div>
         <div class="flex flex-col items-end">

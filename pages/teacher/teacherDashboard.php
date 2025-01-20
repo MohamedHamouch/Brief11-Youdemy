@@ -59,7 +59,8 @@ $courses = $user->getTeacherCourses($PDOConn);
                   class="text-gray-600 hover:text-orange-600 transition-colors duration-300">Courses</a>
               </li>
               <li>
-                <a href="#" class="text-gray-600 hover:text-orange-600 transition-colors duration-300">Contact</a>
+                <a href="../contact/contact.php"
+                  class="text-gray-600 hover:text-orange-600 transition-colors duration-300">Contact</a>
               </li>
               <li class="relative">
                 <button id="dropdownButton"
@@ -441,9 +442,11 @@ $courses = $user->getTeacherCourses($PDOConn);
         </div>
         <div class="flex justify-center">
           <ul class="space-y-1 text-center">
-            <li><a href="#" class="text-gray-400 hover:text-white transition text-sm">Home</a></li>
-            <li><a href="#" class="text-gray-400 hover:text-white transition text-sm">Courses</a></li>
-            <li><a href="#" class="text-gray-400 hover:text-white transition text-sm">Contact</a></li>
+            <li><a href="../../index.php" class="text-gray-400 hover:text-white transition text-sm">Home</a></li>
+            <li><a href="../courses/courses.php" class="text-gray-400 hover:text-white transition text-sm">Courses</a>
+            </li>
+            <li><a href="../contact/contact.php" class="text-gray-400 hover:text-white transition text-sm">Contact</a>
+            </li>
           </ul>
         </div>
         <div class="flex flex-col items-end">

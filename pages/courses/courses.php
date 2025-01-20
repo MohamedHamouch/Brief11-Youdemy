@@ -61,7 +61,8 @@ if (isset($_GET['search']) || isset($_GET['category'])) {
                   class="text-gray-800 font-medium hover:text-orange-600 transition-colors duration-300">Courses</a>
               </li>
               <li>
-                <a href="#" class="text-gray-600 hover:text-orange-600 transition-colors duration-300">Contact</a>
+                <a href="../contact/contact.php"
+                  class="text-gray-600 hover:text-orange-600 transition-colors duration-300">Contact</a>
               </li>
               <?php
               if (!$connected) {
@@ -168,7 +169,7 @@ if (isset($_GET['search']) || isset($_GET['category'])) {
                 </span>
               </div>
               <div class="p-6">
-                <a href="courseDetails.php?id=<?= $course['id'] ?>" class="block">
+                <a href="courseDetails.php?id=<?= urlencode($course['id']) ?>" class="block">
                   <h3
                     class="text-lg font-semibold text-gray-900 mb-2 hover:text-orange-600 transition-colors duration-300 break-words line-clamp-2">
                     <?= htmlspecialchars($course['title']) ?>
@@ -229,9 +230,11 @@ if (isset($_GET['search']) || isset($_GET['category'])) {
         </div>
         <div class="flex justify-center">
           <ul class="space-y-1 text-center">
-            <li><a href="#" class="text-gray-400 hover:text-white transition text-sm">Home</a></li>
-            <li><a href="#" class="text-gray-400 hover:text-white transition text-sm">Courses</a></li>
-            <li><a href="#" class="text-gray-400 hover:text-white transition text-sm">Contact</a></li>
+            <li><a href="../../index.php" class="text-gray-400 hover:text-white transition text-sm">Home</a></li>
+            <li><a href="#" class="text-gray-400 hover:text-white transition text-sm">Courses</a>
+            </li>
+            <li><a href="../contact/contact.php" class="text-gray-400 hover:text-white transition text-sm">Contact</a>
+            </li>
           </ul>
         </div>
         <div class="flex flex-col items-end">
