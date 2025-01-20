@@ -113,24 +113,50 @@ abstract class Course
   //static methods
   public static function getAllCourses(PDO $db)
   {
-    $query = "SELECT c.*, u.first_name, u.last_name, COALESCE(cat.name, 'General') AS category_name
-              FROM courses c
-              JOIN users u ON c.teacher_id = u.id
-              LEFT JOIN categories cat ON c.category_id = cat.id
-              ORDER BY c.created_at DESC";
+    $query = "SELECT c.*, 
+          COALESCE(CONCAT(u.first_name, ' ', u.last_name), 'Deleted Account') AS teacher_name,
+          COALESCE(cat.name, 'General') AS category_name
+          FROM courses c
+          LEFT JOIN users u ON c.teacher_id = u.id
+          LEFT JOIN categories cat ON c.category_id = cat.id
+          ORDER BY c.created_at DESC";
 
     $stmt = $db->query($query);
     return $stmt->fetchAll(PDO::FETCH_ASSOC);
   }
 
+  public static function handelPagination(PDO $db, $page, $limit)
+  {
+    $offset = ($page - 1) * $limit;
+
+    $query = "SELECT c.*, 
+          COALESCE(CONCAT(u.first_name, ' ', u.last_name), 'Deleted Account') AS teacher_name,
+          COALESCE(cat.name, 'General') AS category_name
+          FROM courses c
+          LEFT JOIN users u ON c.teacher_id = u.id
+          LEFT JOIN categories cat ON c.category_id = cat.id
+          ORDER BY c.created_at DESC
+          LIMIT :limit OFFSET :offset;";
+
+    $stmt = $db->prepare($query);
+    $stmt->bindParam(':limit', $limit, PDO::PARAM_INT);
+    $stmt->bindParam(':offset', $offset, PDO::PARAM_INT);
+
+    $stmt->execute();
+    return $stmt->fetchAll(PDO::FETCH_ASSOC);
+  }
+
   public static function getLatestCourses(PDO $db, $limit = 4)
   {
-    $query = "SELECT c.*, u.first_name, u.last_name, COALESCE(cat.name, 'General') AS category_name
-              FROM courses c
-              JOIN users u ON c.teacher_id = u.id
-              LEFT JOIN categories cat ON c.category_id = cat.id
-              ORDER BY c.created_at DESC
-              LIMIT :limit";
+    $query = "SELECT c.*, 
+          COALESCE(CONCAT(u.first_name, ' ', u.last_name), 'Deleted Account') AS teacher_name,
+          COALESCE(cat.name, 'General') AS category_name
+          FROM courses c
+          LEFT JOIN users u ON c.teacher_id = u.id
+          LEFT JOIN categories cat ON c.category_id = cat.id
+          ORDER BY c.created_at DESC
+          LIMIT :limit";
+
     $stmt = $db->prepare($query);
     $stmt->bindParam(':limit', $limit, PDO::PARAM_INT);
     $stmt->execute();
@@ -140,10 +166,12 @@ abstract class Course
 
   public static function filterCourses($pdo, $search = '', $category = '')
   {
-    $query = "SELECT c.*, u.first_name, u.last_name, COALESCE(cat.name, 'General') AS category_name
+    $query = "SELECT c.*, 
+              COALESCE(CONCAT(u.first_name, ' ', u.last_name), 'Delete Account')AS teacher_name,
+              COALESCE(cat.name, 'General') AS category_name
               FROM courses c
               LEFT JOIN categories cat ON c.category_id = cat.id
-              JOIN users u ON c.teacher_id = u.id
+              LEFT JOIN users u ON c.teacher_id = u.id
               WHERE 1";
     $params = [];
 
@@ -156,6 +184,7 @@ abstract class Course
       $params[':category'] = $category;
     }
 
+    $query .= " ORDER BY c.created_at DESC";
     $stmt = $pdo->prepare($query);
     $stmt->execute($params);
 
@@ -231,17 +260,16 @@ abstract class Course
 
   public function getCourseTeacherName(PDO $db)
   {
-    $query = "SELECT CONCAT(first_name, ' ', last_name) AS teacher_name FROM users WHERE id = :teacher_id";
+    $query = "SELECT CONCAT(first_name, ' ', last_name) FROM users WHERE id = :teacher_id";
     $stmt = $db->prepare($query);
     $stmt->bindParam(':teacher_id', $this->teacher_id, PDO::PARAM_INT);
     $stmt->execute();
 
-    return $stmt->fetchColumn();
+    return $stmt->fetchColumn() ?: 'Deleted Account';
   }
   public function getCourseTags(PDO $db)
   {
-    $query = "
-          SELECT t.name AS tag_name
+    $query = "SELECT t.name AS tag_name
          FROM Course_Tags ct
          JOIN Tags t ON ct.tag_id = t.id
          WHERE ct.course_id = :course_id";
@@ -298,29 +326,6 @@ abstract class Course
     return $stmt->fetchAll(PDO::FETCH_ASSOC);
   }
 
-  public function getCourseComments(PDO $db)
-  {
-    $query = "
-         SELECT 
-             c.id AS comment_id,
-             c.content AS comment_content,
-             c.created_at AS comment_date,
-             u.id AS user_id,
-             u.first_name,
-             u.last_name,
-             u.role
-         FROM comments c
-         JOIN Users u ON c.user_id = u.id
-         WHERE c.course_id = :course_id
-         ORDER BY c.created_at DESC";
-
-
-    $stmt = $db->prepare($query);
-    $stmt->bindParam(':course_id', $this->id, PDO::PARAM_INT);
-    $stmt->execute();
-
-    return $stmt->fetchAll(PDO::FETCH_ASSOC);
-  }
 
 }
 ?>

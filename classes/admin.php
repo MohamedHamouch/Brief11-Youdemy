@@ -18,11 +18,31 @@ class Admin extends User
     $this->created_at = date('Y-m-d H:i:s');
   }
 
-  public function getAllUsers(PDO $db)
+  public function filterActiveUsers(array $users, string $name = '', string $role = ''): array
   {
-    $query = "SELECT * FROM users";
-    $stmt = $db->query($query);
-    return $stmt->fetchAll();
+    $filteredUsers = [];
+
+    foreach ($users as $user) {
+
+      if (!empty($name)) {
+
+        $fullName = "{$user['first_name']} {$user['last_name']}";
+        $nameMatches = str_contains($fullName, $name) !== false;
+      } else {
+        $nameMatches = true;
+      }
+
+      if (!empty($role)) {
+        $roleMatches = $user['role'] === $role;
+      } else {
+        $roleMatches = true;
+      }
+
+      if ($nameMatches && $roleMatches) {
+        $filteredUsers[] = $user;
+      }
+    }
+    return $filteredUsers;
   }
 
   public function activateUser(PDO $db, $user_id)
