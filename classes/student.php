@@ -20,11 +20,11 @@ class Student extends User
   }
 
   //static method
-  public static function getAllsutdents(PDO $db)
+  public static function studentsCount(PDO $db)
   {
-    $query = "SELECT * FROM users WHERE role = 'student'";
+    $query = "SELECT COUNT(*) FROM users WHERE role = 'student'";
     $stmt = $db->query($query);
-    return $stmt->fetchAll();
+    return $stmt->fetchColumn();
   }
 
   // Methods

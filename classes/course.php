@@ -109,23 +109,9 @@ abstract class Course
     $this->tags = $tags;
   }
 
-
   //static methods
-  public static function getAllCourses(PDO $db)
-  {
-    $query = "SELECT c.*, 
-          COALESCE(CONCAT(u.first_name, ' ', u.last_name), 'Deleted Account') AS teacher_name,
-          COALESCE(cat.name, 'General') AS category_name
-          FROM courses c
-          LEFT JOIN users u ON c.teacher_id = u.id
-          LEFT JOIN categories cat ON c.category_id = cat.id
-          ORDER BY c.created_at DESC";
 
-    $stmt = $db->query($query);
-    return $stmt->fetchAll(PDO::FETCH_ASSOC);
-  }
-
-  public static function handelPagination(PDO $db, $page, $limit)
+  public static function paginateCourses(PDO $db, $page, $limit)
   {
     $offset = ($page - 1) * $limit;
 
@@ -311,21 +297,6 @@ abstract class Course
 
     return $stmt->fetchColumn() > 0;
   }
-
-  public function getCourseEnrollments(PDO $db)
-  {
-    $query = "SELECT u.id AS user_id, u.first_name, u.last_name
-         FROM Enrollments e
-         JOIN Users u ON e.user_id = u.id
-         WHERE e.course_id = :course_id";
-
-    $stmt = $db->prepare($query);
-    $stmt->bindParam(':course_id', $this->id, PDO::PARAM_INT);
-    $stmt->execute();
-
-    return $stmt->fetchAll(PDO::FETCH_ASSOC);
-  }
-
 
 }
 ?>

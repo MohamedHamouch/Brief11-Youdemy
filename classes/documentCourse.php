@@ -21,6 +21,14 @@ class DocumentCourse extends Course
     $this->text_content = $text_content;
   }
 
+  public static function documentCoursesCount(PDO $db): int
+  {
+    $query = "SELECT COUNT(*) FROM courses WHERE type = 'document'";
+    $stmt = $db->query($query);
+
+    return $stmt->fetchColumn();
+  }
+
   public function loadCourse(PDO $db)
   {
     $query = "SELECT * FROM courses WHERE id = :id";

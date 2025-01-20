@@ -21,21 +21,13 @@ class Teacher extends User
   }
 
   //static methods
-  public static function getAllTeachers(PDO $db)
-  {
-    $query = "SELECT * FROM users WHERE role = 'teacher'";
-    $stmt = $db->query($query);
-    return $stmt->fetchAll();
-  }
-
   public static function getPendingTeachers(PDO $db)
   {
     $query = "SELECT * FROM users WHERE role = 'teacher' AND is_active = 0";
     $stmt = $db->query($query);
-    return $stmt->fetchAll();
+    return $stmt->fetchAll(PDO::FETCH_ASSOC);
   }
-
-  public static function teacherCount(PDO $db)
+  public static function teachersCount(PDO $db)
   {
     $query = "SELECT COUNT(*) FROM users WHERE role = 'teacher'";
     $stmt = $db->query($query);

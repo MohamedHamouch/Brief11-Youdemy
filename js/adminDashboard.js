@@ -20,7 +20,9 @@ navButtons.forEach(button => {
 
     const selectedSection = document.querySelector(`#${sectionId}`);
     selectedSection.classList.remove('hidden');
-    selectedSection.classList.add('flex');
+    if (sectionId != 'statistics') {
+      selectedSection.classList.add('flex');
+    }
   });
 });
 

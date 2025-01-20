@@ -18,6 +18,14 @@ class videoCourse extends Course
     $this->video_path = $video_path;
   }
 
+  public static function videoCoursesCount(PDO $db): int
+  {
+    $query = "SELECT COUNT(*) FROM courses WHERE type = 'video'";
+    $stmt = $db->query($query);
+
+    return $stmt->fetchColumn();
+  }
+
   public function loadCourse(PDO $db)
   {
     $query = "SELECT * FROM courses WHERE id = :id";

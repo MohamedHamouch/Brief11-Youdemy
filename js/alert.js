@@ -11,13 +11,13 @@ document.addEventListener('DOMContentLoaded', () => {
 				html: '<p class="text-gray-600 text-sm">This action cannot be undone.</p>',
 				icon: 'warning',
 				showCancelButton: true,
-				confirmButtonColor: '#FF5722', // Youdemy's primary theme color
-				cancelButtonColor: '#4CAF50', // Matching secondary theme color
+				confirmButtonColor: '#FF5722',
+				cancelButtonColor: '#4CAF50',
 				confirmButtonText: 'Delete',
 				cancelButtonText: 'Cancel',
 				customClass: {
-					popup: 'rounded-lg shadow-lg px-6 py-4 text-sm', // Smaller size
-					title: 'text-lg', // Match Youdemy font sizing
+					popup: 'rounded-lg shadow-lg px-6 py-4 text-sm',
+					title: 'text-lg',
 					confirmButton: 'px-4 py-2 text-white font-semibold bg-orange-500 hover:bg-orange-600',
 					cancelButton: 'px-4 py-2 text-white font-semibold bg-green-500 hover:bg-green-600',
 				},

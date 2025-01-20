@@ -51,6 +51,14 @@ class Enrollment
   {
     $this->enrollment_date = $enrollment_date;
   }
+
+  public static function enrollmentsCount(PDO $db)
+  {
+    $query = "SELECT COUNT(*) FROM enrollments";
+    $stmt = $db->query($query);
+
+    return $stmt->fetchColumn();
+  }
 }
 
 ?>

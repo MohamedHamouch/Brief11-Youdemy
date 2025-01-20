@@ -18,6 +18,16 @@ class Admin extends User
     $this->created_at = date('Y-m-d H:i:s');
   }
 
+  //Static
+  public static function adminsCount(PDO $db)
+  {
+    $query = "SELECT Count(*) FROM users WHERE role = 'admin'";
+    $stmt = $db->query($query);
+
+    return $stmt->fetchColumn();
+  }
+
+  //methods
   public function filterActiveUsers(array $users, string $name = '', string $role = ''): array
   {
     $filteredUsers = [];

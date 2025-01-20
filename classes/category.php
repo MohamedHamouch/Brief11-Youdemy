@@ -20,13 +20,7 @@ class Category
 
     return $stmt->fetchAll(PDO::FETCH_ASSOC);
   }
-
-  public static function categoryCount(PDO $db){
-    $query = "SELECT COUNT(*) FROM categories";
-    $stmt = $db->query($query);
-    return $stmt->fetchColumn();
-  }
-
+  
   public function getId()
   {
     return $this->id;

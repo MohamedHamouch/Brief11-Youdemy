@@ -1,12 +1,14 @@
 <?php
 session_start();
 require_once '../../config/database.php';
-require_once '../../classes/Admin.php';
-require_once '../../classes/Teacher.php';
-require_once '../../classes/User.php';
+require_once '../../classes/admin.php';
+require_once '../../classes/teacher.php';
+require_once '../../classes/student.php';
+require_once '../../classes/user.php';
 require_once '../../classes/course.php';
 require_once '../../classes/videoCourse.php';
 require_once '../../classes/documentCourse.php';
+require_once '../../classes/enrollment.php';
 require_once '../../classes/category.php';
 require_once '../../classes/tag.php';
 
@@ -38,8 +40,21 @@ if (isset($_GET['search']) || isset($_GET['role'])) {
 
 $suspendedUsers = User::getSuspendedUsers($PDOConn);
 $pendingTeachers = Teacher::getPendingTeachers($PDOConn);
+
 $tags = Tag::getAllTags($PDOConn);
 $categories = Category::getAllCategories($PDOConn);
+
+
+$totalUsers = User::usersCount($PDOConn);
+$totalAdmins = Admin::adminsCount($PDOConn);
+$totalTeachers = Teacher::teachersCount($PDOConn);
+$totalStusents = Student::studentsCount($PDOConn);
+
+$totalCourses = Course::coursesCount($PDOConn);
+$totalDocumtns = DocumentCourse::documentCoursesCount($PDOConn);
+$totalVideos = videoCourse::videoCoursesCount($PDOConn);
+$totalEnrollmenst = Enrollment::enrollmentsCount($PDOConn);
+
 
 ?>
 <!DOCTYPE html>
@@ -182,8 +197,6 @@ $categories = Category::getAllCategories($PDOConn);
       <!-- active users -->
       <div id="activeUsers"
         class="contentSection flex flex-col bg-white rounded-xl shadow-sm p-6 border border-gray-100">
-
-
         <div class="mb-6 w-full lg:w-3/4 mx-auto">
           <form action="" method="GET" id="filterForm"
             class="grid grid-cols-1 md:grid-cols-[60%,30%] justify-between gap-4">
@@ -215,60 +228,74 @@ $categories = Category::getAllCategories($PDOConn);
           </form>
         </div>
 
-        <div class="overflow-x-auto mx-auto bg-white shadow-md rounded-lg w-full lg:w-3/4">
-          <table class="min-w-full table-auto">
-            <thead class="bg-orange-100 text-gray-800">
-              <tr>
-                <th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">Full Name
-                </th>
-                <th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">Email</th>
-                <th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">Joined</th>
-                <th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">Role</th>
-                <th class="px-6 py-3 text-center text-xs font-medium uppercase tracking-wider">Suspend
-                </th>
-              </tr>
-            </thead>
-            <tbody class="divide-y divide-gray-200">
-              <?php foreach ($activeUsers as $user): ?>
-                <tr class="hover:bg-gray-50">
-                  <td class="px-6 py-4 text-sm text-gray-900">
-                    <?= htmlspecialchars("{$user['first_name']}  {$user['last_name']}") ?>
-                  </td>
-                  <td class="px-6 py-4 text-sm text-gray-900">
-                    <?= htmlspecialchars($user['email']) ?>
-                  </td>
-                  <td class="px-6 py-4 text-sm text-gray-900">
-                    <?= date('F j, Y', strtotime($user['created_at'])) ?>
-                  </td>
-                  <td class="px-6 py-4 text-sm text-gray-900">
-                    <?= htmlspecialchars(ucfirst($user['role'])) ?>
-                    <?php if ($user['role'] === 'student'): ?>
-                      <i class="fas fa-user-graduate text-blue-500"></i>
-                    <?php elseif ($user['role'] === 'teacher'): ?>
-                      <i class="fas fa-chalkboard-teacher text-green-500"></i>
-                    <?php elseif ($user['role'] === 'admin'): ?>
-                      <i class="fas fa-user-shield text-red-500"></i>
-                    <?php endif; ?>
-                  </td>
-                  <td class="px-6 py-4 text-center text-sm font-medium">
-                    <?php if ($user['role'] !== 'admin'): ?>
-                      <div class="flex justify-center gap-4">
-                        <form action="process/suspendUser.php" method="POST" class="inline">
-                          <input type="hidden" name="userId" value="<?= htmlspecialchars($user['id']) ?>">
-                          <button type="submit"
-                            class="text-yellow-600 hover:text-yellow-800 transform hover:scale-110 transition duration-200">
-                            <i class="fas fa-ban"></i>
-                          </button>
-                        </form>
-                      </div>
-                    <?php else: ?>
-                      <span class="text-gray-400">No Actions</span>
-                    <?php endif; ?>
-                  </td>
-                </tr>
-              <?php endforeach; ?>
-            </tbody>
-          </table>
+        <!-- Active Users Section -->
+        <div class="overflow-x-auto mx-auto bg-white shadow-md rounded-lg w-full max-w-4xl">
+          <?php if (empty($activeUsers)): ?>
+            <div class="text-center py-12">
+              <i class="fas fa-users text-gray-400 text-5xl mb-4"></i>
+              <h3 class="text-lg font-medium text-gray-900 mb-2">No Result Found</h3>
+              <p class="text-gray-500">There are no active users that match </p>
+            </div>
+          <?php else: ?>
+            <table class="min-w-full table-auto">
+
+              <div class="overflow-x-auto mx-auto bg-white shadow-md rounded-lg w-full lg:w-3/4">
+                <table class="min-w-full table-auto">
+                  <thead class="bg-orange-100 text-gray-800">
+                    <tr>
+                      <th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">Full Name
+                      </th>
+                      <th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">Email</th>
+                      <th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">Joined</th>
+                      <th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">Role</th>
+                      <th class="px-6 py-3 text-center text-xs font-medium uppercase tracking-wider">Suspend
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody class="divide-y divide-gray-200">
+                    <?php foreach ($activeUsers as $user): ?>
+                      <tr class="hover:bg-gray-50">
+                        <td class="px-6 py-4 text-sm text-gray-900">
+                          <?= htmlspecialchars("{$user['first_name']}  {$user['last_name']}") ?>
+                        </td>
+                        <td class="px-6 py-4 text-sm text-gray-900">
+                          <?= htmlspecialchars($user['email']) ?>
+                        </td>
+                        <td class="px-6 py-4 text-sm text-gray-900">
+                          <?= date('F j, Y', strtotime($user['created_at'])) ?>
+                        </td>
+                        <td class="px-6 py-4 text-sm text-gray-900">
+                          <?= htmlspecialchars(ucfirst($user['role'])) ?>
+                          <?php if ($user['role'] === 'student'): ?>
+                            <i class="fas fa-user-graduate text-blue-500"></i>
+                          <?php elseif ($user['role'] === 'teacher'): ?>
+                            <i class="fas fa-chalkboard-teacher text-green-500"></i>
+                          <?php elseif ($user['role'] === 'admin'): ?>
+                            <i class="fas fa-user-shield text-red-500"></i>
+                          <?php endif; ?>
+                        </td>
+                        <td class="px-6 py-4 text-center text-sm font-medium">
+                          <?php if ($user['role'] !== 'admin'): ?>
+                            <div class="flex justify-center gap-4">
+                              <form action="process/suspendUser.php" method="POST" class="inline">
+                                <input type="hidden" name="userId" value="<?= htmlspecialchars($user['id']) ?>">
+                                <button type="submit"
+                                  class="text-yellow-600 hover:text-yellow-800 transform hover:scale-110 transition duration-200">
+                                  <i class="fas fa-ban"></i>
+                                </button>
+                              </form>
+                            </div>
+                          <?php else: ?>
+                            <span class="text-gray-400">No Actions</span>
+                          <?php endif; ?>
+                        </td>
+                      </tr>
+                    <?php endforeach; ?>
+                  </tbody>
+                </table>
+              </div>
+            </table>
+          <?php endif; ?>
         </div>
       </div>
 
@@ -278,7 +305,7 @@ $categories = Category::getAllCategories($PDOConn);
         <div class="overflow-x-auto mx-auto bg-white shadow-md rounded-lg w-full max-w-4xl">
           <?php if (empty($suspendedUsers)): ?>
             <div class="text-center py-12">
-              <i class="fas fa-user-shield text-gray-300 text-5xl mb-4"></i>
+              <i class="fas fa-user-shield text-gray-400 text-5xl mb-4"></i>
               <h3 class="text-lg font-medium text-gray-900 mb-2">No Suspended Users</h3>
               <p class="text-gray-500">All users are currently active on the platform.</p>
             </div>
@@ -348,8 +375,8 @@ $categories = Category::getAllCategories($PDOConn);
         <div class="overflow-x-auto mx-auto bg-white shadow-md rounded-lg w-full md:w-3/4">
           <?php if (empty($pendingTeachers)): ?>
             <div class="text-center py-12">
-              <i class="fas fa-chalkboard-teacher text-gray-300 text-5xl mb-4"></i>
-              <h3 class="text-lg font-medium text-gray-900 mb-2">No Pending Teacher Applications</h3>
+              <i class="fas fa-chalkboard-teacher text-gray-400 text-5xl mb-4"></i>
+              <h3 class="text-lg font-medium text-gray-900 mb-2">No Pending Applications</h3>
               <p class="text-gray-500">There are currently no teachers waiting for approval.</p>
             </div>
           <?php else: ?>
@@ -571,12 +598,105 @@ $categories = Category::getAllCategories($PDOConn);
       </div>
 
 
-
-      <!-- Sections -->
+      <!-- stats -->
       <div id="statistics" class="contentSection hidden bg-white rounded-xl shadow-sm p-6 border border-gray-100">
-        <div class="w-full text-center text-gray-500">
-          <i class="fas fa-chart-bar text-4xl mb-4"></i>
-          <p>Statistics Section - Content Coming Soon</p>
+        <div class="mb-8">
+          <h3 class="text-lg font-semibold text-gray-800 mb-4">Users Overview</h3>
+          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+            <div class="bg-gradient-to-br from-orange-50 to-white p-6 rounded-xl border border-orange-100">
+              <div class="flex items-center justify-between mb-4">
+                <div class="text-orange-500">
+                  <i class="fas fa-users text-2xl"></i>
+                </div>
+                <span class="text-xs font-medium text-orange-600 bg-orange-100 px-2 py-1 rounded-full">Total
+                  Users</span>
+              </div>
+              <div class="text-2xl font-bold text-gray-800 mb-1"><?= $totalUsers ?></div>
+              <p class="text-sm text-gray-500">Registered members</p>
+            </div>
+
+            <div class="bg-gradient-to-br from-red-50 to-white p-6 rounded-xl border border-red-100">
+              <div class="flex items-center justify-between mb-4">
+                <div class="text-red-500">
+                  <i class="fas fa-user-shield text-2xl"></i>
+                </div>
+                <span class="text-xs font-medium text-red-600 bg-red-100 px-2 py-1 rounded-full">Admins</span>
+              </div>
+              <div class="text-2xl font-bold text-gray-800 mb-1"><?= $totalAdmins ?></div>
+              <p class="text-sm text-gray-500">Platform administrators</p>
+            </div>
+
+            <div class="bg-gradient-to-br from-green-50 to-white p-6 rounded-xl border border-green-100">
+              <div class="flex items-center justify-between mb-4">
+                <div class="text-green-500">
+                  <i class="fas fa-chalkboard-teacher text-2xl"></i>
+                </div>
+                <span class="text-xs font-medium text-green-600 bg-green-100 px-2 py-1 rounded-full">Teachers</span>
+              </div>
+              <div class="text-2xl font-bold text-gray-800 mb-1"><?= $totalTeachers ?></div>
+              <p class="text-sm text-gray-500">Active instructors</p>
+            </div>
+
+            <div class="bg-gradient-to-br from-blue-50 to-white p-6 rounded-xl border border-blue-100">
+              <div class="flex items-center justify-between mb-4">
+                <div class="text-blue-500">
+                  <i class="fas fa-user-graduate text-2xl"></i>
+                </div>
+                <span class="text-xs font-medium text-blue-600 bg-blue-100 px-2 py-1 rounded-full">Students</span>
+              </div>
+              <div class="text-2xl font-bold text-gray-800 mb-1"><?= $totalStusents ?></div>
+              <p class="text-sm text-gray-500">Registered learners</p>
+            </div>
+          </div>
+        </div>
+
+        <div>
+          <h3 class="text-lg font-semibold text-gray-800 mb-4">Content Overview</h3>
+          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+            <div class="bg-gradient-to-br from-purple-50 to-white p-6 rounded-xl border border-purple-100">
+              <div class="flex items-center justify-between mb-4">
+                <div class="text-purple-500">
+                  <i class="fas fa-graduation-cap text-2xl"></i>
+                </div>
+                <span class="text-xs font-medium text-purple-600 bg-purple-100 px-2 py-1 rounded-full">Courses</span>
+              </div>
+              <div class="text-2xl font-bold text-gray-800 mb-1"><?= $totalCourses ?></div>
+              <p class="text-sm text-gray-500">Available courses</p>
+            </div>
+
+            <div class="bg-gradient-to-br from-yellow-50 to-white p-6 rounded-xl border border-yellow-100">
+              <div class="flex items-center justify-between mb-4">
+                <div class="text-yellow-500">
+                  <i class="fas fa-file-alt text-2xl"></i>
+                </div>
+                <span class="text-xs font-medium text-yellow-600 bg-yellow-100 px-2 py-1 rounded-full">Documents</span>
+              </div>
+              <div class="text-2xl font-bold text-gray-800 mb-1"><?= $totalDocumtns ?></div>
+              <p class="text-sm text-gray-500">Document Lessons</p>
+            </div>
+
+            <div class="bg-gradient-to-br from-indigo-50 to-white p-6 rounded-xl border border-indigo-100">
+              <div class="flex items-center justify-between mb-4">
+                <div class="text-indigo-500">
+                  <i class="fas fa-video text-2xl"></i>
+                </div>
+                <span class="text-xs font-medium text-indigo-600 bg-indigo-100 px-2 py-1 rounded-full">Videos</span>
+              </div>
+              <div class="text-2xl font-bold text-gray-800 mb-1"><?= $totalVideos ?></div>
+              <p class="text-sm text-gray-500">Video lessons</p>
+            </div>
+
+            <div class="bg-gradient-to-br from-pink-50 to-white p-6 rounded-xl border border-pink-100">
+              <div class="flex items-center justify-between mb-4">
+                <div class="text-pink-500">
+                  <i class="fas fa-user-plus text-2xl"></i>
+                </div>
+                <span class="text-xs font-medium text-pink-600 bg-pink-100 px-2 py-1 rounded-full">Enrollments</span>
+              </div>
+              <div class="text-2xl font-bold text-gray-800 mb-1"><?= $totalEnrollmenst ?></div>
+              <p class="text-sm text-gray-500">Total enrollments</p>
+            </div>
+          </div>
         </div>
       </div>
 

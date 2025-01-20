@@ -91,14 +91,22 @@ abstract class User
   {
     $query = "SELECT * FROM users WHERE is_active = 1 AND is_suspended = 0";
     $stmt = $db->query($query);
-    return $stmt->fetchAll();
+    return $stmt->fetchAll(PDO::FETCH_ASSOC);
   }
 
   public static function getSuspendedUsers($db)
   {
     $query = "SELECT * FROM users WHERE is_suspended = 1";
     $stmt = $db->query($query);
-    return $stmt->fetchAll();
+    return $stmt->fetchAll(PDO::FETCH_ASSOC);
+  }
+
+  public static function usersCount(PDO $db)
+  {
+    $query = "SELECT COUNT(*) FROM users";
+    $stmt = $db->query($query);
+    
+    return $stmt->fetchColumn();
   }
 
   //methods
@@ -107,26 +115,6 @@ abstract class User
     $query = "SELECT * FROM users WHERE email = :email";
     $stmt = $db->prepare($query);
     $stmt->bindParam(':email', $this->email, PDO::PARAM_STR);
-    $stmt->execute();
-    $user = $stmt->fetch(PDO::FETCH_ASSOC);
-
-    $this->id = $user['id'];
-    $this->first_name = $user['first_name'];
-    $this->last_name = $user['last_name'];
-    $this->email = $user['email'];
-    $this->role = $user['role'];
-    $this->created_at = $user['created_at'];
-    $this->is_active = $user['is_active'];
-    $this->is_suspended = $user['is_suspended'];
-
-    return $user;
-  }
-
-  public function loadUserById($db)
-  {
-    $query = "SELECT * FROM users WHERE id = :id";
-    $stmt = $db->prepare($query);
-    $stmt->bindParam(':id', $this->id, PDO::PARAM_INT);
     $stmt->execute();
     $user = $stmt->fetch(PDO::FETCH_ASSOC);
 
