@@ -24,6 +24,12 @@ $tags = Tag::getAllTags($PDOConn);
 $categories = Category::getAllCategories($PDOConn);
 $courses = $user->getTeacherCourses($PDOConn);
 
+$totalCourses = count($courses);
+$totalEnrollments = $user->teacherTotalEnrollments($PDOConn);
+$totalDocumtns = $user->teacherTotalDocuments($PDOConn);
+$totalVideos = $user->teacherTotalVideos($PDOConn);
+
+
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -328,9 +334,54 @@ $courses = $user->getTeacherCourses($PDOConn);
 
         <!-- statistics -->
         <div id="statistics" class="contentSection hidden bg-white rounded-xl shadow-sm p-6 border border-gray-100">
-          <div class="w-full text-center text-gray-500">
-            <i class="fas fa-chart-bar text-4xl mb-4"></i>
-            <p>Statistics Section - Content Coming Soon</p>
+          <div class="mb-8">
+            <h3 class="text-lg font-semibold text-gray-800 mb-4">Course Overview</h3>
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+              <div class="bg-gradient-to-br from-purple-50 to-white p-6 rounded-xl border border-purple-100">
+                <div class="flex items-center justify-between mb-4">
+                  <div class="text-purple-500">
+                    <i class="fas fa-graduation-cap text-2xl"></i>
+                  </div>
+                  <span class="text-xs font-medium text-purple-600 bg-purple-100 px-2 py-1 rounded-full">Total
+                    Courses</span>
+                </div>
+                <div class="text-2xl font-bold text-gray-800 mb-1"><?= $totalCourses ?></div>
+                <p class="text-sm text-gray-500">Your published courses</p>
+              </div>
+
+              <div class="bg-gradient-to-br from-yellow-50 to-white p-6 rounded-xl border border-yellow-100">
+                <div class="flex items-center justify-between mb-4">
+                  <div class="text-yellow-500">
+                    <i class="fas fa-file-alt text-2xl"></i>
+                  </div>
+                  <span class="text-xs font-medium text-yellow-600 bg-yellow-100 px-2 py-1 rounded-full">Documents</span>
+                </div>
+                <div class="text-2xl font-bold text-gray-800 mb-1"><?= $totalDocumtns ?></div>
+                <p class="text-sm text-gray-500">Document lessons</p>
+              </div>
+
+              <div class="bg-gradient-to-br from-indigo-50 to-white p-6 rounded-xl border border-indigo-100">
+                <div class="flex items-center justify-between mb-4">
+                  <div class="text-indigo-500">
+                    <i class="fas fa-video text-2xl"></i>
+                  </div>
+                  <span class="text-xs font-medium text-indigo-600 bg-indigo-100 px-2 py-1 rounded-full">Videos</span>
+                </div>
+                <div class="text-2xl font-bold text-gray-800 mb-1"><?= $totalVideos ?></div>
+                <p class="text-sm text-gray-500">Video lessons</p>
+              </div>
+
+              <div class="bg-gradient-to-br from-pink-50 to-white p-6 rounded-xl border border-pink-100">
+                <div class="flex items-center justify-between mb-4">
+                  <div class="text-pink-500">
+                    <i class="fas fa-user-plus text-2xl"></i>
+                  </div>
+                  <span class="text-xs font-medium text-pink-600 bg-pink-100 px-2 py-1 rounded-full">Enrollments</span>
+                </div>
+                <div class="text-2xl font-bold text-gray-800 mb-1"><?= $totalEnrollments ?></div>
+                <p class="text-sm text-gray-500">Total student enrollments</p>
+              </div>
+            </div>
           </div>
         </div>
 

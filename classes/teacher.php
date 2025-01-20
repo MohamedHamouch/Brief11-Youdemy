@@ -78,4 +78,38 @@ class Teacher extends User
       return "Failed to delete course";
     }
   }
+  
+  public function teacherTotalVideos(PDO $db)
+  {
+    $query = "SELECT COUNT(*) FROM courses WHERE teacher_id = :teacher_id AND type = 'video'";
+    $stmt = $db->prepare($query);
+    $stmt->bindParam(':teacher_id', $this->id, PDO::PARAM_INT);
+    $stmt->execute();
+
+    return $stmt->fetchColumn();
+  }
+
+  public function teacherTotalDocuments(PDO $db)
+  {
+    $query = "SELECT COUNT(*) FROM courses WHERE teacher_id = :teacher_id AND type = 'document'";
+    $stmt = $db->prepare($query);
+    $stmt->bindParam(':teacher_id', $this->id, PDO::PARAM_INT);
+    $stmt->execute();
+
+    return $stmt->fetchColumn();
+  }
+
+  public function teacherTotalEnrollments(PDO $db)
+  {
+    $query = "SELECT COUNT(*) FROM enrollments e
+            JOIN courses c ON e.course_id = c.id
+            WHERE c.teacher_id = :teacher_id";
+
+    $stmt = $db->prepare($query);
+    $stmt->bindParam(':teacher_id', $this->id, PDO::PARAM_INT); // Teacher's ID
+    $stmt->execute();
+
+    return $stmt->fetchColumn();
+
+  }
 }
