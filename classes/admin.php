@@ -28,7 +28,7 @@ class Admin extends User
   }
 
   //methods
-  public function filterActiveUsers(array $users, string $name = '', string $role = ''): array
+  public function filterActiveUsers($users, $name = '', $role = '')
   {
     $filteredUsers = [];
 

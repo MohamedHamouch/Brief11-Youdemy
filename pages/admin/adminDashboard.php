@@ -53,7 +53,7 @@ $totalStusents = Student::studentsCount($PDOConn);
 $totalCourses = Course::coursesCount($PDOConn);
 $totalDocumtns = DocumentCourse::documentCoursesCount($PDOConn);
 $totalVideos = videoCourse::videoCoursesCount($PDOConn);
-$totalEnrollmenst = Enrollment::enrollmentsCount($PDOConn);
+$totalEnrollments = Enrollment::enrollmentsCount($PDOConn);
 
 
 ?>
@@ -601,67 +601,18 @@ $totalEnrollmenst = Enrollment::enrollmentsCount($PDOConn);
       <!-- stats -->
       <div id="statistics" class="contentSection hidden bg-white rounded-xl shadow-sm p-6 border border-gray-100">
         <div class="mb-8">
-          <h3 class="text-lg font-semibold text-gray-800 mb-4">Users Overview</h3>
-          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-            <div class="bg-gradient-to-br from-orange-50 to-white p-6 rounded-xl border border-orange-100">
-              <div class="flex items-center justify-between mb-4">
-                <div class="text-orange-500">
-                  <i class="fas fa-users text-2xl"></i>
-                </div>
-                <span class="text-xs font-medium text-orange-600 bg-orange-100 px-2 py-1 rounded-full">Total
-                  Users</span>
-              </div>
-              <div class="text-2xl font-bold text-gray-800 mb-1"><?= $totalUsers ?></div>
-              <p class="text-sm text-gray-500">Registered members</p>
-            </div>
-
-            <div class="bg-gradient-to-br from-red-50 to-white p-6 rounded-xl border border-red-100">
-              <div class="flex items-center justify-between mb-4">
-                <div class="text-red-500">
-                  <i class="fas fa-user-shield text-2xl"></i>
-                </div>
-                <span class="text-xs font-medium text-red-600 bg-red-100 px-2 py-1 rounded-full">Admins</span>
-              </div>
-              <div class="text-2xl font-bold text-gray-800 mb-1"><?= $totalAdmins ?></div>
-              <p class="text-sm text-gray-500">Platform administrators</p>
-            </div>
-
-            <div class="bg-gradient-to-br from-green-50 to-white p-6 rounded-xl border border-green-100">
-              <div class="flex items-center justify-between mb-4">
-                <div class="text-green-500">
-                  <i class="fas fa-chalkboard-teacher text-2xl"></i>
-                </div>
-                <span class="text-xs font-medium text-green-600 bg-green-100 px-2 py-1 rounded-full">Teachers</span>
-              </div>
-              <div class="text-2xl font-bold text-gray-800 mb-1"><?= $totalTeachers ?></div>
-              <p class="text-sm text-gray-500">Active instructors</p>
-            </div>
-
-            <div class="bg-gradient-to-br from-blue-50 to-white p-6 rounded-xl border border-blue-100">
-              <div class="flex items-center justify-between mb-4">
-                <div class="text-blue-500">
-                  <i class="fas fa-user-graduate text-2xl"></i>
-                </div>
-                <span class="text-xs font-medium text-blue-600 bg-blue-100 px-2 py-1 rounded-full">Students</span>
-              </div>
-              <div class="text-2xl font-bold text-gray-800 mb-1"><?= $totalStusents ?></div>
-              <p class="text-sm text-gray-500">Registered learners</p>
-            </div>
-          </div>
-        </div>
-
-        <div>
-          <h3 class="text-lg font-semibold text-gray-800 mb-4">Content Overview</h3>
+          <h3 class="text-lg font-semibold text-gray-800 mb-4">Course Overview</h3>
           <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
             <div class="bg-gradient-to-br from-purple-50 to-white p-6 rounded-xl border border-purple-100">
               <div class="flex items-center justify-between mb-4">
                 <div class="text-purple-500">
                   <i class="fas fa-graduation-cap text-2xl"></i>
                 </div>
-                <span class="text-xs font-medium text-purple-600 bg-purple-100 px-2 py-1 rounded-full">Courses</span>
+                <span class="text-xs font-medium text-purple-600 bg-purple-100 px-2 py-1 rounded-full">Total
+                  Courses</span>
               </div>
               <div class="text-2xl font-bold text-gray-800 mb-1"><?= $totalCourses ?></div>
-              <p class="text-sm text-gray-500">Available courses</p>
+              <p class="text-sm text-gray-500">Your published courses</p>
             </div>
 
             <div class="bg-gradient-to-br from-yellow-50 to-white p-6 rounded-xl border border-yellow-100">
@@ -672,7 +623,7 @@ $totalEnrollmenst = Enrollment::enrollmentsCount($PDOConn);
                 <span class="text-xs font-medium text-yellow-600 bg-yellow-100 px-2 py-1 rounded-full">Documents</span>
               </div>
               <div class="text-2xl font-bold text-gray-800 mb-1"><?= $totalDocumtns ?></div>
-              <p class="text-sm text-gray-500">Document Lessons</p>
+              <p class="text-sm text-gray-500">Document lessons</p>
             </div>
 
             <div class="bg-gradient-to-br from-indigo-50 to-white p-6 rounded-xl border border-indigo-100">
@@ -693,13 +644,12 @@ $totalEnrollmenst = Enrollment::enrollmentsCount($PDOConn);
                 </div>
                 <span class="text-xs font-medium text-pink-600 bg-pink-100 px-2 py-1 rounded-full">Enrollments</span>
               </div>
-              <div class="text-2xl font-bold text-gray-800 mb-1"><?= $totalEnrollmenst ?></div>
-              <p class="text-sm text-gray-500">Total enrollments</p>
+              <div class="text-2xl font-bold text-gray-800 mb-1"><?= $totalEnrollments ?></div>
+              <p class="text-sm text-gray-500">Total student enrollments</p>
             </div>
           </div>
         </div>
       </div>
-
     </div>
   </main>
 

@@ -29,7 +29,7 @@ if (isset($_GET['search']) || isset($_GET['category'])) {
   $totalCourses = count($courses);
 } else {
 
-  $courses = Course::handelPagination($PDOConn, $currentPage, $coursePerPage);
+  $courses = Course::paginateCourses($PDOConn, $currentPage, $coursePerPage);
   $totalCourses = Course::coursesCount($PDOConn);
 }
 

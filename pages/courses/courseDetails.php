@@ -55,7 +55,7 @@ if (isset($_SESSION['user'])) {
 </head>
 
 <body class="bg-gray-50 min-h-screen flex flex-col">
-  <header class="w-full">
+  <header class="w-full z-50">
     <div class="bg-white backdrop-blur-md bg-opacity-90">
       <div class="max-w-7xl mx-auto px-6">
         <div class="flex justify-between h-20">
@@ -158,7 +158,8 @@ if (isset($_SESSION['user'])) {
                 <i class="fas fa-ban text-2xl text-red-500"></i>
               </div>
               <h2 class="text-2xl font-bold text-gray-900 mb-2">Account Suspended</h2>
-              <p class="text-gray-600">Your account has been suspended due to a policy violation or pending investigation.
+              <p class="text-gray-600">Your account has been suspended due to a policy violation or pending
+                investigation.
                 As a result, you are unable to access or read courses.</p>
             </div>
             <div class="bg-red-50 rounded-lg p-4 mb-6">
@@ -168,7 +169,8 @@ if (isset($_SESSION['user'])) {
                 </div>
                 <div class="ml-3">
                   <p class="text-sm text-red-700">
-                    Please contact our support team to resolve this issue. Include any relevant details to expedite the
+                    Please contact our support team to resolve this issue. Include any relevant details
+                    to expedite the
                     process.
                   </p>
                 </div>
@@ -201,7 +203,7 @@ if (isset($_SESSION['user'])) {
 
       <?php
     } elseif ($courseNotFound) { ?>
-      <!-- Course Not Found Section -->
+
       <div class="min-h-[60vh] flex items-center justify-center px-4">
         <div class="text-center">
           <div class="mb-4 text-orange-500">
@@ -217,8 +219,10 @@ if (isset($_SESSION['user'])) {
       </div>
       <?php
     } else { ?>
-     <!-- Course Details Section -->
-<div class=" container mx-auto px-4 py-8">
+
+    
+     <!-- Course detail -->
+        <div class=" container mx-auto px-4 py-8">
             <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
 
               <div class="lg:col-span-2 space-y-6">
@@ -231,7 +235,9 @@ if (isset($_SESSION['user'])) {
                       <span class="bg-orange-500/90 text-white text-sm px-3 py-1 rounded-full">
                         <?= htmlspecialchars($categoryName) ?>
                       </span>
-                      <h1 class="text-3xl font-bold mt-3 mb-2"><?= htmlspecialchars($course->getTitle()) ?></h1>
+                      <h1 class="text-3xl font-bold mt-3 mb-2">
+                        <?= htmlspecialchars($course->getTitle()) ?>
+                      </h1>
                       <div class="flex flex-wrap items-center gap-4 text-sm">
                         <div class="flex items-center gap-2">
                           <i class="fas fa-user-circle"></i>
@@ -292,7 +298,7 @@ if (isset($_SESSION['user'])) {
                   </div>
                 </div>
 
-                <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
+                <!-- <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
                   <div class="p-6">
                     <h2 class="text-xl font-semibold text-gray-900 mb-6 flex items-center gap-2">
                       <i class="fas fa-comments text-orange-500"></i>
@@ -301,7 +307,8 @@ if (isset($_SESSION['user'])) {
 
                     <form class="mb-8">
                       <div class="mb-4">
-                        <label for="comment" class="block text-sm font-medium text-gray-700 mb-2">Leave a Comment</label>
+                        <label for="comment" class="block text-sm font-medium text-gray-700 mb-2">Leave a
+                          Comment</label>
                         <textarea id="comment" rows="4"
                           class="w-full px-4 py-3 rounded-lg resize-none border border-gray-200 focus:ring-2 focus:ring-orange-500 focus:border-transparent transition"
                           placeholder="Share your thoughts about this course..."></textarea>
@@ -312,8 +319,7 @@ if (isset($_SESSION['user'])) {
                       </button>
                     </form>
 
-                    <div class="space-y-6">
-                      <!-- Comment 1 -->
+                    <div class="COMMENT space-y-6">
                       <div class="flex gap-4">
                         <div class="flex-shrink-0">
                           <div class="w-10 h-10 rounded-full bg-orange-100 flex items-center justify-center">
@@ -325,42 +331,27 @@ if (isset($_SESSION['user'])) {
                             <h4 class="font-medium text-gray-900">John Doe</h4>
                             <span class="text-sm text-gray-500">2 days ago</span>
                           </div>
-                          <p class="text-gray-600">Great course! The content is well-structured and easy to follow. I
+                          <p class="text-gray-600">Great course! The content is well-structured
+                            and easy to follow. I
                             especially enjoyed the practical examples.</p>
-                        </div>
-                      </div>
-
-                      <!-- Comment 2 -->
-                      <div class="flex gap-4">
-                        <div class="flex-shrink-0">
-                          <div class="w-10 h-10 rounded-full bg-orange-100 flex items-center justify-center">
-                            <i class="fas fa-user text-orange-500"></i>
-                          </div>
-                        </div>
-                        <div class="flex-grow">
-                          <div class="flex items-center justify-between mb-1">
-                            <h4 class="font-medium text-gray-900">Sarah Smith</h4>
-                            <span class="text-sm text-gray-500">5 days ago</span>
-                          </div>
-                          <p class="text-gray-600">The instructor explains everything very clearly. Would definitely
-                            recommend this course to others!</p>
                         </div>
                       </div>
                     </div>
                   </div>
-                </div>
+                </div> -->
               </div>
 
               <!-- Sidebar -->
-              <div class="lg:col-span-1">
-                <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6 sticky top-6">
+              <div class="lg:col-span-1 z-10">
+                <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6 sticky top-28">
                   <?php if (!$connected) { ?>
                     <div class="text-center space-y-4">
                       <div class="text-4xl text-orange-500">
                         <i class="fas fa-lock"></i>
                       </div>
                       <div>
-                        <h3 class="text-lg font-semibold text-gray-900 mb-2">Ready to Start Learning?</h3>
+                        <h3 class="text-lg font-semibold text-gray-900 mb-2">Ready to Start Learning?
+                        </h3>
                         <p class="text-gray-600 mb-4">Sign in to enroll in this course</p>
                         <a href="../auth/login.php"
                           class="inline-block bg-orange-500 text-white px-8 py-3 rounded-full hover:bg-orange-600 transform hover:-translate-y-0.5 transition">
@@ -390,7 +381,8 @@ if (isset($_SESSION['user'])) {
                         </div>
                         <form action="../student/process/enrollCourse.php" method="POST">
                           <input type="hidden" name="courseId" value="<?= $course->getId() ?>">
-                          <h3 class="text-lg font-semibold text-gray-900 mb-2">Ready to Start Learning?</h3>
+                          <h3 class="text-lg font-semibold text-gray-900 mb-2">Ready to Start Learning?
+                          </h3>
                           <p class="text-gray-600 mb-4">Enroll now to access the full course content</p>
                           <button type="submit"
                             class="bg-orange-500 text-white px-10 py-3 rounded-full hover:bg-orange-600 transform hover:-translate-y-0.5 transition w-full">
@@ -406,7 +398,8 @@ if (isset($_SESSION['user'])) {
                       </div>
                       <div>
                         <h3 class="text-lg font-semibold text-gray-900 mb-2">Course Access</h3>
-                        <p class="text-gray-600 text-sm">Only students can enroll in courses. You're currently logged in as
+                        <p class="text-gray-600 text-sm">Only students can enroll in courses. You're
+                          currently logged in as
                           a <?= $user instanceof Teacher ? 'teacher' : 'admin' ?>.</p>
                       </div>
                     </div>
@@ -428,7 +421,8 @@ if (isset($_SESSION['user'])) {
         </div>
         <div class="flex justify-center">
           <ul class="space-y-1 text-center">
-            <li><a href="../../index.php" class="text-gray-400 hover:text-white transition text-sm">Home</a></li>
+            <li><a href="../../index.php" class="text-gray-400 hover:text-white transition text-sm">Home</a>
+            </li>
             <li><a href="../courses/courses.php" class="text-gray-400 hover:text-white transition text-sm">Courses</a>
             </li>
             <li><a href="../contact/contact.php" class="text-gray-400 hover:text-white transition text-sm">Contact</a>
