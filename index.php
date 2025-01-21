@@ -108,7 +108,7 @@ $latestCourses = Course::getLatestCourses($PDOConn);
       <?php
       if (!$connected) {
         ?>
-        <h1 class="text-4xl md:text-5xl font-bold text-gray-900 mb-6">Welcome to Youdemy</h1>';
+        <h1 class="text-4xl md:text-5xl font-bold text-gray-900 mb-6">Welcome to Youdemy</h1>
         <p class="text-xl text-gray-600 mb-8 max-w-2xl mx-auto">Join our global community of learners and
           instructors.
           Whether you're here to master new skills or share your expertise, Youdemy is your platform for growth.
@@ -116,7 +116,7 @@ $latestCourses = Course::getLatestCourses($PDOConn);
         <a href="pages/auth/register.php"
           class="inline-block bg-orange-500 text-white px-8 py-3 rounded-full font-medium hover:bg-orange-600 transform hover:-translate-y-0.5 transition">
           Start Today
-        </a>'
+        </a>
         <?php
       } else {
         ?>
@@ -159,13 +159,15 @@ $latestCourses = Course::getLatestCourses($PDOConn);
           <div
             class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden hover:shadow-md transition-shadow duration-300">
             <div class="relative h-48 bg-gray-100">
-              <img src="uploads/covers/<?= $course['image'] ?>" alt="Course thumbnail" class="w-full h-full object-cover">
+              <img src="uploads/covers/<?= htmlspecialchars($course['image']) ?>" alt="Course thumbnail"
+                class="w-full h-full object-cover">
             </div>
             <div class="p-6">
               <span
                 class="bg-orange-100 text-orange-600 text-xs px-2 py-1 rounded-full"><?= htmlspecialchars($course['category_name']) ?></span>
-              <a href="#" class="block">
-                <h3 class="text-lg font-semibold text-gray-900 my-3 hover:text-orange-600 transition-colors duration-300">
+              <a href="pages/courses/courseDetails.php?id=<?= urlencode($course['id']) ?>" class="block">
+                <h3
+                  class="text-lg font-semibold text-gray-900 my-3 hover:text-orange-600 transition-colors duration-300 break-words line-clamp-2">
                   <?= htmlspecialchars($course['title']) ?>
                 </h3>
               </a>
@@ -175,7 +177,7 @@ $latestCourses = Course::getLatestCourses($PDOConn);
                     <i class="fas fa-user text-orange-500"></i>
                   </div>
                   <p class="text-sm text-gray-600">
-                    <?= htmlspecialchars("{$course['first_name']} {$course['last_name']}") ?>
+                    <?= htmlspecialchars($course['teacher_name']) ?>
                   </p>
                 </div>
                 <div class="text-sm text-gray-500">
