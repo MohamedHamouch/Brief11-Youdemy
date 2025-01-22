@@ -21,7 +21,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $course_id = $_POST['courseId'];
     $user_id = $user->getId();
 
-    $enrollment = new Enrollment(null, $course_id, $user_id);
+    $enrollment = new Enrollment(null, $user_id, $course_id);
     $status = $user->cancelEnrollment($PDOConn, $enrollment);
     if ($status) {
 
