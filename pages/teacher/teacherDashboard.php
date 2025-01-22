@@ -333,166 +333,213 @@ $totalVideos = $user->teacherTotalVideos($PDOConn);
 
         <!-- statistics -->
         <div id="statistics" class="contentSection hidden bg-white rounded-xl shadow-sm p-6 border border-gray-100">
-          <div class="mb-8">
-            <h3 class="text-lg font-semibold text-gray-800 mb-4">Course Overview</h3>
-            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-              <div class="bg-gradient-to-br from-purple-50 to-white p-6 rounded-xl border border-purple-100">
-                <div class="flex items-center justify-between mb-4">
-                  <div class="text-purple-500">
-                    <i class="fas fa-graduation-cap text-2xl"></i>
+          <div class="w-full text-center text-gray-500">
+            <i class="fas fa-chart-bar text-4xl mb-4"></i>
+            <!-- <p>Statistics Section - Content Coming Soon</p> -->
+            <div class="mb-8">
+              <h3 class="text-lg font-semibold text-gray-800 mb-4">Users Overview</h3>
+              <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                <div class="bg-gradient-to-br from-orange-50 to-white p-6 rounded-xl border border-orange-100">
+                  <div class="flex items-center justify-between mb-4">
+                    <div class="text-orange-500">
+                      <i class="fas fa-users text-2xl"></i>
+                    </div>
+                    <span class="text-xs font-medium text-orange-600 bg-orange-100 px-2 py-1 rounded-full">Total
+                      Users</span>
                   </div>
-                  <span class="text-xs font-medium text-purple-600 bg-purple-100 px-2 py-1 rounded-full">Total
-                    Courses</span>
+                  <div class="text-2xl font-bold text-gray-800 mb-1"><?= $totalUsers ?></div>
+                  <p class="text-sm text-gray-500">Registered members</p>
                 </div>
-                <div class="text-2xl font-bold text-gray-800 mb-1"><?= $totalCourses ?></div>
-                <p class="text-sm text-gray-500">Your published courses</p>
+                <div class="bg-gradient-to-br from-red-50 to-white p-6 rounded-xl border border-red-100">
+                  <div class="flex items-center justify-between mb-4">
+                    <div class="text-red-500">
+                      <i class="fas fa-user-shield text-2xl"></i>
+                    </div>
+                    <span class="text-xs font-medium text-red-600 bg-red-100 px-2 py-1 rounded-full">Admins</span>
+                  </div>
+                  <div class="text-2xl font-bold text-gray-800 mb-1"><?= $totalAdmins ?></div>
+                  <p class="text-sm text-gray-500">Platform administrators</p>
+                </div>
+                <div class="bg-gradient-to-br from-green-50 to-white p-6 rounded-xl border border-green-100">
+                  <div class="flex items-center justify-between mb-4">
+                    <div class="text-green-500">
+                      <i class="fas fa-chalkboard-teacher text-2xl"></i>
+                    </div>
+                    <span class="text-xs font-medium text-green-600 bg-green-100 px-2 py-1 rounded-full">Teachers</span>
+                  </div>
+                  <div class="text-2xl font-bold text-gray-800 mb-1"><?= $totalTeachers ?></div>
+                  <p class="text-sm text-gray-500">Active instructors</p>
+                </div>
+                <div class="bg-gradient-to-br from-blue-50 to-white p-6 rounded-xl border border-blue-100">
+                  <div class="flex items-center justify-between mb-4">
+                    <div class="text-blue-500">
+                      <i class="fas fa-user-graduate text-2xl"></i>
+                    </div>
+                    <span class="text-xs font-medium text-blue-600 bg-blue-100 px-2 py-1 rounded-full">Students</span>
+                  </div>
+                  <div class="text-2xl font-bold text-gray-800 mb-1"><?= $totalStusents ?></div>
+                  <p class="text-sm text-gray-500">Registered learners</p>
+                </div>
               </div>
-
-              <div class="bg-gradient-to-br from-yellow-50 to-white p-6 rounded-xl border border-yellow-100">
-                <div class="flex items-center justify-between mb-4">
-                  <div class="text-yellow-500">
-                    <i class="fas fa-file-alt text-2xl"></i>
+            </div>
+            <div>
+              <h3 class="text-lg font-semibold text-gray-800 mb-4">Content Overview</h3>
+              <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                <div class="bg-gradient-to-br from-purple-50 to-white p-6 rounded-xl border border-purple-100">
+                  <div class="flex items-center justify-between mb-4">
+                    <div class="text-purple-500">
+                      <i class="fas fa-graduation-cap text-2xl"></i>
+                    </div>
+                    <span class="text-xs font-medium text-purple-600 bg-purple-100 px-2 py-1 rounded-full">Courses</span>
                   </div>
-                  <span class="text-xs font-medium text-yellow-600 bg-yellow-100 px-2 py-1 rounded-full">Documents</span>
+                  <div class="text-2xl font-bold text-gray-800 mb-1"><?= $totalCourses ?></div>
+                  <p class="text-sm text-gray-500">Available courses</p>
                 </div>
-                <div class="text-2xl font-bold text-gray-800 mb-1"><?= $totalDocumtns ?></div>
-                <p class="text-sm text-gray-500">Document lessons</p>
-              </div>
-
-              <div class="bg-gradient-to-br from-indigo-50 to-white p-6 rounded-xl border border-indigo-100">
-                <div class="flex items-center justify-between mb-4">
-                  <div class="text-indigo-500">
-                    <i class="fas fa-video text-2xl"></i>
+                <div class="bg-gradient-to-br from-yellow-50 to-white p-6 rounded-xl border border-yellow-100">
+                  <div class="flex items-center justify-between mb-4">
+                    <div class="text-yellow-500">
+                      <i class="fas fa-file-alt text-2xl"></i>
+                    </div>
+                    <span
+                      class="text-xs font-medium text-yellow-600 bg-yellow-100 px-2 py-1 rounded-full">Documents</span>
                   </div>
-                  <span class="text-xs font-medium text-indigo-600 bg-indigo-100 px-2 py-1 rounded-full">Videos</span>
+                  <div class="text-2xl font-bold text-gray-800 mb-1"><?= $totalDocumtns ?></div>
+                  <p class="text-sm text-gray-500">Document Lessons</p>
                 </div>
-                <div class="text-2xl font-bold text-gray-800 mb-1"><?= $totalVideos ?></div>
-                <p class="text-sm text-gray-500">Video lessons</p>
-              </div>
-
-              <div class="bg-gradient-to-br from-pink-50 to-white p-6 rounded-xl border border-pink-100">
-                <div class="flex items-center justify-between mb-4">
-                  <div class="text-pink-500">
-                    <i class="fas fa-user-plus text-2xl"></i>
+                <div class="bg-gradient-to-br from-indigo-50 to-white p-6 rounded-xl border border-indigo-100">
+                  <div class="flex items-center justify-between mb-4">
+                    <div class="text-indigo-500">
+                      <i class="fas fa-video text-2xl"></i>
+                    </div>
+                    <span class="text-xs font-medium text-indigo-600 bg-indigo-100 px-2 py-1 rounded-full">Videos</span>
                   </div>
-                  <span class="text-xs font-medium text-pink-600 bg-pink-100 px-2 py-1 rounded-full">Enrollments</span>
+                  <div class="text-2xl font-bold text-gray-800 mb-1"><?= $totalVideos ?></div>
+                  <p class="text-sm text-gray-500">Video lessons</p>
                 </div>
-                <div class="text-2xl font-bold text-gray-800 mb-1"><?= $totalEnrollments ?></div>
-                <p class="text-sm text-gray-500">Total student enrollments</p>
+                <div class="bg-gradient-to-br from-pink-50 to-white p-6 rounded-xl border border-pink-100">
+                  <div class="flex items-center justify-between mb-4">
+                    <div class="text-pink-500">
+                      <i class="fas fa-user-plus text-2xl"></i>
+                    </div>
+                    <span class="text-xs font-medium text-pink-600 bg-pink-100 px-2 py-1 rounded-full">Enrollments</span>
+                  </div>
+                  <div class="text-2xl font-bold text-gray-800 mb-1"><?= $totalEnrollments ?></div>
+                  <p class="text-sm text-gray-500">Total enrollments</p>
+                </div>
               </div>
             </div>
           </div>
-        </div>
 
-      <?php } elseif (!$user->isActive()) { ?>
+        <?php } elseif (!$user->isActive()) { ?>
 
-        <!-- not approved acc -->
-        <div class="bg-gray-50 flex items-center justify-center p-4">
-          <div class="max-w-md w-full bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
-            <div class="p-6">
-              <div class="text-center mb-6">
-                <div class="inline-flex items-center justify-center w-16 h-16 bg-orange-100 rounded-full mb-4">
-                  <i class="fas fa-clock text-2xl text-orange-500"></i>
-                </div>
-                <h2 class="text-2xl font-bold text-gray-900 mb-2">Account Pending Approval</h2>
-                <p class="text-gray-600">Your teacher account is currently under review.</p>
-              </div>
-              <div class="bg-orange-50 rounded-lg p-4 mb-6">
-                <div class="flex items-start">
-                  <div class="flex-shrink-0">
-                    <i class="fas fa-info-circle text-orange-500 mt-1"></i>
+          <!-- not approved acc -->
+          <div class="bg-gray-50 flex items-center justify-center p-4">
+            <div class="max-w-md w-full bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
+              <div class="p-6">
+                <div class="text-center mb-6">
+                  <div class="inline-flex items-center justify-center w-16 h-16 bg-orange-100 rounded-full mb-4">
+                    <i class="fas fa-clock text-2xl text-orange-500"></i>
                   </div>
-                  <div class="ml-3">
-                    <p class="text-sm text-orange-700">
-                      Our admin team will review your application shortly. You'll receive an email
-                      notification once your account is approved.
-                    </p>
+                  <h2 class="text-2xl font-bold text-gray-900 mb-2">Account Pending Approval</h2>
+                  <p class="text-gray-600">Your teacher account is currently under review.</p>
+                </div>
+                <div class="bg-orange-50 rounded-lg p-4 mb-6">
+                  <div class="flex items-start">
+                    <div class="flex-shrink-0">
+                      <i class="fas fa-info-circle text-orange-500 mt-1"></i>
+                    </div>
+                    <div class="ml-3">
+                      <p class="text-sm text-orange-700">
+                        Our admin team will review your application shortly. You'll receive an email
+                        notification once your account is approved.
+                      </p>
+                    </div>
                   </div>
                 </div>
-              </div>
-              <div class="space-y-4">
-                <h3 class="text-lg font-medium text-gray-900">While you wait, you can:</h3>
-                <ul class="space-y-3">
-                  <li class="flex items-start">
-                    <i class="fas fa-check text-green-500 mt-1 mr-3"></i>
-                    <span class="text-gray-600">
-                      Browse available <a href="../courses/courses.php" class="text-orange-500 underline">courses</a>
-                    </span>
-                  </li>
-                  <li class="flex items-start">
-                    <i class="fas fa-check text-green-500 mt-1 mr-3"></i>
-                    <span class="text-gray-600">Complete your profile information</span>
-                  </li>
-                  <li class="flex items-start">
-                    <i class="fas fa-check text-green-500 mt-1 mr-3"></i>
-                    <span class="text-gray-600">Prepare your course materials</span>
-                  </li>
-                </ul>
-              </div>
+                <div class="space-y-4">
+                  <h3 class="text-lg font-medium text-gray-900">While you wait, you can:</h3>
+                  <ul class="space-y-3">
+                    <li class="flex items-start">
+                      <i class="fas fa-check text-green-500 mt-1 mr-3"></i>
+                      <span class="text-gray-600">
+                        Browse available <a href="../courses/courses.php" class="text-orange-500 underline">courses</a>
+                      </span>
+                    </li>
+                    <li class="flex items-start">
+                      <i class="fas fa-check text-green-500 mt-1 mr-3"></i>
+                      <span class="text-gray-600">Complete your profile information</span>
+                    </li>
+                    <li class="flex items-start">
+                      <i class="fas fa-check text-green-500 mt-1 mr-3"></i>
+                      <span class="text-gray-600">Prepare your course materials</span>
+                    </li>
+                  </ul>
+                </div>
 
-              <div class="mt-8">
-                <a href="../../index.php"
-                  class="block w-full bg-orange-500 text-white text-center px-6 py-3 rounded-lg hover:bg-orange-600 transition-colors">
-                  Return to Homepage
-                </a>
+                <div class="mt-8">
+                  <a href="../../index.php"
+                    class="block w-full bg-orange-500 text-white text-center px-6 py-3 rounded-lg hover:bg-orange-600 transition-colors">
+                    Return to Homepage
+                  </a>
+                </div>
               </div>
             </div>
           </div>
-        </div>
 
-        <!-- suspended acc -->
-      <?php } elseif ($user->isSuspended()) { ?>
-        <div class="bg-gray-50 flex items-center justify-center p-4">
-          <div class="max-w-md w-full bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
-            <div class="p-6">
-              <div class="text-center mb-6">
-                <div class="inline-flex items-center justify-center w-16 h-16 bg-red-100 rounded-full mb-4">
-                  <i class="fas fa-ban text-2xl text-red-500"></i>
-                </div>
-                <h2 class="text-2xl font-bold text-gray-900 mb-2">Account Suspended</h2>
-                <p class="text-gray-600">Your account has been suspended due to a policy violation or pending
-                  investigation.</p>
-              </div>
-              <div class="bg-red-50 rounded-lg p-4 mb-6">
-                <div class="flex items-start">
-                  <div class="flex-shrink-0">
-                    <i class="fas fa-info-circle text-red-500 mt-1"></i>
+          <!-- suspended acc -->
+        <?php } elseif ($user->isSuspended()) { ?>
+          <div class="bg-gray-50 flex items-center justify-center p-4">
+            <div class="max-w-md w-full bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
+              <div class="p-6">
+                <div class="text-center mb-6">
+                  <div class="inline-flex items-center justify-center w-16 h-16 bg-red-100 rounded-full mb-4">
+                    <i class="fas fa-ban text-2xl text-red-500"></i>
                   </div>
-                  <div class="ml-3">
-                    <p class="text-sm text-red-700">
-                      Please contact our support team to resolve this issue. Include any relevant details to expedite the
-                      process.
-                    </p>
+                  <h2 class="text-2xl font-bold text-gray-900 mb-2">Account Suspended</h2>
+                  <p class="text-gray-600">Your account has been suspended due to a policy violation or pending
+                    investigation.</p>
+                </div>
+                <div class="bg-red-50 rounded-lg p-4 mb-6">
+                  <div class="flex items-start">
+                    <div class="flex-shrink-0">
+                      <i class="fas fa-info-circle text-red-500 mt-1"></i>
+                    </div>
+                    <div class="ml-3">
+                      <p class="text-sm text-red-700">
+                        Please contact our support team to resolve this issue. Include any relevant details to expedite
+                        the
+                        process.
+                      </p>
+                    </div>
                   </div>
                 </div>
-              </div>
-              <div class="space-y-4">
-                <h3 class="text-lg font-medium text-gray-900">You may also:</h3>
-                <ul class="space-y-3">
-                  <li class="flex items-start">
-                    <i class="fas fa-check text-green-500 mt-1 mr-3"></i>
-                    <span class="text-gray-600">Review our <a href="#" class="text-orange-500 underline">terms of
-                        service</a></span>
-                  </li>
-                  <li class="flex items-start">
-                    <i class="fas fa-check text-green-500 mt-1 mr-3"></i>
-                    <span class="text-gray-600">Update your account information</span>
-                  </li>
-                </ul>
-              </div>
+                <div class="space-y-4">
+                  <h3 class="text-lg font-medium text-gray-900">You may also:</h3>
+                  <ul class="space-y-3">
+                    <li class="flex items-start">
+                      <i class="fas fa-check text-green-500 mt-1 mr-3"></i>
+                      <span class="text-gray-600">Review our <a href="#" class="text-orange-500 underline">terms of
+                          service</a></span>
+                    </li>
+                    <li class="flex items-start">
+                      <i class="fas fa-check text-green-500 mt-1 mr-3"></i>
+                      <span class="text-gray-600">Update your account information</span>
+                    </li>
+                  </ul>
+                </div>
 
-              <div class="mt-8">
-                <a href="../contact/contact.php"
-                  class="block w-full bg-red-500 text-white text-center px-6 py-3 rounded-lg hover:bg-red-600 transition-colors">
-                  Contact Support
-                </a>
+                <div class="mt-8">
+                  <a href="../contact/contact.php"
+                    class="block w-full bg-red-500 text-white text-center px-6 py-3 rounded-lg hover:bg-red-600 transition-colors">
+                    Contact Support
+                  </a>
+                </div>
               </div>
             </div>
           </div>
-        </div>
-      <?php } ?>
+        <?php } ?>
 
-    </div>
+      </div>
   </main>
 
   <footer class="bg-gray-900 text-white mt-auto">
