@@ -298,7 +298,7 @@ if (isset($_SESSION['user'])) {
                   </div>
                 </div>
 
-                <!-- <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
+                <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
                   <div class="p-6">
                     <h2 class="text-xl font-semibold text-gray-900 mb-6 flex items-center gap-2">
                       <i class="fas fa-comments text-orange-500"></i>
@@ -338,7 +338,7 @@ if (isset($_SESSION['user'])) {
                       </div>
                     </div>
                   </div>
-                </div> -->
+                </div>
               </div>
 
               <!-- Sidebar -->
