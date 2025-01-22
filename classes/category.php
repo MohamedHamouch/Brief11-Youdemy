@@ -46,5 +46,9 @@ class Category
     $this->description = $description;
   }
 }
-
+// $cats = new Category(null, null, null);
+// $categories = $cats->getAllCategories($PDOConn);
+// foreach($categories as $cat){
+//   echo $cat->getName();
+// }
 ?>
