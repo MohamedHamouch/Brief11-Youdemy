@@ -119,7 +119,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
       exit();
     }
 
-    $allowed_image_types = ['image/jpeg', 'image/png', 'image/gif'];
+    $allowed_image_types = ['image/jpeg', 'image/png', 'image/jpg'];
     if (!in_array($image['type'], $allowed_image_types)) {
       $_SESSION['teacherActionError'] = 'Image type not allowed';
       header('Location: ../teacherDashboard.php');
@@ -128,7 +128,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
     $imageTmpName = $image['tmp_name'];
     $imageName = uniqid('image_') . basename($image['name']);
-    $imagePath = '../../../uploads/images/' . $imageName;
+    $imagePath = '../../../uploads/covers/' . $imageName;
     if (!move_uploaded_file($imageTmpName, $imagePath)) {
       $_SESSION['teacherActionError'] = 'Image upload failed';
       header('Location: ../teacherDashboard.php');

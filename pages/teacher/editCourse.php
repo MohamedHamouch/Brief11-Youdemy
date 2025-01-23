@@ -224,7 +224,7 @@ $categories = Category::getAllCategories($PDOConn);
                         <p class="text-xs text-gray-500">MP4, MKV or WebM (MAX. 100MB)</p>
                       </div>
                       <input id="courseVideo" name="video" type="file" class="hidden"
-                        accept="video/mp4,video/webm,video/mkv">
+                        accept="video/*">
                     </label>
                   </div>
                 </div>
