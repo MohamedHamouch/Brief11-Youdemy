@@ -51,6 +51,14 @@ courseType.addEventListener('change', () => {
     courseVideo.removeAttribute('required');
   }
 });
+window.addEventListener('load', () => {
+  if (courseType.value === 'document') {
+    documentContent.classList.remove('hidden');
+    videoContent.classList.add('hidden');
+    courseDocument.setAttribute('required', '');
+    courseVideo.removeAttribute('required');
+  }
+});
 
 const coverInput = document.querySelector('#courseCover');
 coverInput.addEventListener('change', (e) => {
